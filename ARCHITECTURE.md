@@ -144,11 +144,16 @@ Currently, physical IoT sensors do not exist in the fields of Yangiariq. However
 
 ## 7. Security Architecture
 
-- **Mechanism**: Stateless JWT authentication with HMAC-SHA512.
-- **Roles**:
+- **Mechanism**: Hybrid JWT & Stateful Session Security:
+  - **Access Tokens**: Stateless signed JWT (HS256) for zero-database verification per request.
+  - **Refresh Tokens**: Cryptographically secure UUIDs rotated on every refresh. Only SHA-256 digests (`token_hash`) are stored in `refresh_token_sessions`. Supports multi-device tracking.
+  - **Reuse Detection**: Presenting an already-revoked refresh token triggers an immediate automated compromise mitigation that invalidates all active sessions for that user across all devices.
+  - **Password Reset**: Single-use tokens stored as SHA-256 digests with expiration and non-enumerating responses. Dispatched via decoupled `PasswordResetNotificationProvider`.
+- **Roles & Permissions**:
   - `FARMER`: Manages their own fields, logs irrigation, submits problem reports, views field recommendations.
   - `OPERATOR`: Manages district-wide water scheduling, monitors incidents, views aggregated analytics.
   - `ADMIN`: User management, global configuration, system auditing.
+- **Ownership-Aware Authorization**: `SecurityContextHelper` provides programmatic evaluation of resource ownership against the authenticated JWT principal, allowing role-based overrides (e.g. `OPERATOR` or `ADMIN`) where needed.
 - **Data Protection**: Passwords hashed using BCrypt. Secrets injected exclusively via environment variables (`.env`). Secrets and tokens are filtered and never logged.
 
 ---

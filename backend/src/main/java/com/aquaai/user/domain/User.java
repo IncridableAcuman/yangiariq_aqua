@@ -22,6 +22,15 @@ import lombok.Setter;
 @AllArgsConstructor
 public class User extends BaseAuditableEntity {
 
+    @Column(name = "first_name", nullable = false, length = 64)
+    private String firstName;
+
+    @Column(name = "last_name", nullable = false, length = 64)
+    private String lastName;
+
+    @Column(name = "full_name", length = 128)
+    private String fullName;
+
     @Column(name = "phone_number", nullable = false, unique = true, length = 32)
     private String phoneNumber;
 
@@ -31,18 +40,51 @@ public class User extends BaseAuditableEntity {
     @Column(name = "password_hash", nullable = false, length = 255)
     private String passwordHash;
 
-    @Column(name = "full_name", nullable = false, length = 128)
-    private String fullName;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false, length = 32)
-    private UserRole role;
+    @Builder.Default
+    private UserRole role = UserRole.FARMER;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false, length = 32)
+    @Builder.Default
+    private UserStatus status = UserStatus.ACTIVE;
 
     @Column(name = "district", length = 64)
     @Builder.Default
     private String district = "Yangiariq";
 
-    @Column(name = "active", nullable = false)
-    @Builder.Default
-    private boolean active = true;
+    public String getFullName() {
+        if (fullName != null && !fullName.isBlank()) {
+            return fullName;
+        }
+        String first = firstName != null ? firstName.trim() : "";
+        String last = lastName != null ? lastName.trim() : "";
+        String combined = (first + " " + last).trim();
+        return combined.isEmpty() ? "User" : combined;
+    }
+
+    public boolean isAllowedToAuthenticate() {
+        return this.status == UserStatus.ACTIVE;
+    }
+
+    public void updateProfile(String firstName, String lastName, String email, String district) {
+        if (firstName != null && !firstName.isBlank()) {
+            this.firstName = firstName.trim();
+        }
+        if (lastName != null && !lastName.isBlank()) {
+            this.lastName = lastName.trim();
+        }
+        this.fullName = (this.firstName + " " + this.lastName).trim();
+        if (email != null) {
+            this.email = email.trim().toLowerCase();
+        }
+        if (district != null && !district.isBlank()) {
+            this.district = district.trim();
+        }
+    }
+
+    public void changePassword(String newPasswordHash) {
+        this.passwordHash = newPasswordHash;
+    }
 }

@@ -1,12 +1,14 @@
 package com.aquaai.auth.api.dto;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 
 @Builder
 public record LoginRequest(
-        @NotBlank(message = "Phone number or username is required")
-        String username,
+        @NotBlank(message = "Identifier (phone or email) is required")
+        @JsonAlias({"username", "email", "phone"})
+        String identifier,
 
         @NotBlank(message = "Password is required")
         String password

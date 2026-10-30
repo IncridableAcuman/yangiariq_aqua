@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=PostgreSQL
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=PostgreSQL;TIME ZONE=UTC
     driver-class-name: org.h2.Driver
     username: sa
     password: ""
@@ -9,6 +9,10 @@ spring:
     hibernate:
       ddl-auto: create-drop
     show-sql: false
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
   liquibase:
     enabled: true
     change-log: classpath:db/changelog/db.changelog-master.xml
@@ -18,7 +22,7 @@ app:
     jwt:
       secret: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970337336763979244226452948404D635166546A576E5A7234753778214125442A
       access-token-expiration-ms: 3600000
-      refresh-token-expiration-ms: 7200000
+      refresh-token-expiration-ms: 604800000
   cors:
     allowed-origins:
       - http://localhost:3000

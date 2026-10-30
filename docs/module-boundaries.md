@@ -4,8 +4,8 @@ In Yangiariq Aqua AI, every backend module has a strictly bounded context. Modul
 
 | Module | Core Responsibilities | Owned Entities | External Ports / Dependencies |
 | :--- | :--- | :--- | :--- |
-| **`auth`** | Token issuing, login, registration, password hashing | - | Interacts with `user` via `UserRepository` or `UserService` |
-| **`user`** | Farmer profiles, operator credentials, roles | `User` | Shared security context |
+| **`auth`** | Token issuing, login, registration, password hashing, session lifecycle, password reset | `RefreshTokenSession`, `PasswordResetToken` | Interacts with `user` via `UserRepository` or `UserService`; uses `PasswordResetNotificationProvider` |
+| **`user`** | Farmer profiles, operator credentials, roles, user self-service | `User` | Shared security context (`SecurityContextHelper`) |
 | **`field`** | Parcels, crop types, soil characteristics, boundaries | `Field` | References `User` (farmerId) |
 | **`water`** | Irrigation logs, water delivery, volumetric intake | `IrrigationRecord` | References `Field` (fieldId), `User` (recordedBy) |
 | **`problem`**| Canal blockage, water shortage, leak reports, status | `ProblemReport` | References `User` (reportedBy), `Field` (optional fieldId) |

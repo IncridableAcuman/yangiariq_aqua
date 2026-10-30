@@ -5,4 +5,8 @@ public class UnauthorizedOperationException extends DomainException {
     public UnauthorizedOperationException(String message) {
         super(message, "UNAUTHORIZED_OPERATION");
     }
+
+    public UnauthorizedOperationException(String message, String errorCode) {
+        super(message, errorCode);
+    }
 }
