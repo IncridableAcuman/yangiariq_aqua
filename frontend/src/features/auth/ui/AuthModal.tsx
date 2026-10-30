@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Modal } from '@/shared/ui/Modal'
+import { Modal } from '@/shared/ui'
 import { LoginForm } from './LoginForm'
 import { RegisterForm } from './RegisterForm'
 import { PasswordResetModal } from './PasswordResetModal'

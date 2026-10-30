@@ -1,7 +1,9 @@
 import React from 'react'
 import { UserRole, UserStatus } from '../types'
 import { translations, SupportedLanguage } from '@/shared/i18n'
+import { Badge } from '@/shared/ui/badge'
 import { Shield, Tractor, Compass, CheckCircle2, AlertOctagon, XCircle } from 'lucide-react'
+import { cn } from '@/shared/lib/utils'
 
 interface UserRoleBadgeProps {
   role: UserRole
@@ -45,12 +47,19 @@ export const UserRoleBadge: React.FC<UserRoleBadgeProps> = ({
   const config = configs[role] || configs.FARMER
 
   return (
-    <span
-      className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold border ${config.bg} ${config.text} ${config.border} ${className}`}
+    <Badge
+      variant="outline"
+      className={cn(
+        'gap-1.5 font-semibold text-xs',
+        config.bg,
+        config.text,
+        config.border,
+        className
+      )}
     >
       {showIcon && config.icon}
       <span>{config.label}</span>
-    </span>
+    </Badge>
   )
 }
 
@@ -67,23 +76,20 @@ export const UserStatusBadge: React.FC<UserStatusBadgeProps> = ({
 }) => {
   const t = translations[lang]
 
-  const configs: Record<UserStatus, { label: string; bg: string; text: string; icon: React.ReactNode }> = {
+  const configs: Record<UserStatus, { label: string; className: string; icon: React.ReactNode }> = {
     ACTIVE: {
       label: t.auth.statuses.ACTIVE,
-      bg: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300',
-      text: 'text-emerald-500',
+      className: 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-500/30',
       icon: <CheckCircle2 className="h-3 w-3" />,
     },
     INACTIVE: {
       label: t.auth.statuses.INACTIVE,
-      bg: 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300',
-      text: 'text-gray-400',
+      className: 'bg-muted text-muted-foreground border-border',
       icon: <AlertOctagon className="h-3 w-3" />,
     },
     BLOCKED: {
       label: t.auth.statuses.BLOCKED,
-      bg: 'bg-rose-100 text-rose-800 dark:bg-rose-900/40 dark:text-rose-300',
-      text: 'text-rose-500',
+      className: 'bg-destructive/15 text-destructive border-destructive/30',
       icon: <XCircle className="h-3 w-3" />,
     },
   }
@@ -91,11 +97,12 @@ export const UserStatusBadge: React.FC<UserStatusBadgeProps> = ({
   const config = configs[status] || configs.ACTIVE
 
   return (
-    <span
-      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium ${config.bg} ${className}`}
+    <Badge
+      variant="outline"
+      className={cn('gap-1 font-medium text-xs', config.className, className)}
     >
       {config.icon}
       <span>{config.label}</span>
-    </span>
+    </Badge>
   )
 }

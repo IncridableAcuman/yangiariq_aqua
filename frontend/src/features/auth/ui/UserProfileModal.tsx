@@ -1,7 +1,5 @@
 import React, { useState } from 'react'
-import { Modal } from '@/shared/ui/Modal'
-import { Input } from '@/shared/ui/Input'
-import { Button } from '@/shared/ui/Button'
+import { Modal, Input, Button } from '@/shared/ui'
 import { useAuth } from '../context/AuthContext'
 import { UserRoleBadge, UserStatusBadge, UserAvatar } from '@/entities/user'
 import { translations, SupportedLanguage } from '@/shared/i18n'
@@ -11,7 +9,7 @@ import { ApiError } from '@/shared/api/client'
 interface UserProfileModalProps {
   isOpen: boolean
   onClose: () => void
-  onOpenChangePassword: () => void
+  onOpenChangePassword?: () => void
   lang?: SupportedLanguage
 }
 
@@ -222,7 +220,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                   leftIcon={<KeyRound className="h-4 w-4" />}
                   onClick={() => {
                     onClose()
-                    onOpenChangePassword()
+                    onOpenChangePassword?.()
                   }}
                 >
                   {t.auth.changePassword}

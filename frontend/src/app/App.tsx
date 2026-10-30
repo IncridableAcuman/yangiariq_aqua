@@ -1,12 +1,20 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { useState } from 'react'
-import { Droplets, ShieldCheck, Cpu, MapPin, Sparkles, UserCheck, ChevronRight } from 'lucide-react'
-import { translations, SupportedLanguage } from '@/shared/i18n'
+import { useState, useEffect } from 'react'
+import { SupportedLanguage } from '@/shared/i18n'
 import { AuthProvider, useAuth } from '@/features/auth/context/AuthContext'
 import { Header } from '@/widgets/header'
-import { UserRoleBadge } from '@/entities/user'
-import { AuthModal } from '@/features/auth/ui/AuthModal'
-import { Button } from '@/shared/ui/Button'
+import { Sidebar, MobileSidebar, NavSection } from '@/widgets/sidebar'
+import { AuthModal, AuthModalView } from '@/features/auth/ui/AuthModal'
+import { UserProfileModal } from '@/features/auth/ui/UserProfileModal'
+import { ChangePasswordModal } from '@/features/auth/ui/ChangePasswordModal'
+import { LandingPage } from '@/pages/landing'
+import { DashboardPage } from '@/pages/dashboard'
+import { FieldsPage } from '@/pages/fields'
+import { IrrigationPage } from '@/pages/irrigation'
+import { SensorsPage } from '@/pages/sensors'
+import { AiAdvisorPage } from '@/pages/ai-advisor'
+import { ProblemsPage } from '@/pages/problems'
+import { SettingsPage } from '@/pages/settings'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -18,170 +26,186 @@ const queryClient = new QueryClient({
 })
 
 export function AppContent() {
+  const { isAuthenticated, isLoading } = useAuth()
   const [lang, setLang] = useState<SupportedLanguage>('uz')
-  const [authModalOpen, setAuthModalOpen] = useState(false)
-  const [authModalView, setAuthModalView] = useState<'login' | 'register'>('register')
+  const [currentSection, setCurrentSection] = useState<NavSection>('dashboard')
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false)
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false)
 
-  const t = translations[lang]
-  const { user, isAuthenticated } = useAuth()
+  // Landing Page vs Dashboard View state
+  // If user is not authenticated, default to landing page
+  const [showLanding, setShowLanding] = useState<boolean>(!isAuthenticated)
+
+  // Automatically sync landing state when auth status changes (e.g., on logout or login)
+  useEffect(() => {
+    if (!isLoading) {
+      if (!isAuthenticated) {
+        setShowLanding(true)
+      } else {
+        setShowLanding(false)
+      }
+    }
+  }, [isAuthenticated, isLoading])
+
+  // Auth & Profile Modals
+  const [authModalOpen, setAuthModalOpen] = useState(false)
+  const [authModalView, setAuthModalView] = useState<AuthModalView>('login')
+  const [profileModalOpen, setProfileModalOpen] = useState(false)
+  const [changePasswordModalOpen, setChangePasswordModalOpen] = useState(false)
+
+  const handleOpenAuth = (view: AuthModalView) => {
+    setAuthModalView(view)
+    setAuthModalOpen(true)
+  }
+
+  const handleOpenProfile = () => {
+    setProfileModalOpen(true)
+  }
+
+  const handleGoToLanding = () => {
+    setShowLanding(true)
+  }
+
+  const handleGoToDashboard = () => {
+    setShowLanding(false)
+    setCurrentSection('dashboard')
+  }
+
+  // If loading user profile on initial cold-start, display smooth loader
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background text-foreground">
+        <div className="flex flex-col items-center space-y-3">
+          <div className="h-10 w-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center font-bold animate-pulse">
+            <span className="h-5 w-5 rounded-full border-2 border-primary border-t-transparent animate-spin" />
+          </div>
+          <p className="text-xs text-muted-foreground font-medium">Yangiariq Aqua AI yuklanmoqda...</p>
+        </div>
+      </div>
+    )
+  }
+
+  // If viewing landing page (e.g. after logout or guest landing)
+  if (showLanding) {
+    return (
+      <>
+        <LandingPage
+          lang={lang}
+          onLangChange={setLang}
+          onOpenAuth={handleOpenAuth}
+          onGoToDashboard={handleGoToDashboard}
+        />
+
+        {/* Global Auth Modal accessible from Landing page */}
+        <AuthModal
+          isOpen={authModalOpen}
+          onClose={() => setAuthModalOpen(false)}
+          initialView={authModalView}
+          lang={lang}
+        />
+      </>
+    )
+  }
+
+  // Render current active page based on sidebar selection
+  const renderPageContent = () => {
+    switch (currentSection) {
+      case 'dashboard':
+        return <DashboardPage lang={lang} onNavigate={setCurrentSection} />
+      case 'fields':
+        return <FieldsPage lang={lang} />
+      case 'irrigation':
+        return <IrrigationPage lang={lang} />
+      case 'sensors':
+        return <SensorsPage lang={lang} />
+      case 'ai-advisor':
+        return <AiAdvisorPage lang={lang} />
+      case 'problems':
+        return <ProblemsPage lang={lang} />
+      case 'settings':
+        return <SettingsPage lang={lang} />
+      default:
+        return <DashboardPage lang={lang} onNavigate={setCurrentSection} />
+    }
+  }
 
   return (
-    <div className="min-h-screen flex flex-col bg-background text-foreground selection:bg-primary/20">
-      {/* Dynamic Header with Auth & Language support */}
-      <Header lang={lang} onLangChange={setLang} />
+    <div className="flex h-screen w-screen overflow-hidden bg-background text-foreground selection:bg-primary/20">
+      {/* Desktop Sidebar (Collapsible) */}
+      <div className="hidden lg:block shrink-0">
+        <Sidebar
+          currentSection={currentSection}
+          onSelectSection={setCurrentSection}
+          lang={lang}
+          isCollapsed={isSidebarCollapsed}
+          onToggleCollapse={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
+          onOpenAuthModal={handleOpenAuth}
+          onOpenProfileModal={handleOpenProfile}
+          onGoToLanding={handleGoToLanding}
+        />
+      </div>
 
-      {/* Main Container */}
-      <main className="flex-1 p-4 sm:p-6 max-w-7xl mx-auto w-full space-y-6">
-        {/* Authenticated Welcome Banner or Guest Hero */}
-        {isAuthenticated && user ? (
-          <div className="relative overflow-hidden rounded-2xl border border-border bg-gradient-to-r from-card via-card to-primary/5 p-6 shadow-sm">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-              <div className="space-y-1.5">
-                <div className="flex items-center gap-2">
-                  <span className="text-xs font-semibold uppercase tracking-wider text-primary flex items-center gap-1">
-                    <Sparkles className="h-3.5 w-3.5" />
-                    {lang === 'uz' ? 'Xush kelibsiz' : lang === 'ru' ? 'Добро пожаловать' : 'Welcome'}
-                  </span>
-                  <UserRoleBadge role={user.role} lang={lang} />
-                </div>
-                <h2 className="text-2xl font-bold tracking-tight text-foreground">
-                  {user.fullName || `${user.firstName} ${user.lastName}`}
-                </h2>
-                <p className="text-sm text-muted-foreground">
-                  {lang === 'uz'
-                    ? `${user.district || 'Yangiariq tumani'} boʻyicha suv taqsimoti va dala monitoring axborot tizimi.`
-                    : lang === 'ru'
-                    ? `Информационная система водораспределения и мониторинга полей района ${user.district || 'Янгиарык'}.`
-                    : `Water distribution and field monitoring system for ${user.district || 'Yangiariq district'}.`}
-                </p>
-              </div>
+      {/* Mobile Drawer Sidebar */}
+      <MobileSidebar
+        isOpen={isMobileSidebarOpen}
+        onClose={() => setIsMobileSidebarOpen(false)}
+        currentSection={currentSection}
+        onSelectSection={setCurrentSection}
+        lang={lang}
+        onOpenAuthModal={handleOpenAuth}
+        onOpenProfileModal={handleOpenProfile}
+        onGoToLanding={handleGoToLanding}
+      />
 
-              <div className="flex items-center gap-3">
-                <div className="text-right hidden sm:block">
-                  <div className="text-xs text-muted-foreground">{t.auth.accountStatus}</div>
-                  <div className="text-sm font-semibold text-emerald-600 flex items-center gap-1.5 justify-end">
-                    <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-                    {t.auth.statuses.ACTIVE}
-                  </div>
-                </div>
-                <div className="h-10 w-10 rounded-xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center font-bold">
-                  <UserCheck className="h-5 w-5" />
-                </div>
-              </div>
-            </div>
+      {/* Main Content Area */}
+      <div className="flex-1 flex flex-col h-full min-w-0 overflow-hidden">
+        {/* Top Navigation Header */}
+        <Header
+          lang={lang}
+          onLangChange={setLang}
+          currentSection={currentSection}
+          onOpenMobileMenu={() => setIsMobileSidebarOpen(true)}
+          onOpenAuthModal={handleOpenAuth}
+          onOpenProfileModal={handleOpenProfile}
+          onGoToLanding={handleGoToLanding}
+        />
+
+        {/* Scrollable Page Body */}
+        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 space-y-6">
+          <div className="max-w-7xl mx-auto w-full">
+            {renderPageContent()}
           </div>
-        ) : (
-          <div className="relative overflow-hidden rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/10 via-background to-secondary/10 p-6 sm:p-8 shadow-sm">
-            <div className="max-w-2xl space-y-3">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold">
-                <Droplets className="h-3.5 w-3.5" />
-                <span>Yangiariq Aqua AI • Smart Water Management</span>
-              </div>
-              <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">
-                {lang === 'uz'
-                  ? 'Fermer xoʻjaliklari uchun intellektual suv taqsimoti'
-                  : lang === 'ru'
-                  ? 'Интеллектуальное водораспределение для фермерских хозяйств'
-                  : 'Intelligent Water Allocation for Farming Communities'}
-              </h2>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                {lang === 'uz'
-                  ? 'Yangiariq tumanidagi kanallar, datchiklar telemetriyasi va AI tavsiyalaridan foydalanish uchun tizimga kiring yoki yangi fermer hisobini oching.'
-                  : lang === 'ru'
-                  ? 'Войдите в систему или создайте аккаунт фермера для доступа к аналитике каналов, телеметрии датчиков и рекомендациям ИИ.'
-                  : 'Sign in or create a farmer account to access canal network analytics, sensor telemetry, and AI-driven irrigation advisories.'}
-              </p>
-              <div className="flex items-center gap-3 pt-2">
-                <Button
-                  variant="primary"
-                  size="md"
-                  onClick={() => {
-                    setAuthModalView('register')
-                    setAuthModalOpen(true)
-                  }}
-                  rightIcon={<ChevronRight className="h-4 w-4" />}
-                >
-                  {t.auth.signUp}
-                </Button>
-                <Button
-                  variant="outline"
-                  size="md"
-                  onClick={() => {
-                    setAuthModalView('login')
-                    setAuthModalOpen(true)
-                  }}
-                >
-                  {t.auth.signIn}
-                </Button>
-              </div>
-            </div>
-          </div>
-        )}
 
-        {/* Feature Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="p-6 rounded-xl border bg-card shadow-sm space-y-2 hover:border-primary/40 transition-colors">
-            <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-muted-foreground">Water Governance</span>
-              <div className="h-8 w-8 rounded-lg bg-hydro-500/10 flex items-center justify-center">
-                <Droplets className="h-4 w-4 text-hydro-600" />
-              </div>
-            </div>
-            <div className="text-2xl font-bold">Yangiariq Canal Network</div>
-            <p className="text-xs text-muted-foreground">
-              Automated allocation and irrigation scheduling engine
+          {/* District Footer */}
+          <footer className="border-t border-border pt-6 pb-2 text-center text-xs text-muted-foreground">
+            <p>
+              © 2026 Yangiariq Aqua AI • {lang === 'uz' ? 'Xorazm viloyati Yangiariq tumani suv xoʻjaligi intellektual boshqaruv tizimi' : 'Интеллектуальная система управления водными ресурсами Янгиарыкского района'}
             </p>
-          </div>
+          </footer>
+        </main>
+      </div>
 
-          <div className="p-6 rounded-xl border bg-card shadow-sm space-y-2 hover:border-secondary/40 transition-colors">
-            <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-muted-foreground">Sensor Abstraction</span>
-              <div className="h-8 w-8 rounded-lg bg-agri-500/10 flex items-center justify-center">
-                <Cpu className="h-4 w-4 text-agri-600" />
-              </div>
-            </div>
-            <div className="text-2xl font-bold">Simulated Telemetry</div>
-            <p className="text-xs text-muted-foreground">
-              Decoupled soil moisture and water flow adapters ready for IoT
-            </p>
-          </div>
-
-          <div className="p-6 rounded-xl border bg-card shadow-sm space-y-2 hover:border-primary/40 transition-colors">
-            <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-muted-foreground">AI Decision Support</span>
-              <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
-                <ShieldCheck className="h-4 w-4 text-primary" />
-              </div>
-            </div>
-            <div className="text-2xl font-bold">Gemini Provider</div>
-            <p className="text-xs text-muted-foreground">
-              Smart recommendations for crop drought prevention & water saving
-            </p>
-          </div>
-        </div>
-
-        {/* Architecture Foundation Notice */}
-        <div className="border border-dashed border-border rounded-xl p-8 text-center space-y-3 bg-muted/20">
-          <div className="inline-flex items-center justify-center p-3 rounded-full bg-primary/10 text-primary">
-            <MapPin className="h-6 w-6" />
-          </div>
-          <h2 className="text-lg font-semibold">Architectural Foundation Stage</h2>
-          <p className="text-sm text-muted-foreground max-w-xl mx-auto">
-            The core architecture, modular domain boundaries, DTO schemas, authentication lifecycle,
-            and AI / Sensor abstractions are established. Ready for modular feature implementations.
-          </p>
-        </div>
-      </main>
-
-      <footer className="border-t border-border py-4 px-6 text-center text-xs text-muted-foreground">
-        © 2026 Yangiariq Aqua AI. Smart Water-Management Decision Support Platform.
-      </footer>
-
-      {/* Guest Auth Modal trigger */}
+      {/* Global Modals */}
       <AuthModal
         isOpen={authModalOpen}
         onClose={() => setAuthModalOpen(false)}
         initialView={authModalView}
+        lang={lang}
+      />
+
+      <UserProfileModal
+        isOpen={profileModalOpen}
+        onClose={() => setProfileModalOpen(false)}
+        onOpenChangePassword={() => {
+          setProfileModalOpen(false)
+          setChangePasswordModalOpen(true)
+        }}
+        lang={lang}
+      />
+
+      <ChangePasswordModal
+        isOpen={changePasswordModalOpen}
+        onClose={() => setChangePasswordModalOpen(false)}
         lang={lang}
       />
     </div>

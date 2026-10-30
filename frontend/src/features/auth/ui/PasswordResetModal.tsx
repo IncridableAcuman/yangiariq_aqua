@@ -1,7 +1,5 @@
 import React, { useState } from 'react'
-import { Modal } from '@/shared/ui/Modal'
-import { Input } from '@/shared/ui/Input'
-import { Button } from '@/shared/ui/Button'
+import { Modal, Input, Button } from '@/shared/ui'
 import { useAuth } from '../context/AuthContext'
 import { translations, SupportedLanguage } from '@/shared/i18n'
 import { Phone, KeyRound, Lock, Eye, EyeOff, AlertCircle, CheckCircle2, ArrowLeft } from 'lucide-react'

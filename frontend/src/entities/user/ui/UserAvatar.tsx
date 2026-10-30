@@ -1,6 +1,8 @@
 import React from 'react'
 import { UserProfile } from '../types'
+import { Avatar, AvatarFallback } from '@/shared/ui/avatar'
 import { User } from 'lucide-react'
+import { cn } from '@/shared/lib/utils'
 
 interface UserAvatarProps {
   user?: Partial<UserProfile> | null
@@ -21,11 +23,11 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
 
   if (!user) {
     return (
-      <div
-        className={`rounded-full bg-muted flex items-center justify-center text-muted-foreground border border-border ${sizeClasses} ${className}`}
-      >
-        <User className={size === 'sm' ? 'h-4 w-4' : size === 'md' ? 'h-5 w-5' : 'h-7 w-7'} />
-      </div>
+      <Avatar className={cn(sizeClasses, className)}>
+        <AvatarFallback>
+          <User className={size === 'sm' ? 'h-4 w-4' : size === 'md' ? 'h-5 w-5' : 'h-7 w-7'} />
+        </AvatarFallback>
+      </Avatar>
     )
   }
 
@@ -38,7 +40,6 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
       ? user.phoneNumber.slice(-2)
       : 'U'
 
-  // Pick color based on role
   const roleColors = {
     FARMER: 'bg-emerald-600 text-white',
     OPERATOR: 'bg-sky-600 text-white',
@@ -48,11 +49,10 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
   const colorClass = user.role ? roleColors[user.role] : 'bg-primary text-primary-foreground'
 
   return (
-    <div
-      className={`rounded-full flex items-center justify-center font-bold shadow-sm select-none shrink-0 ${sizeClasses} ${colorClass} ${className}`}
-      title={user.fullName || user.phoneNumber}
-    >
-      {initials}
-    </div>
+    <Avatar className={cn(sizeClasses, 'border-2 border-background shadow-xs', className)} title={user.fullName || user.phoneNumber}>
+      <AvatarFallback className={cn('font-bold select-none', colorClass)}>
+        {initials}
+      </AvatarFallback>
+    </Avatar>
   )
 }

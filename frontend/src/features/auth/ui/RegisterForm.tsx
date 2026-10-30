@@ -1,8 +1,7 @@
 import React, { useState } from 'react'
 import { useAuth } from '../context/AuthContext'
 import { translations, SupportedLanguage } from '@/shared/i18n'
-import { Input } from '@/shared/ui/Input'
-import { Button } from '@/shared/ui/Button'
+import { Input, Button } from '@/shared/ui'
 import { User, Phone, Mail, Lock, MapPin, Eye, EyeOff, AlertCircle } from 'lucide-react'
 import { ApiError } from '@/shared/api/client'
 
