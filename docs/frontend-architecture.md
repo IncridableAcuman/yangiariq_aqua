@@ -37,3 +37,22 @@ The application supports three languages:
 - **`en`** (English) - Engineering & international language
 
 User-facing strings are strictly referenced from the typed dictionary in `src/shared/i18n`. Hardcoded strings in TSX elements are prohibited.
+
+---
+
+## 5. Authentication & User Management Integration
+
+The frontend authentication subsystem integrates seamlessly with the backend `com.aquaai.auth` and `com.aquaai.user` modules:
+
+- **State & Context (`src/features/auth/context/AuthContext.tsx`)**:
+  - Provides reactive user authentication state (`user`, `isAuthenticated`, `isLoading`).
+  - Exposes actions: `login`, `register`, `logout`, `updateProfile`, `changePassword`, `requestReset`, `confirmReset`, `refreshUser`.
+- **Token Management & Refresh Token Rotation (`src/shared/api/client.ts` & `src/features/auth/storage.ts`)**:
+  - Automatically attaches `Authorization: Bearer <accessToken>` headers.
+  - Automatically intercepts HTTP 401 responses, initiates a single queued call to `POST /api/v1/auth/refresh`, rotates stored tokens, and retries the original failed request.
+  - Gracefully invalidates sessions and broadcasts `aqua:unauthorized` when sessions expire or token reuse is detected.
+- **Role & Profile Presentation (`src/entities/user`)**:
+  - Role-specific theming for `FARMER` (agri green), `OPERATOR` (hydro blue), and `ADMIN` (purple).
+  - Status badges for `ACTIVE`, `INACTIVE`, and `BLOCKED` accounts.
+  - Personal profile drawer allowing real-time profile editing (`PATCH /api/v1/user/profile`) and credential rotation.
+

@@ -20,6 +20,15 @@ public record UpdateUserProfileRequest(
         String email,
 
         @Size(max = 64, message = "District must not exceed 64 characters")
-        String district
+        String district,
+
+        @Size(max = 128, message = "Organization must not exceed 128 characters")
+        String organization,
+
+        @Size(max = 64, message = "Telegram username must not exceed 64 characters")
+        String telegramUsername,
+
+        @Size(max = 8, message = "Preferred language code must not exceed 8 characters")
+        String preferredLanguage
 ) {
 }

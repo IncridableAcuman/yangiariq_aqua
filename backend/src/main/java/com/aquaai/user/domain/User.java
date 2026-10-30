@@ -54,6 +54,16 @@ public class User extends BaseAuditableEntity {
     @Builder.Default
     private String district = "Yangiariq";
 
+    @Column(name = "organization", length = 128)
+    private String organization;
+
+    @Column(name = "telegram_username", length = 64)
+    private String telegramUsername;
+
+    @Column(name = "preferred_language", length = 8)
+    @Builder.Default
+    private String preferredLanguage = "uz";
+
     public String getFullName() {
         if (fullName != null && !fullName.isBlank()) {
             return fullName;
@@ -68,7 +78,32 @@ public class User extends BaseAuditableEntity {
         return this.status == UserStatus.ACTIVE;
     }
 
+    public boolean isFarmer() {
+        return this.role == UserRole.FARMER;
+    }
+
+    public boolean isOperator() {
+        return this.role == UserRole.OPERATOR;
+    }
+
+    public boolean isAdmin() {
+        return this.role == UserRole.ADMIN;
+    }
+
+    public boolean isActive() {
+        return this.status == UserStatus.ACTIVE;
+    }
+
+    public boolean isBlocked() {
+        return this.status == UserStatus.BLOCKED;
+    }
+
     public void updateProfile(String firstName, String lastName, String email, String district) {
+        updateProfile(firstName, lastName, email, district, this.organization, this.telegramUsername, this.preferredLanguage);
+    }
+
+    public void updateProfile(String firstName, String lastName, String email, String district,
+                              String organization, String telegramUsername, String preferredLanguage) {
         if (firstName != null && !firstName.isBlank()) {
             this.firstName = firstName.trim();
         }
@@ -81,6 +116,39 @@ public class User extends BaseAuditableEntity {
         }
         if (district != null && !district.isBlank()) {
             this.district = district.trim();
+        }
+        if (organization != null) {
+            this.organization = organization.trim();
+        }
+        if (telegramUsername != null) {
+            this.telegramUsername = telegramUsername.trim();
+        }
+        if (preferredLanguage != null && !preferredLanguage.isBlank()) {
+            this.preferredLanguage = preferredLanguage.trim().toLowerCase();
+        }
+    }
+
+    public void deactivate() {
+        this.status = UserStatus.INACTIVE;
+    }
+
+    public void block() {
+        this.status = UserStatus.BLOCKED;
+    }
+
+    public void activate() {
+        this.status = UserStatus.ACTIVE;
+    }
+
+    public void changeStatus(UserStatus newStatus) {
+        if (newStatus != null) {
+            this.status = newStatus;
+        }
+    }
+
+    public void changeRole(UserRole newRole) {
+        if (newRole != null) {
+            this.role = newRole;
         }
     }
 

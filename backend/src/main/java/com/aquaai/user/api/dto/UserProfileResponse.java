@@ -19,7 +19,11 @@ public record UserProfileResponse(
         UserRole role,
         UserStatus status,
         String district,
-        Instant createdAt
+        String organization,
+        String telegramUsername,
+        String preferredLanguage,
+        Instant createdAt,
+        Instant updatedAt
 ) {
     public static UserProfileResponse from(User user) {
         return UserProfileResponse.builder()
@@ -32,7 +36,11 @@ public record UserProfileResponse(
                 .role(user.getRole())
                 .status(user.getStatus())
                 .district(user.getDistrict())
+                .organization(user.getOrganization())
+                .telegramUsername(user.getTelegramUsername())
+                .preferredLanguage(user.getPreferredLanguage())
                 .createdAt(user.getCreatedAt())
+                .updatedAt(user.getUpdatedAt())
                 .build();
     }
 }
