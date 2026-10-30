@@ -1,0 +1,50 @@
+# Version Control Ignores
+
+# Environment & Secrets
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+
+# Operating System Files
+.DS_Store
+Thumbs.db
+
+# IDE & Editor Files
+.idea/
+*.iml
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*.bak
+*~
+
+# Java / Gradle Build Artifacts
+backend/.gradle/
+backend/build/
+backend/bin/
+backend/out/
+!gradle/wrapper/gradle-wrapper.jar
+
+# Node / Vite Build Artifacts
+frontend/node_modules/
+frontend/dist/
+frontend/build/
+frontend/.next/
+frontend/.cache/
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+frontend/pnpm-debug.log*
+
+# Database & Runtime volumes
+.docker-data/
+postgres-data/
+
+# Temporary / Scratch files
+/tmp/
+*.log
