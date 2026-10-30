@@ -27,8 +27,8 @@ spring:
 
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.xml
-    enabled: ${LIQUIBASE_ENABLED:true}
-    drop-first: ${LIQUIBASE_DROP_FIRST:false}
+    enabled: ${SPRING_LIQUIBASE_ENABLED:${LIQUIBASE_ENABLED:true}}
+    drop-first: ${SPRING_LIQUIBASE_DROP_FIRST:${LIQUIBASE_DROP_FIRST:false}}
 
 server:
   port: ${SERVER_PORT:8080}

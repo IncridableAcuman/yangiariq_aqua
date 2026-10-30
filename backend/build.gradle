@@ -74,6 +74,25 @@ tasks.named('test') {
     useJUnitPlatform()
 }
 
+tasks.named('bootRun') {
+    def envFile = rootProject.file('.env')
+    if (!envFile.exists()) {
+        envFile = file('../.env')
+    }
+    if (!envFile.exists()) {
+        envFile = file('.env')
+    }
+    if (envFile.exists()) {
+        envFile.readLines().each { line ->
+            def trimmed = line.trim()
+            if (trimmed && !trimmed.startsWith('#') && trimmed.contains('=')) {
+                def parts = trimmed.split('=', 2)
+                environment parts[0].trim(), parts[1].trim()
+            }
+        }
+    }
+}
+
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
     options.compilerArgs.addAll([
