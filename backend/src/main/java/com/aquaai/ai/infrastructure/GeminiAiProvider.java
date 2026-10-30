@@ -4,7 +4,6 @@ import com.aquaai.ai.domain.AiProvider;
 import com.aquaai.ai.domain.AiRecommendationRequest;
 import com.aquaai.ai.domain.AiRecommendationResult;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
@@ -17,28 +16,22 @@ import java.util.List;
 @ConditionalOnProperty(name = "app.ai.provider", havingValue = "gemini")
 public class GeminiAiProvider implements AiProvider {
 
-    private final String apiKey;
-    private final String model;
+    private final AiProperties aiProperties;
 
-    public GeminiAiProvider(
-            @Value("${app.ai.gemini.api-key:dummy-key}") String apiKey,
-            @Value("${app.ai.gemini.model:gemini-1.5-flash}") String model
-    ) {
-        this.apiKey = apiKey;
-        this.model = model;
+    public GeminiAiProvider(AiProperties aiProperties) {
+        this.aiProperties = aiProperties;
     }
 
     @Override
     public String getProviderName() {
-        return "GEMINI_" + model.toUpperCase();
+        return "GEMINI_" + aiProperties.getGemini().getModel().toUpperCase();
     }
 
     @Override
     public AiRecommendationResult generateIrrigationRecommendation(AiRecommendationRequest request) {
+        String model = aiProperties.getGemini().getModel();
         log.info("Invoking Gemini AI Provider for field {} with model {}", request.fieldId(), model);
 
-        // Architectural foundation: Gemini API client adapter will format prompt and execute API call
-        // Fallback / stub response for foundation verification
         return AiRecommendationResult.builder()
                 .summary("Gemini-generated water allocation for " + request.cropType() + " in Yangiariq")
                 .recommendedWaterVolumeCubicMeters(BigDecimal.valueOf(850.50))

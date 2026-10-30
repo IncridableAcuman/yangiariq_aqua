@@ -10,14 +10,19 @@ spring:
       ddl-auto: create-drop
     show-sql: false
   liquibase:
-    enabled: false
+    enabled: true
+    change-log: classpath:db/changelog/db.changelog-master.xml
 
 app:
   security:
     jwt:
       secret: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970337336763979244226452948404D635166546A576E5A7234753778214125442A
-      expiration-ms: 3600000
-      refresh-expiration-ms: 7200000
+      access-token-expiration-ms: 3600000
+      refresh-token-expiration-ms: 7200000
+  cors:
+    allowed-origins:
+      - http://localhost:3000
+      - http://localhost:5173
   ai:
     provider: mock
   sensor:

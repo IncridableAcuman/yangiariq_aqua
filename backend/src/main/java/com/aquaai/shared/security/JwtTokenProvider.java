@@ -5,7 +5,6 @@ import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -18,22 +17,20 @@ import java.util.UUID;
 public class JwtTokenProvider {
 
     private final SecretKey key;
-    private final long expirationMs;
-    private final long refreshExpirationMs;
+    private final JwtProperties jwtProperties;
 
-    public JwtTokenProvider(
-            @Value("${app.security.jwt.secret:defaultSecretKeyWithAtLeastFiftyTwoCharactersForShaAlgorithmSafety1234567890}") String secret,
-            @Value("${app.security.jwt.expiration-ms:86400000}") long expirationMs,
-            @Value("${app.security.jwt.refresh-expiration-ms:604800000}") long refreshExpirationMs
-    ) {
+    public JwtTokenProvider(JwtProperties jwtProperties) {
+        this.jwtProperties = jwtProperties;
+        String secret = jwtProperties.getSecret();
+        if (secret == null || secret.isBlank()) {
+            throw new IllegalStateException("JWT secret must be configured via app.security.jwt.secret or JWT_SECRET");
+        }
         this.key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
-        this.expirationMs = expirationMs;
-        this.refreshExpirationMs = refreshExpirationMs;
     }
 
     public String generateAccessToken(UUID userId, String username, UserRole role) {
         Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + expirationMs);
+        Date expiryDate = new Date(now.getTime() + jwtProperties.getAccessTokenExpirationMs());
 
         return Jwts.builder()
                 .subject(userId.toString())
@@ -47,7 +44,7 @@ public class JwtTokenProvider {
 
     public String generateRefreshToken(UUID userId) {
         Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + refreshExpirationMs);
+        Date expiryDate = new Date(now.getTime() + jwtProperties.getRefreshTokenExpirationMs());
 
         return Jwts.builder()
                 .subject(userId.toString())

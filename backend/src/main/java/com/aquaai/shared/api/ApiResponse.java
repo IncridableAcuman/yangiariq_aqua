@@ -18,6 +18,12 @@ public class ApiResponse<T> {
     private final Instant timestamp = Instant.now();
     private final String correlationId;
 
+    public static ApiResponse<Void> ok() {
+        return ApiResponse.<Void>builder()
+                .success(true)
+                .build();
+    }
+
     public static <T> ApiResponse<T> ok(T data) {
         return ApiResponse.<T>builder()
                 .success(true)

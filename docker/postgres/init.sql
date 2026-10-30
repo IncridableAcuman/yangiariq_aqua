@@ -1,2 +1,2 @@
--- Database initialization script
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+-- Yangiariq Aqua AI - Database initialization script
+-- PostgreSQL 16 natively supports gen_random_uuid() without external extensions.
