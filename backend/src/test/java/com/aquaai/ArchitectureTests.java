@@ -112,4 +112,32 @@ class ArchitectureTests {
                 .should().haveSimpleNameEndingWith("Controller")
                 .check(importedClasses);
     }
+
+    @Test
+    @DisplayName("10. Field domain must not depend on JPA or persistence annotations")
+    void fieldDomainMustNotDependOnJpa() {
+        noClasses()
+                .that().resideInAPackage("..field.domain..")
+                .should().dependOnClassesThat().resideInAnyPackage("jakarta.persistence..", "org.springframework.data..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("11. Field domain must not depend on Spring MVC or PostgreSQL vendor classes")
+    void fieldDomainMustNotDependOnWebOrPostgres() {
+        noClasses()
+                .that().resideInAPackage("..field.domain..")
+                .should().dependOnClassesThat().resideInAnyPackage("org.springframework.web..", "org.postgresql..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("12. Field persistence entities must reside in field.infrastructure.persistence")
+    void fieldPersistenceEntitiesMustResideInInfrastructurePersistence() {
+        classes()
+                .that().resideInAPackage("..field..")
+                .and().areAnnotatedWith(Entity.class)
+                .should().resideInAPackage("..field.infrastructure.persistence..")
+                .check(importedClasses);
+    }
 }
