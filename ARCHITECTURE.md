@@ -177,3 +177,19 @@ frontend/src/
 - **Client State**: Minimal local state (React hooks / Zustand where needed for non-server UI state).
 - **Forms**: React Hook Form validated with **Zod** schemas.
 - **Localization**: Native dictionary structure supporting Uzbek (`uz`), Russian (`ru`), and English (`en`).
+
+---
+
+## 9. Domain Documentation References
+
+- **Field Domain & Parcel Architecture**: [`docs/field-domain.md`](file:///home/izzatbek/Desktop/agronexsus/docs/field-domain.md)
+- **Field Authorization & Security Blueprint**: [`docs/field-security.md`](file:///home/izzatbek/Desktop/agronexsus/docs/field-security.md)
+- **Field Frontend & UI Architecture**: [`docs/field-frontend.md`](file:///home/izzatbek/Desktop/agronexsus/docs/field-frontend.md)
+- **Field GIS & Map Visualization**: [`docs/field-gis.md`](file:///home/izzatbek/Desktop/agronexsus/docs/field-gis.md)
+- **Frontend Architecture & Design Guidelines**: [`docs/frontend-architecture.md`](file:///home/izzatbek/Desktop/agronexsus/docs/frontend-architecture.md)
+- **Module Boundaries & Ownership**: [`docs/module-boundaries.md`](file:///home/izzatbek/Desktop/agronexsus/docs/module-boundaries.md)
+- **Database Strategy & Migrations**: [`docs/database-strategy.md`](file:///home/izzatbek/Desktop/agronexsus/docs/database-strategy.md)
+- **Authentication & Security Architecture**: [`docs/authentication.md`](file:///home/izzatbek/Desktop/agronexsus/docs/authentication.md)
+- **AI Abstraction Strategy**: [`docs/ai-abstraction.md`](file:///home/izzatbek/Desktop/agronexsus/docs/ai-abstraction.md)
+- **Sensor Telemetry & Simulation**: [`docs/sensor-abstraction.md`](file:///home/izzatbek/Desktop/agronexsus/docs/sensor-abstraction.md)
+

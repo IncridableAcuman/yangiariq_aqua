@@ -133,7 +133,11 @@ public class FieldJpaMapper {
             return null;
         }
         try {
-            return objectMapper.readValue(boundaryJson, FieldBoundary.class);
+            com.fasterxml.jackson.databind.JsonNode node = objectMapper.readTree(boundaryJson);
+            if (node.isTextual()) {
+                return objectMapper.readValue(node.asText(), FieldBoundary.class);
+            }
+            return objectMapper.treeToValue(node, FieldBoundary.class);
         } catch (JsonProcessingException e) {
             log.error("Failed to deserialize field boundary from JSON: {}", boundaryJson, e);
             throw new BusinessRuleException("Invalid field boundary JSON format stored in database");

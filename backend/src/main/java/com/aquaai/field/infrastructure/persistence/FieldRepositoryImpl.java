@@ -1,13 +1,22 @@
 package com.aquaai.field.infrastructure.persistence;
 
+import com.aquaai.field.domain.model.CropType;
 import com.aquaai.field.domain.model.Field;
+import com.aquaai.field.domain.model.FieldPage;
 import com.aquaai.field.domain.model.FieldStatus;
+import com.aquaai.field.domain.model.IrrigationMethod;
+import com.aquaai.field.domain.model.SoilType;
 import com.aquaai.field.domain.repository.FieldRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -17,6 +26,14 @@ import java.util.UUID;
 @Repository
 @RequiredArgsConstructor
 public class FieldRepositoryImpl implements FieldRepository {
+
+    private static final Set<String> ALLOWED_SORT_PROPERTIES = Set.of(
+            "createdAt",
+            "updatedAt",
+            "name",
+            "areaHectares",
+            "status"
+    );
 
     private final SpringDataFieldRepository springDataFieldRepository;
     private final FieldJpaMapper mapper;
@@ -50,6 +67,14 @@ public class FieldRepositoryImpl implements FieldRepository {
             return Optional.empty();
         }
         return springDataFieldRepository.findById(id).map(mapper::toDomain);
+    }
+
+    @Override
+    public Optional<Field> findByIdAndOwnerId(UUID id, UUID ownerId) {
+        if (id == null || ownerId == null) {
+            return Optional.empty();
+        }
+        return springDataFieldRepository.findByIdAndOwnerId(id, ownerId).map(mapper::toDomain);
     }
 
     @Override
@@ -120,6 +145,48 @@ public class FieldRepositoryImpl implements FieldRepository {
             return 0;
         }
         return springDataFieldRepository.countByStatus(status);
+    }
+
+    @Override
+    public FieldPage findWithFilters(
+            UUID ownerId,
+            FieldStatus status,
+            CropType cropType,
+            SoilType soilType,
+            IrrigationMethod irrigationMethod,
+            int page,
+            int size,
+            String sortBy,
+            String sortDirection
+    ) {
+        int safePage = Math.max(page, 0);
+        int safeSize = (size <= 0) ? 20 : Math.min(size, 100);
+
+        String safeSortBy = (sortBy != null && ALLOWED_SORT_PROPERTIES.contains(sortBy)) ? sortBy : "createdAt";
+        Sort.Direction direction = "asc".equalsIgnoreCase(sortDirection) ? Sort.Direction.ASC : Sort.Direction.DESC;
+
+        Pageable pageable = PageRequest.of(safePage, safeSize, Sort.by(direction, safeSortBy));
+
+        Page<FieldJpaEntity> pageResult = springDataFieldRepository.findWithFilters(
+                ownerId,
+                status,
+                cropType,
+                soilType,
+                irrigationMethod,
+                pageable
+        );
+
+        List<Field> domainFields = pageResult.getContent().stream()
+                .map(mapper::toDomain)
+                .toList();
+
+        return new FieldPage(
+                domainFields,
+                pageResult.getNumber(),
+                pageResult.getSize(),
+                pageResult.getTotalElements(),
+                pageResult.getTotalPages()
+        );
     }
 
     @Override

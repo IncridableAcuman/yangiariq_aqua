@@ -27,6 +27,11 @@ public class SpringSecurityCurrentUserProvider implements CurrentUserProvider {
     }
 
     @Override
+    public UserRole getRequiredUserRole() {
+        return SecurityContextHelper.getCurrentUserRole();
+    }
+
+    @Override
     public boolean isAuthenticated() {
         return SecurityContextHelper.getCurrentPrincipal().isPresent();
     }

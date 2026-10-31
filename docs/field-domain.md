@@ -258,3 +258,153 @@ ON fields(owner_id, LOWER(name)) WHERE status = 'ACTIVE';
 - `fk_fields_owner` links `fields.owner_id` to `users.id`.
 - `ON DELETE CASCADE`: If a user account is deleted, their associated field parcel records are removed automatically.
 - No redundant user details (`first_name`, `phone_number`) are duplicated into `fields`.
+
+---
+
+## 10. Field Application Services & REST API Specification
+
+### 10.1 Application Use Cases
+
+The application layer encapsulates domain workflows into cohesive, single-responsibility use cases:
+
+| Use Case | Responsibility | Primary Security Rule |
+| :--- | :--- | :--- |
+| `CreateFieldUseCase` | Validates input, resolves authenticated farmer from `CurrentUserProvider`, checks active name uniqueness, persists parcel. | Only `FARMER` role permitted. Request body `ownerId` is strictly ignored/prohibited. |
+| `GetFieldUseCase` | Retrieves field details by UUID. | Enforces ownership: `FARMER` can access only owned parcels; `OPERATOR` and `ADMIN` have district-wide read access. Non-owners receive 403 Forbidden. |
+| `ListMyFieldsUseCase` | Paginated listing with multi-attribute filtering and secure sort validation. | For `FARMER`, query is strictly forced to `ownerId = currentUserId`. For `OPERATOR` / `ADMIN`, permits district-wide listing or filtering by specific owner. |
+| `UpdateFieldUseCase` | Applies partial updates using PATCH semantics. Preserves unprovided attributes. | Direct owner or `ADMIN` only. Prevents changing `id`, `ownerId`, `status`, or audit timestamps. Checks active name conflicts on rename. |
+| `DeactivateFieldUseCase` | Executes domain lifecycle transition `ACTIVE -> INACTIVE`. | Direct owner or `ADMIN` only. No physical deletion; preserves historical records. |
+| `ReactivateFieldUseCase` | Restores parcel lifecycle transition `INACTIVE -> ACTIVE`. | Direct owner or `ADMIN` only. Validates active name uniqueness before restoring status. |
+
+---
+
+### 10.2 REST Endpoints Specification
+
+All endpoints are exposed under `/api/v1/fields` and require `Authorization: Bearer <JWT>`.
+
+#### 1. Register Agricultural Field Parcel
+- **HTTP Method**: `POST /api/v1/fields`
+- **Role Requirement**: `FARMER` (`@PreAuthorize("hasRole('FARMER')")`)
+- **Request Body**: `CreateFieldRequest`
+  ```json
+  {
+    "name": "Paxtakor Maydoni 1",
+    "description": "Main cotton parcel adjacent to branch 3",
+    "areaHectares": 12.5000,
+    "cropType": "COTTON",
+    "soilType": "LOAM",
+    "irrigationMethod": "FURROW",
+    "latitude": 41.450123,
+    "longitude": 60.590456,
+    "boundary": {
+      "type": "Polygon",
+      "coordinates": [
+        [
+          [60.5900, 41.4500],
+          [60.5950, 41.4500],
+          [60.5950, 41.4550],
+          [60.5900, 41.4550],
+          [60.5900, 41.4500]
+        ]
+      ]
+    }
+  }
+  ```
+- **Responses**:
+  - `201 Created`: Field parcel registered; returns `ApiResponse<FieldResponse>`.
+  - `400 Bad Request`: Validation failure (blank name, non-positive area, invalid lat/lon).
+  - `401 Unauthorized`: Missing or invalid JWT.
+  - `403 Forbidden`: Authenticated user is not a farmer.
+  - `409 Conflict`: Farmer already has an `ACTIVE` field with this name.
+
+#### 2. Get Field Parcel By ID
+- **HTTP Method**: `GET /api/v1/fields/{fieldId}`
+- **Responses**:
+  - `200 OK`: `ApiResponse<FieldResponse>`
+  - `401 Unauthorized`: Missing or invalid JWT.
+  - `403 Forbidden`: Authenticated user does not own the requested field (IDOR protection).
+  - `404 Not Found`: Field does not exist.
+
+#### 3. List Fields with Filtering and Pagination
+- **HTTP Method**: `GET /api/v1/fields`
+- **Query Parameters**:
+  - `status`: Filter by `ACTIVE` or `INACTIVE`.
+  - `cropType`: Filter by `COTTON`, `WHEAT`, `RICE`, `MAIZE`, `VEGETABLE`, `MELON`, `OTHER`.
+  - `soilType`: Filter by `SANDY`, `LOAM`, `CLAY`, `SANDY_LOAM`, `CLAY_LOAM`, `OTHER`.
+  - `irrigationMethod`: Filter by `CANAL`, `DITCH`, `FURROW`, `DRIP`, `SPRINKLER`, `OTHER`.
+  - `ownerId`: Filter by owner UUID (evaluated only for `OPERATOR` and `ADMIN`; ignored for `FARMER`).
+  - `page`: Zero-based page index (default: `0`).
+  - `size`: Page size limit (default: `20`, max: `100`).
+  - `sort`: Sort parameter formatted as `property,asc|desc` (e.g. `createdAt,desc`, `name,asc`).
+  - `sortBy`: Alternative sort property (default: `createdAt`).
+  - `direction`: Alternative sort direction `asc` or `desc` (default: `desc`).
+- **Whitelisted Sort Properties**: `createdAt`, `updatedAt`, `name`, `areaHectares`, `status`. Unlisted properties fall back safely to `createdAt`.
+- **Responses**:
+  - `200 OK`: `ApiResponse<PageResponse<FieldResponse>>` with content, pagination metadata (`page`, `size`, `totalElements`, `totalPages`, `first`, `last`).
+
+#### 4. Update Field Parcel (PATCH Semantics)
+- **HTTP Method**: `PATCH /api/v1/fields/{fieldId}`
+- **Request Body**: `UpdateFieldRequest` (any omitted field retains existing value)
+  ```json
+  {
+    "name": "Paxtakor Maydoni 1 Yangilangan",
+    "cropType": "RICE",
+    "areaHectares": 14.0000
+  }
+  ```
+- **Responses**:
+  - `200 OK`: `ApiResponse<FieldResponse>`
+  - `400 Bad Request`: Validation failure.
+  - `403 Forbidden`: Non-owner attempting update (IDOR prevention) or operator without admin privileges.
+  - `404 Not Found`: Field not found.
+  - `409 Conflict`: Renaming conflicts with another active field owned by same farmer.
+
+#### 5. Deactivate Field Parcel
+- **HTTP Method**: `DELETE /api/v1/fields/{fieldId}`
+- **Lifecycle Action**: Transitions parcel state `ACTIVE -> INACTIVE`. Preserves historical water records and sensor telemetry.
+- **Responses**:
+  - `200 OK`: `ApiResponse<Void>`
+  - `403 Forbidden`: Non-owner attempting deactivation.
+  - `404 Not Found`: Field not found.
+
+#### 6. Reactivate Field Parcel
+- **HTTP Method**: `PATCH /api/v1/fields/{fieldId}/activate`
+- **Lifecycle Action**: Transitions parcel state `INACTIVE -> ACTIVE`.
+- **Responses**:
+  - `200 OK`: `ApiResponse<FieldResponse>`
+  - `403 Forbidden`: Non-owner attempting reactivation.
+  - `404 Not Found`: Field not found.
+  - `409 Conflict`: Farmer already registered another active field with this name while this field was inactive.
+
+---
+
+### 10.3 Security & IDOR Defense Matrix
+
+| Actor | Action | Target Resource | Authorization Result |
+| :--- | :--- | :--- | :--- |
+| **Anonymous** | Any Field endpoint | Any Field | `401 Unauthorized` |
+| **FARMER A** | `POST /api/v1/fields` | New Field | `201 Created` (`ownerId` = Farmer A) |
+| **FARMER A** | `GET /api/v1/fields/{idA}` | Own Field A | `200 OK` |
+| **FARMER B** | `GET /api/v1/fields/{idA}` | Farmer A's Field | `404 Not Found` (`RESOURCE_NOT_FOUND` - Anti-enumeration) |
+| **FARMER B** | `PATCH /api/v1/fields/{idA}` | Farmer A's Field | `404 Not Found` (`RESOURCE_NOT_FOUND` - Anti-enumeration) |
+| **FARMER B** | `DELETE /api/v1/fields/{idA}` | Farmer A's Field | `404 Not Found` (`RESOURCE_NOT_FOUND` - Anti-enumeration) |
+| **FARMER B** | `GET /api/v1/fields?ownerId={idA}` | Farmer A's Fields | Result forced to Farmer B's own fields |
+| **OPERATOR** | `POST /api/v1/fields` | New Field | `403 Forbidden` (`ACCESS_DENIED`) |
+| **OPERATOR** | `GET /api/v1/fields/{idA}` | District Field A | `200 OK` (District operational monitoring) |
+| **OPERATOR** | `GET /api/v1/fields` | District Fields | `200 OK` (District-wide listing) |
+| **OPERATOR** | `PATCH /api/v1/fields/{idA}` | District Field A | `403 Forbidden` (Farmer parcel ownership protected) |
+| **ADMIN** | `GET /api/v1/fields/{idA}` | Any Field | `200 OK` |
+| **ADMIN** | `PATCH /api/v1/fields/{idA}` | Any Field | `200 OK` (Administrative override permitted) |
+| **ADMIN** | `DELETE /api/v1/fields/{idA}` | Any Field | `200 OK` |
+
+For detailed security threat model, query-level ownership architecture, and testing matrices, consult [`docs/field-security.md`](file:///home/izzatbek/Desktop/agronexsus/docs/field-security.md).
+
+---
+
+### 10.4 DTO Architecture
+
+- `CreateFieldRequest`: Input contract with Bean Validation annotations (`@NotBlank`, `@Positive`, `@DecimalMin`, `@DecimalMax`, `@Valid`).
+- `UpdateFieldRequest`: Contract for PATCH operations; omitted fields preserve current entity values.
+- `FieldResponse`: Comprehensive representation including centroid location and GeoJSON boundary.
+- `FieldSummaryResponse`: Lightweight compact projection without boundary payload, optimized for dropdowns and tabular views.
+

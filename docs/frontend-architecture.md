@@ -56,3 +56,31 @@ The frontend authentication subsystem integrates seamlessly with the backend `co
   - Status badges for `ACTIVE`, `INACTIVE`, and `BLOCKED` accounts.
   - Personal profile drawer allowing real-time profile editing (`PATCH /api/v1/user/profile`) and credential rotation.
 
+---
+
+## 6. Field Management Subsystem (`src/features/field` & `src/entities/field`)
+
+Developed in Milestone 05.4, the Field Management UI provides complete CRUD, lifecycle management, and monitoring for agricultural parcels:
+- **Architecture & Technical Blueprint**: [`docs/field-frontend.md`](file:///home/izzatbek/Desktop/agronexsus/docs/field-frontend.md)
+- **Entities (`src/entities/field`)**: Strict TypeScript contracts matching backend REST API, `FieldStatusBadge`, and typed API service using `apiClient`.
+- **Features (`src/features/field`)**:
+  - `fieldFormSchema`: Zod schema validating parcel invariants (Uzbekistan coordinates, positive hectares, enum types).
+  - `useFieldQueries`: TanStack Query hooks with targeted cache invalidation.
+  - Role-aware components: `FieldToolbar`, `FieldFilters`, `FieldTable` (desktop), `FieldCard` (mobile), `FieldPagination`, `FieldFormDialog`, `FieldDetailsModal`, `FieldDeactivateDialog`, `FieldReactivateDialog`, `FieldEmptyState`.
+- **Page (`src/pages/fields/FieldsPage.tsx`)**: Responsive orchestrator handling filtering, local search, toasts, and modal workflows.
+- **Security Invariants**: `ownerId` is never sent in request bodies (server-derived); mutation buttons are hidden for `OPERATOR` role; soft deactivation explains data retention.
+
+---
+
+## 7. GIS & Map Field Visualization Subsystem (`src/features/field/gis`)
+
+Developed in Milestone 05.5, the GIS subsystem provides interactive mapping, centroid coordinate picking, and GeoJSON boundary polygon editing:
+- **Technical Blueprint**: [`docs/field-gis.md`](file:///home/izzatbek/Desktop/agronexsus/docs/field-gis.md)
+- **Library**: Native Leaflet with OpenStreetMap tiles. No external token or API key requirements.
+- **Components**:
+  - `FieldMap`: Interactive map viewer embedded inside `FieldDetailsModal`.
+  - `FieldLocationPickerModal`: Map click & drag-to-set centroid coordinates.
+  - `FieldBoundaryEditorModal`: Interactive polygon perimeter drawing and vertex handle dragging.
+- **RFC 7946 GeoJSON Standard**: Strict `[longitude, latitude]` order enforcement and automatic ring closure.
+- **Validation**: Strict boundary checks against Uzbekistan bounds (`37.0 - 45.6°N`, `56.0 - 73.2°E`).
+

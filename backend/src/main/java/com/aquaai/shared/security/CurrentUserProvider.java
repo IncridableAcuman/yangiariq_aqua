@@ -15,5 +15,7 @@ public interface CurrentUserProvider {
 
     Optional<UserRole> getCurrentUserRole();
 
+    UserRole getRequiredUserRole();
+
     boolean isAuthenticated();
 }

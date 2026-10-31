@@ -24,6 +24,50 @@ public class FieldOwnershipChecker {
     private final FieldRepository fieldRepository;
 
     /**
+     * Retrieves the field aggregate for read operations, enforcing query-level ownership for FARMERs
+     * while supporting district-wide operational monitoring for OPERATOR and system-wide access for ADMIN.
+     * <p>
+     * For FARMERs, non-owned fields produce ResourceNotFoundException (404 Not Found),
+     * preventing resource enumeration and existence discovery.
+     */
+    public Field getFieldForRead(UUID fieldId, UUID currentUserId, UserRole currentRole) {
+        if (fieldId == null) {
+            throw new ResourceNotFoundException("Field", "null");
+        }
+        if (currentRole == UserRole.ADMIN || currentRole == UserRole.OPERATOR) {
+            return fieldRepository.findById(fieldId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Field", fieldId));
+        }
+        // FARMER: Query-level ownership prevents field enumeration attacks
+        return fieldRepository.findByIdAndOwnerId(fieldId, currentUserId)
+                .orElseThrow(() -> new ResourceNotFoundException("Field", fieldId));
+    }
+
+    /**
+     * Retrieves the field aggregate for mutating operations (UPDATE, DEACTIVATE, REACTIVATE).
+     * <p>
+     * - ADMIN: Permitted to modify any parcel.
+     * - OPERATOR: Strictly rejected with UnauthorizedOperationException (403 Forbidden).
+     * - FARMER: Enforces query-level ownership; non-owned fields produce ResourceNotFoundException (404 Not Found).
+     */
+    public Field getFieldForMutation(UUID fieldId, UUID currentUserId, UserRole currentRole) {
+        if (fieldId == null) {
+            throw new ResourceNotFoundException("Field", "null");
+        }
+        if (currentRole == UserRole.ADMIN) {
+            return fieldRepository.findById(fieldId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Field", fieldId));
+        }
+        if (currentRole == UserRole.OPERATOR) {
+            log.warn("Operator {} attempted unauthorized parcel mutation on field {}", currentUserId, fieldId);
+            throw new UnauthorizedOperationException("Operators have read-only district monitoring access and cannot modify or deactivate field parcels");
+        }
+        // FARMER: Query-level ownership prevents field enumeration attacks
+        return fieldRepository.findByIdAndOwnerId(fieldId, currentUserId)
+                .orElseThrow(() -> new ResourceNotFoundException("Field", fieldId));
+    }
+
+    /**
      * Verifies that the specified user is the direct owner of the field.
      *
      * @param fieldId Field identifier

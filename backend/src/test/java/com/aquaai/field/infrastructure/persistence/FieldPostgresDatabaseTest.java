@@ -192,4 +192,60 @@ class FieldPostgresDatabaseTest {
         // ON DELETE CASCADE removes field in PostgreSQL
         assertThat(fieldRepository.findById(saved.getId())).isEmpty();
     }
+
+    @Test
+    @DisplayName("PostgreSQL: Query-level ownership findByIdAndOwnerId strictly isolates parcels in PostgreSQL")
+    void shouldEnforceQueryLevelOwnershipInPostgres() {
+        String uniqueSuffix = UUID.randomUUID().toString().substring(0, 8);
+        User secondFarmer = userRepository.save(User.builder()
+                .firstName("Second")
+                .lastName("Farmer")
+                .fullName("Second Farmer")
+                .phoneNumber("+99893" + uniqueSuffix)
+                .email("second." + uniqueSuffix + "@yangiariq.uz")
+                .passwordHash("$2a$10$validPasswordHashForPgTesting123456789")
+                .role(UserRole.FARMER)
+                .status(UserStatus.ACTIVE)
+                .district("Yangiariq")
+                .build());
+
+        Field fieldA = fieldRepository.save(Field.create(
+                postgresFarmer.getId(),
+                "Farmer A PG Field",
+                null,
+                new BigDecimal("10.0"),
+                CropType.COTTON,
+                SoilType.LOAM,
+                IrrigationMethod.CANAL,
+                null,
+                null
+        ));
+
+        Field fieldB = fieldRepository.save(Field.create(
+                secondFarmer.getId(),
+                "Farmer B PG Field",
+                null,
+                new BigDecimal("12.0"),
+                CropType.WHEAT,
+                SoilType.SANDY,
+                IrrigationMethod.DRIP,
+                null,
+                null
+        ));
+
+        entityManager.flush();
+        entityManager.clear();
+
+        // 1. Farmer A queries own Field A -> Found
+        assertThat(fieldRepository.findByIdAndOwnerId(fieldA.getId(), postgresFarmer.getId())).isPresent();
+
+        // 2. Farmer A queries Field B -> Empty (anti-enumeration in PostgreSQL)
+        assertThat(fieldRepository.findByIdAndOwnerId(fieldB.getId(), postgresFarmer.getId())).isEmpty();
+
+        // 3. Farmer B queries own Field B -> Found
+        assertThat(fieldRepository.findByIdAndOwnerId(fieldB.getId(), secondFarmer.getId())).isPresent();
+
+        // 4. Farmer B queries Field A -> Empty (anti-enumeration in PostgreSQL)
+        assertThat(fieldRepository.findByIdAndOwnerId(fieldA.getId(), secondFarmer.getId())).isEmpty();
+    }
 }

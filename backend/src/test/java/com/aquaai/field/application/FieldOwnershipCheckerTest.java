@@ -122,4 +122,74 @@ class FieldOwnershipCheckerTest {
         assertThat(ownershipChecker.isOwner(null, ownerId)).isFalse();
         assertThat(ownershipChecker.isOwner(fieldId, null)).isFalse();
     }
+
+    @Test
+    @DisplayName("getFieldForRead: Farmer retrieves own field via query-level ownership")
+    void shouldGetFieldForReadAsFarmerOwner() {
+        when(fieldRepository.findByIdAndOwnerId(fieldId, ownerId)).thenReturn(Optional.of(testField));
+
+        Field result = ownershipChecker.getFieldForRead(fieldId, ownerId, UserRole.FARMER);
+        assertThat(result).isNotNull();
+        assertThat(result.getName()).isEqualTo("Field 1");
+    }
+
+    @Test
+    @DisplayName("getFieldForRead: Farmer requesting non-owned field throws ResourceNotFoundException (anti-enumeration)")
+    void shouldThrowNotFoundWhenFarmerReadsNonOwnedField() {
+        when(fieldRepository.findByIdAndOwnerId(fieldId, otherUserId)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> ownershipChecker.getFieldForRead(fieldId, otherUserId, UserRole.FARMER))
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessageContaining("Field not found");
+    }
+
+    @Test
+    @DisplayName("getFieldForRead: Operator and Admin read district field via findById")
+    void shouldAllowOperatorAndAdminRead() {
+        when(fieldRepository.findById(fieldId)).thenReturn(Optional.of(testField));
+
+        Field operatorResult = ownershipChecker.getFieldForRead(fieldId, otherUserId, UserRole.OPERATOR);
+        assertThat(operatorResult).isNotNull();
+
+        Field adminResult = ownershipChecker.getFieldForRead(fieldId, otherUserId, UserRole.ADMIN);
+        assertThat(adminResult).isNotNull();
+    }
+
+    @Test
+    @DisplayName("getFieldForMutation: Farmer mutates own field successfully")
+    void shouldGetFieldForMutationAsFarmerOwner() {
+        when(fieldRepository.findByIdAndOwnerId(fieldId, ownerId)).thenReturn(Optional.of(testField));
+
+        Field result = ownershipChecker.getFieldForMutation(fieldId, ownerId, UserRole.FARMER);
+        assertThat(result).isNotNull();
+        assertThat(result.getName()).isEqualTo("Field 1");
+    }
+
+    @Test
+    @DisplayName("getFieldForMutation: Farmer attempting mutation on non-owned field throws ResourceNotFoundException")
+    void shouldThrowNotFoundWhenFarmerMutatesNonOwnedField() {
+        when(fieldRepository.findByIdAndOwnerId(fieldId, otherUserId)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> ownershipChecker.getFieldForMutation(fieldId, otherUserId, UserRole.FARMER))
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessageContaining("Field not found");
+    }
+
+    @Test
+    @DisplayName("getFieldForMutation: Operator is strictly forbidden from mutating field parcels")
+    void shouldForbidOperatorFromMutatingField() {
+        assertThatThrownBy(() -> ownershipChecker.getFieldForMutation(fieldId, otherUserId, UserRole.OPERATOR))
+                .isInstanceOf(UnauthorizedOperationException.class)
+                .hasMessageContaining("Operators have read-only district monitoring access");
+    }
+
+    @Test
+    @DisplayName("getFieldForMutation: Admin is permitted to mutate field parcels")
+    void shouldAllowAdminToMutateField() {
+        when(fieldRepository.findById(fieldId)).thenReturn(Optional.of(testField));
+
+        Field result = ownershipChecker.getFieldForMutation(fieldId, otherUserId, UserRole.ADMIN);
+        assertThat(result).isNotNull();
+        assertThat(result.getName()).isEqualTo("Field 1");
+    }
 }

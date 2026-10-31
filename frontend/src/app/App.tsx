@@ -1,6 +1,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { useState, useEffect } from 'react'
 import { SupportedLanguage } from '@/shared/i18n'
+import { ToastProvider } from '@/shared/ui'
 import { AuthProvider, useAuth } from '@/features/auth/context/AuthContext'
 import { Header } from '@/widgets/header'
 import { Sidebar, MobileSidebar, NavSection } from '@/widgets/sidebar'
@@ -216,7 +217,9 @@ export function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <AppContent />
+        <ToastProvider>
+          <AppContent />
+        </ToastProvider>
       </AuthProvider>
     </QueryClientProvider>
   )
