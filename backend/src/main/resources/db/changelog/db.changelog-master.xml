@@ -9,5 +9,7 @@
     <include file="db/changelog/changes/002-enhance-users-and-auth-tables.sql"/>
     <include file="db/changelog/changes/003-enhance-user-profile-fields.sql"/>
     <include file="db/changelog/changes/004-create-fields-table.sql"/>
+    <include file="db/changelog/changes/005-create-water-domain-tables.sql"/>
+    <include file="db/changelog/changes/006-add-water-consumption-indexes.sql"/>
 
 </databaseChangeLog>

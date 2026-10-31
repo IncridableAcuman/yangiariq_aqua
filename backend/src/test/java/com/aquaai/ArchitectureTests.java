@@ -140,4 +140,68 @@ class ArchitectureTests {
                 .should().resideInAPackage("..field.infrastructure.persistence..")
                 .check(importedClasses);
     }
+
+    @Test
+    @DisplayName("13. Water domain must not depend on JPA or persistence annotations")
+    void waterDomainMustNotDependOnJpa() {
+        noClasses()
+                .that().resideInAPackage("..water.domain..")
+                .should().dependOnClassesThat().resideInAnyPackage("jakarta.persistence..", "org.springframework.data..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("14. Water domain must not depend on Spring MVC or PostgreSQL vendor classes")
+    void waterDomainMustNotDependOnWebOrPostgres() {
+        noClasses()
+                .that().resideInAPackage("..water.domain..")
+                .should().dependOnClassesThat().resideInAnyPackage("org.springframework.web..", "org.postgresql..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("15. Water persistence entities must reside in water.infrastructure.persistence")
+    void waterPersistenceEntitiesMustResideInInfrastructurePersistence() {
+        classes()
+                .that().resideInAPackage("..water..")
+                .and().areAnnotatedWith(Entity.class)
+                .should().resideInAPackage("..water.infrastructure.persistence..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("16. Water domain must not depend on other business domain modules directly")
+    void waterDomainMustNotDependOnOtherModules() {
+        noClasses()
+                .that().resideInAPackage("..water.domain..")
+                .should().dependOnClassesThat().resideInAnyPackage("..field..", "..user..", "..auth..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("17. Water module must not depend on AI module")
+    void waterMustNotDependOnAi() {
+        noClasses()
+                .that().resideInAPackage("..water..")
+                .should().dependOnClassesThat().resideInAPackage("..ai..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("18. Water module must not depend on Sensor module")
+    void waterMustNotDependOnSensor() {
+        noClasses()
+                .that().resideInAPackage("..water..")
+                .should().dependOnClassesThat().resideInAPackage("..sensor..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("19. Water domain must not depend on Spring framework classes")
+    void waterDomainMustNotDependOnSpring() {
+        noClasses()
+                .that().resideInAPackage("..water.domain..")
+                .should().dependOnClassesThat().resideInAPackage("org.springframework..")
+                .check(importedClasses);
+    }
 }

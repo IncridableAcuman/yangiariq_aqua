@@ -180,8 +180,38 @@ frontend/src/
 
 ---
 
-## 9. Domain Documentation References
+## 9. Water Management & Irrigation Domain
 
+Following the user/auth and field management milestones, the platform establishes the **Water Management & Irrigation (`com.aquaai.water`)** domain context:
+
+```text
+Field
+  │
+  ├── WaterAllocation (Linked to WaterSource: Canal, Reservoir, Well)
+  │
+  └── IrrigationPlan (Scheduled water volume & method)
+           │
+           └── IrrigationEvent (Real executed delivery & actual consumption m³)
+```
+
+### Planned vs Actual Accounting & Future Capabilities
+- **Domain & Database Foundation (Milestone 06.1)**: Robust pure domain models, invariants, status lifecycles, and PostgreSQL persistence capturing allocated quotas (`WaterAllocation`), planned irrigation schedules (`IrrigationPlan`), and recorded operational deliveries (`IrrigationEvent`).
+- **Application Services & REST API (Milestone 06.2)**: Production-ready clean architecture REST APIs (`/api/v1/water-sources`, `/api/v1/water-allocations`, `/api/v1/irrigation-plans`, `/api/v1/irrigation-events`), IDOR protection with anti-enumeration (404), cross-aggregate invariant enforcement (422), pagination, whitelist sorting, and OpenAPI 3 contracts.
+- **Water Rules, Consumption & Efficiency (Milestone 06.3)**: Real-time volumetric consumption accounting, non-negative remaining quota clamping, over-consumption detection and excess volume tracking, planned vs actual variance ratios, parcel periodic water summaries, and zero N+1 database aggregations.
+- **Water Frontend UI: Consumption, Quotas & Variance Dashboards (Milestone 06.4)**: Production-ready FSD Water operations dashboard (`frontend/src/entities/water`, `frontend/src/features/water`, `frontend/src/pages/irrigation/IrrigationPage.tsx`), integrating TanStack Query, Zod form validations, clamped progress bars, over-consumption alert banners, planned vs actual variance visualizations, field periodic summaries, regional water source catalog with RBAC, and full i18n (`uz`, `ru`, `en`).
+- **Future Integration (Upcoming Milestones)**:
+  - Telemetry flow meters / ultrasonic sensors feeding `IrrigationEvent.actualVolumeM3`.
+  - Quota consumption monitoring and over-allocation alert mechanisms.
+  - AI advisory proposing optimal `IrrigationPlan` candidates tailored to soil water capacity and weather conditions.
+
+---
+
+## 10. Domain Documentation References
+
+- **Water Management UI & Dashboards**: [`docs/water-frontend.md`](file:///home/izzatbek/Desktop/agronexsus/docs/water-frontend.md)
+- **Water Management & Irrigation Domain**: [`docs/water-domain.md`](file:///home/izzatbek/Desktop/agronexsus/docs/water-domain.md)
+- **Water Application Services & REST API**: [`docs/water-api.md`](file:///home/izzatbek/Desktop/agronexsus/docs/water-api.md)
+- **Water Consumption & Efficiency Rules**: [`docs/water-consumption.md`](file:///home/izzatbek/Desktop/agronexsus/docs/water-consumption.md)
 - **Field Domain & Parcel Architecture**: [`docs/field-domain.md`](file:///home/izzatbek/Desktop/agronexsus/docs/field-domain.md)
 - **Field Authorization & Security Blueprint**: [`docs/field-security.md`](file:///home/izzatbek/Desktop/agronexsus/docs/field-security.md)
 - **Field Frontend & UI Architecture**: [`docs/field-frontend.md`](file:///home/izzatbek/Desktop/agronexsus/docs/field-frontend.md)
