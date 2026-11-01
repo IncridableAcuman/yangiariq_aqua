@@ -2,6 +2,7 @@ import React from 'react'
 import {
   LayoutDashboard,
   MapPin,
+  Map,
   Droplets,
   Cpu,
   Sparkles,
@@ -14,6 +15,7 @@ import {
   UserPlus,
   Globe,
   Radio,
+  ShieldAlert,
 } from 'lucide-react'
 import { translations, SupportedLanguage } from '@/shared/i18n'
 import { useAuth } from '@/features/auth/context/AuthContext'
@@ -25,8 +27,10 @@ import { cn } from '@/shared/lib/utils'
 export type NavSection =
   | 'dashboard'
   | 'fields'
+  | 'gis'
   | 'irrigation'
   | 'sensors'
+  | 'anomalies'
   | 'ai-advisor'
   | 'problems'
   | 'settings'
@@ -66,7 +70,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
       id: 'fields' as NavSection,
       label: t.nav.fields,
       icon: MapPin,
-      badge: '12',
+      badge: null,
+    },
+    {
+      id: 'gis' as NavSection,
+      label: t.nav.gis,
+      icon: Map,
+      badge: 'GIS',
+      badgeVariant: 'secondary' as const,
     },
     {
       id: 'irrigation' as NavSection,
@@ -80,6 +91,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
       icon: Cpu,
       badge: 'Live',
       badgeVariant: 'success' as const,
+    },
+    {
+      id: 'anomalies' as NavSection,
+      label: t.nav.anomalies,
+      icon: ShieldAlert,
+      badge: null,
     },
     {
       id: 'ai-advisor' as NavSection,

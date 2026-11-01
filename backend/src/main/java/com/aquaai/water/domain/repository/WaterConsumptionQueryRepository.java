@@ -76,4 +76,16 @@ public interface WaterConsumptionQueryRepository {
      * @return Aggregated {@link FieldWaterSummaryData}
      */
     FieldWaterSummaryData getFieldWaterSummary(UUID fieldId, Instant from, Instant to);
+
+    /**
+     * Batch-aggregates parcel-level total allocated quotas and total executed consumption
+     * for a collection of field IDs within the specified optional temporal window.
+     * Completely prevents N+1 queries during district/GIS map overviews.
+     *
+     * @param fieldIds Collection of field parcel identifiers
+     * @param from     Filter window start timestamp (inclusive, nullable)
+     * @param to       Filter window end timestamp (inclusive, nullable)
+     * @return Map of fieldId to aggregated {@link FieldWaterSummaryData}
+     */
+    Map<UUID, FieldWaterSummaryData> getFieldWaterSummaries(Collection<UUID> fieldIds, Instant from, Instant to);
 }

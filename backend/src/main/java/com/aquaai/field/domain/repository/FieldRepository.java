@@ -21,6 +21,8 @@ public interface FieldRepository {
 
     Optional<Field> findById(UUID id);
 
+    List<Field> findAll();
+
     Optional<Field> findByIdAndOwnerId(UUID id, UUID ownerId);
 
     List<Field> findByOwnerId(UUID ownerId);

@@ -87,6 +87,27 @@ public class WaterAllocationRepositoryImpl implements WaterAllocationRepository 
 
     @Override
     @Transactional(readOnly = true)
+    public List<WaterAllocation> findByFieldIdIn(java.util.Collection<UUID> fieldIds) {
+        if (fieldIds == null || fieldIds.isEmpty()) {
+            return List.of();
+        }
+        return springDataRepository.findByFieldIdIn(fieldIds)
+                .stream()
+                .map(mapper::toDomain)
+                .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<WaterAllocation> findAll() {
+        return springDataRepository.findAll()
+                .stream()
+                .map(mapper::toDomain)
+                .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public List<WaterAllocation> findByFieldIdAndStatus(UUID fieldId, WaterAllocationStatus status) {
         if (fieldId == null || status == null) {
             return List.of();

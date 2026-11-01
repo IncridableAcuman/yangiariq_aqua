@@ -124,4 +124,37 @@ public interface SpringDataWaterConsumptionRepository extends JpaRepository<Irri
             @Param("to") Instant to,
             @Param("completedStatus") IrrigationEventStatus completedStatus
     );
+
+    @Query("""
+        SELECT a.fieldId, COALESCE(SUM(a.allocatedVolumeM3), 0), COUNT(a)
+        FROM WaterAllocationJpaEntity a
+        WHERE a.fieldId IN :fieldIds
+          AND a.status <> :cancelledStatus
+          AND (cast(:from as timestamp) IS NULL OR a.periodEnd >= :from)
+          AND (cast(:to as timestamp) IS NULL OR a.periodStart <= :to)
+        GROUP BY a.fieldId
+    """)
+    List<Object[]> aggregateAllocationsByFieldIdsAndPeriod(
+            @Param("fieldIds") Collection<UUID> fieldIds,
+            @Param("from") Instant from,
+            @Param("to") Instant to,
+            @Param("cancelledStatus") WaterAllocationStatus cancelledStatus
+    );
+
+    @Query("""
+        SELECT e.fieldId, COALESCE(SUM(e.actualVolumeM3), 0), COUNT(e)
+        FROM IrrigationEventJpaEntity e
+        WHERE e.fieldId IN :fieldIds
+          AND e.status = :completedStatus
+          AND e.actualVolumeM3 IS NOT NULL
+          AND (cast(:from as timestamp) IS NULL OR e.startedAt >= :from)
+          AND (cast(:to as timestamp) IS NULL OR e.startedAt <= :to)
+        GROUP BY e.fieldId
+    """)
+    List<Object[]> aggregateEventsByFieldIdsAndPeriod(
+            @Param("fieldIds") Collection<UUID> fieldIds,
+            @Param("from") Instant from,
+            @Param("to") Instant to,
+            @Param("completedStatus") IrrigationEventStatus completedStatus
+    );
 }

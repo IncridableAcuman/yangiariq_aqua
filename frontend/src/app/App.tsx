@@ -11,8 +11,10 @@ import { ChangePasswordModal } from '@/features/auth/ui/ChangePasswordModal'
 import { LandingPage } from '@/pages/landing'
 import { DashboardPage } from '@/pages/dashboard'
 import { FieldsPage } from '@/pages/fields'
+import { GisPage } from '@/pages/gis'
 import { IrrigationPage } from '@/pages/irrigation'
 import { SensorsPage } from '@/pages/sensors'
+import { AnomaliesPage } from '@/pages/anomalies'
 import { AiAdvisorPage } from '@/pages/ai-advisor'
 import { ProblemsPage } from '@/pages/problems'
 import { SettingsPage } from '@/pages/settings'
@@ -115,10 +117,14 @@ export function AppContent() {
         return <DashboardPage lang={lang} onNavigate={setCurrentSection} />
       case 'fields':
         return <FieldsPage lang={lang} />
+      case 'gis':
+        return <GisPage lang={lang} onNavigate={setCurrentSection} />
       case 'irrigation':
         return <IrrigationPage lang={lang} />
       case 'sensors':
         return <SensorsPage lang={lang} />
+      case 'anomalies':
+        return <AnomaliesPage lang={lang} />
       case 'ai-advisor':
         return <AiAdvisorPage lang={lang} />
       case 'problems':

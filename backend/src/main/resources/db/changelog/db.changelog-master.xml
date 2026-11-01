@@ -11,5 +11,12 @@
     <include file="db/changelog/changes/004-create-fields-table.sql"/>
     <include file="db/changelog/changes/005-create-water-domain-tables.sql"/>
     <include file="db/changelog/changes/006-add-water-consumption-indexes.sql"/>
+    <include file="db/changelog/changes/007-add-water-sources-location.sql"/>
+    <include file="db/changelog/changes/008-create-sensor-domain-tables.sql"/>
+    <include file="db/changelog/changes/009-create-sensor-analytics-indexes.sql"/>
+    <include file="db/changelog/changes/010-create-anomaly-domain-tables.sql"/>
+    <include file="db/changelog/changes/011-create-recommendation-domain-tables.sql"/>
+    <include file="db/changelog/changes/012-create-smart-irrigation-planning-tables.sql"/>
+    <include file="db/changelog/changes/013-create-intelligence-domain-tables.sql"/>
 
 </databaseChangeLog>

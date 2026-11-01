@@ -28,7 +28,7 @@ The platform addresses regional challenges in canal water scheduling, soil salin
 
 ## Architectural Highlights
 
-- **Modular Monolith**: Clean boundaries between business domains (`auth`, `user`, `field`, `water`, `problem`, `dashboard`, `ai`, `sensor`, `notification`, `shared`).
+- **Modular Monolith**: Clean boundaries between business domains (`auth`, `user`, `field`, `water`, `problem`, `dashboard`, `ai`, `sensor`, `anomaly`, `recommendation`, `irrigation`, `intelligence`, `notification`, `shared`).
 - **Clean Package-by-Feature**: Explicit separation between `api`, `application`, `domain`, and `infrastructure` layers.
 - **Architectural Guardrails**: Enforced via **ArchUnit** tests ensuring that controllers never access repositories or bypass DTO mappings.
 - **Pluggable AI Port**: `AiProvider` interface supporting Gemini API and mock fallbacks without leaking vendor SDK dependencies into domain logic.
@@ -92,8 +92,31 @@ docker compose up --build -d
 
 - [Architecture Blueprint](ARCHITECTURE.md)
 - [Architecture Overview](docs/architecture-overview.md)
+- [Water + GIS Intelligence Architecture](docs/gis-water-integration.md)
+- [GIS Water Intelligence REST API](docs/gis-api.md)
+- [Water Frontend & Consumption Dashboards](docs/water-frontend.md)
+- [Water Domain & Accounting Rules](docs/water-domain.md)
+- [Water Consumption & Efficiency](docs/water-consumption.md)
+- [Field GIS & Cartography](docs/field-gis.md)
 - [Module Boundaries & Ownership](docs/module-boundaries.md)
 - [AI Abstraction Strategy](docs/ai-abstraction.md)
+- [Sensor Domain & Telemetry Foundation](docs/sensor-domain.md)
+- [Sensor & Telemetry REST API](docs/sensor-api.md)
+- [Telemetry Analytics & Historical REST API](docs/telemetry-analytics.md)
+- [Time-Series Storage & TimescaleDB Strategy](docs/time-series-storage.md)
+- [Telemetry Aggregation Engine & Modality Policies](docs/telemetry-aggregation.md)
+- [AI Agronomic Recommendations & Decision Support](docs/ai-agronomic-recommendations.md)
+- [Recommendation REST API & Lifecycle](docs/recommendation-api.md)
+- [Advisory AI Provider & Reasoning Architecture](docs/ai-provider.md)
+- [Telemetry Intelligence & Agronomic Recommendations](docs/telemetry-intelligence.md)
+- [Agronomic Recommendations Architecture](docs/agronomic-recommendations.md)
+- [Smart Irrigation Planning & Optimization](docs/irrigation-planning.md)
+- [Water Allocation & Budgeting Optimization](docs/water-allocation.md)
+- [Smart Irrigation REST API Contracts](docs/irrigation-api.md)
+- [Telemetry Anomaly Detection Architecture](docs/anomaly-detection.md)
+- [Configurable Anomaly Rules & Thresholds](docs/anomaly-rules.md)
+- [Alert Lifecycle, Deduplication & Management](docs/alert-management.md)
+- [Anomaly REST API Contracts & Security](docs/anomaly-api.md)
 - [Sensor Abstraction Strategy](docs/sensor-abstraction.md)
 - [API Conventions](docs/api-conventions.md)
 - [Database & Liquibase Strategy](docs/database-strategy.md)

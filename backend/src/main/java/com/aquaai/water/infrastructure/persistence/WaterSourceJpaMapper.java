@@ -19,6 +19,8 @@ public class WaterSourceJpaMapper {
                 entity.getType(),
                 entity.getDescription(),
                 entity.getStatus(),
+                entity.getLatitude(),
+                entity.getLongitude(),
                 entity.getCreatedAt(),
                 entity.getUpdatedAt(),
                 entity.getVersion()
@@ -38,6 +40,8 @@ public class WaterSourceJpaMapper {
         entity.setType(domain.getType());
         entity.setDescription(domain.getDescription());
         entity.setStatus(domain.getStatus());
+        entity.setLatitude(domain.getLatitude());
+        entity.setLongitude(domain.getLongitude());
         entity.setCreatedAt(domain.getCreatedAt());
         entity.setUpdatedAt(domain.getUpdatedAt());
         return entity;
@@ -48,6 +52,8 @@ public class WaterSourceJpaMapper {
         entity.setType(domain.getType());
         entity.setDescription(domain.getDescription());
         entity.setStatus(domain.getStatus());
+        entity.setLatitude(domain.getLatitude());
+        entity.setLongitude(domain.getLongitude());
         entity.setUpdatedAt(domain.getUpdatedAt());
     }
 }

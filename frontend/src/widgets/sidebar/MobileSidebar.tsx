@@ -2,10 +2,12 @@ import React from 'react'
 import {
   LayoutDashboard,
   MapPin,
+  Map,
   Droplets,
   Cpu,
   Sparkles,
   AlertTriangle,
+  ShieldAlert,
   Settings,
   Globe,
   LogOut,
@@ -60,7 +62,14 @@ export const MobileSidebar: React.FC<MobileSidebarProps> = ({
       id: 'fields' as NavSection,
       label: t.nav.fields,
       icon: MapPin,
-      badge: '12',
+      badge: null,
+    },
+    {
+      id: 'gis' as NavSection,
+      label: t.nav.gis,
+      icon: Map,
+      badge: 'GIS',
+      badgeVariant: 'secondary' as const,
     },
     {
       id: 'irrigation' as NavSection,
@@ -74,6 +83,12 @@ export const MobileSidebar: React.FC<MobileSidebarProps> = ({
       icon: Cpu,
       badge: 'Live',
       badgeVariant: 'success' as const,
+    },
+    {
+      id: 'anomalies' as NavSection,
+      label: t.nav.anomalies,
+      icon: ShieldAlert,
+      badge: null,
     },
     {
       id: 'ai-advisor' as NavSection,

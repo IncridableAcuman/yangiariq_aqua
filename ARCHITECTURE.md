@@ -28,6 +28,11 @@ To maximize development velocity during the MVP and early-growth phases while el
 |  |         ai (Abstraction)       |  |          sensor (Abstraction)           | |
 |  |   [AiProvider -> Gemini/Mock]  |  | [SensorProvider -> Simulated/Future IoT]| |
 |  +--------------------------------+  +-----------------------------------------+ |
+|                                                                                  |
+|  +-----------------------------------------------------------------------------+ |
+|  |                         anomaly (Intelligent Alerting)                       | |
+|  |           [AnomalyDetector SPI -> Rules / Z-Score / Health / Bursts]         | |
+|  +-----------------------------------------------------------------------------+ |
 +----------------------------------------------------------------------------------+
                                         |
                                         v
@@ -131,6 +136,18 @@ Currently, physical IoT sensors do not exist in the fields of Yangiariq. However
 
 ---
 
+## 5.5. Telemetry Anomaly Detection & Alerting Architecture
+
+Milestone 08.0 adds the **Telemetry Anomaly Detection & Intelligent Alerting System** (`com.aquaai.anomaly`).
+
+### Guarantees
+- **Decoupled Ingestion**: The `sensor` module publishes domain events (`TelemetryReadingRecordedEvent`). Anomaly detection consumes these asynchronously, ensuring zero coupling.
+- **Pluggable Detector SPI**: Contract `AnomalyDetector` allows independent registration of deterministic rules (soil moisture deficit, flow spikes, pressure drop), statistical algorithms (Z-score deviation against 24h moving baselines), hardware health monitoring (stuck sensor, possible drift, offline heartbeats), and multi-metric corroboration (suspected pipe burst requiring both high flow and pressure drop).
+- **Active Alert Deduplication & State Machine**: State transitions (`DETECTED` -> `ACKNOWLEDGED` -> `INVESTIGATING` -> `RESOLVED` / `DISMISSED`) enforce terminal state immutability, mandatory resolution notes, optimistic concurrency locking, and alert cooldown throttling (30 min).
+- **Simulation Isolation**: Anomalies detected on simulated telemetry are tagged `isSimulated=true` and never silently trigger production alerts to farmers.
+
+---
+
 ## 6. Database & Migration Strategy
 
 - **DBMS**: PostgreSQL 16
@@ -199,15 +216,43 @@ Field
 - **Application Services & REST API (Milestone 06.2)**: Production-ready clean architecture REST APIs (`/api/v1/water-sources`, `/api/v1/water-allocations`, `/api/v1/irrigation-plans`, `/api/v1/irrigation-events`), IDOR protection with anti-enumeration (404), cross-aggregate invariant enforcement (422), pagination, whitelist sorting, and OpenAPI 3 contracts.
 - **Water Rules, Consumption & Efficiency (Milestone 06.3)**: Real-time volumetric consumption accounting, non-negative remaining quota clamping, over-consumption detection and excess volume tracking, planned vs actual variance ratios, parcel periodic water summaries, and zero N+1 database aggregations.
 - **Water Frontend UI: Consumption, Quotas & Variance Dashboards (Milestone 06.4)**: Production-ready FSD Water operations dashboard (`frontend/src/entities/water`, `frontend/src/features/water`, `frontend/src/pages/irrigation/IrrigationPage.tsx`), integrating TanStack Query, Zod form validations, clamped progress bars, over-consumption alert banners, planned vs actual variance visualizations, field periodic summaries, regional water source catalog with RBAC, and full i18n (`uz`, `ru`, `en`).
+- **Water + GIS Intelligence Integration (Milestone 06.5)**: Unified spatial cartography combining field geometry (`[lon, lat]` RFC 7946 GeoJSON), regional water sources (`CANAL`, `WELL`, `RESERVOIR`), volumetric allocations, actual metered consumption, dynamic supply linkage geodesics, and real-time over-quota warnings. Implements single-roundtrip batch backend aggregations (`/api/v1/gis/overview`) without PostGIS, strict tenant anti-IDOR isolation, interactive parcel side panel, multi-filter toolbar, layer toggles, and resilient non-blocking geometry handling.
+- **Sensor Domain & Telemetry Foundation (Milestone 07.1)**: Pure Java domain model (`Sensor` aggregate root, `SensorReading` value objects), physical parameter invariants, device lifecycle state machine (`ACTIVE`, `INACTIVE`, `MAINTENANCE`, `OFFLINE`), `SensorProvider` SPI with realistic Yangiariq physical drift simulation (`SimulatedSensorProvider`), Liquibase migration `008-create-sensor-domain-tables.sql`, anti-IDOR security via parcel tenancy, and REST APIs under `/api/v1/sensors` and `/api/v1/fields/{fieldId}/sensors`.
+- **Time-Series Storage & Telemetry Analytics (Milestone 07.3)**: High-performance historical telemetry analytics and bucketing engine across 5 temporal granularities (`5m`, `15m`, `1h`, `1d`, `1w`). Evaluated TimescaleDB extension compatibility against deployment environment (`postgres:16-alpine`), delivering a high-performance PostgreSQL-native architecture with composite B-tree indexes, lightweight Spring Data projections (`SensorReadingPointProjection`), and single-pass linear chronological bucketing. Enforces modality-specific mathematical aggregation policies (`AggregationPolicy`: AVG/MIN/MAX for soil moisture, flow, temperature, salinity; SUM/MIN/MAX for rainfall), rolling 24h parcel summaries, hardware fleet availability tracking (`communicating` vs `unresponsive` based on `lastSeenAt`), data quality metrics (`VALID`, `SUSPECT`, `INVALID`), retention policy abstraction (`TelemetryRetentionService`), interactive frontend telemetry dashboard with Recharts, and GIS side-panel telemetry integration.
+*(Note: Milestone 07.2 — High-Throughput Telemetry Ingestion Pipeline was identified as not present in the repository prior to 07.3; its message streaming components remain scheduled for future streaming milestones).*
+- **Telemetry Anomaly Detection & Intelligent Alerting System (Milestone 08.0)**: Statistical Z-score and configurable agricultural threshold anomaly detection (`com.aquaai.anomaly`), multi-metric pipe burst corroboration (flow surge + pressure drop), alert lifecycle state machine (`DETECTED`, `ACKNOWLEDGED`, `INVESTIGATING`, `RESOLVED`, `DISMISSED`), active deduplication, simulation isolation, full audit trails, and GIS side-panel anomaly integration.
+- **AI Agronomic Recommendations & Decision Support System (Milestone 08.1)**: Explainable decision support engine (`com.aquaai.recommendation`) synthesizing telemetry, anomalies, weather forecasts, and historical water allocations. Pure Java domain model, deterministic agronomic safety rules, hydraulic safety interlock (immediate `INSPECT_PIPE_BURST` with `CRITICAL` priority suppressing irrigation), Google Gemini 1.5 Flash advisory adapter with structured JSON schema, zero PII exposure, graceful fallback to mock advisor, Hargreaves-Samani ET0 estimation, multi-factor confidence calibration, 4-hour cooldown deduplication, anti-IDOR security with 404 anti-enumeration, trilingual frontend dashboard (`RecommendationsPage`), and GIS side-panel advisory integration.
+- **Smart Irrigation Planning & Water Allocation Optimization (Milestone 08.2)**: Safe, explainable, and operational irrigation decision-support engine (`com.aquaai.irrigation`). Pure Java domain model (`SmartIrrigationPlan` aggregate root, value objects for `WaterBudget`, `IrrigationRequirement`, `FlowRate`, `IrrigationWindow`), 8-stage lifecycle state machine (`DRAFT` -> `PROPOSED` -> `APPROVED` -> `SCHEDULED` -> `IN_PROGRESS` -> `COMPLETED`, plus `CANCELLED` and `EXPIRED`), hard constraint precedence hierarchy (`SAFETY` -> `WATER_QUOTA` -> `INFRASTRUCTURE` -> `AGRONOMIC` -> `WEATHER` -> `FIELD_PRIORITY` -> `AI_EXPLANATION`), hydraulic safety interlock (blocking plans on suspected pipe bursts or pressure drops), root-zone soil water deficit model accounting for crop coefficient ($K_c$), Hargreaves-Samani reference $ET_0$, forecast rainfall offsets, and irrigation method application efficiencies ($\eta$), multi-parcel priority scoring engine (0-100), conflict resolution for water quotas and nocturnal scheduling, idempotent generation, anti-IDOR parcel isolation with 404 anti-enumeration, full Liquibase migrations (`012-create-smart-irrigation-planning-tables.sql`), FSD frontend architecture with water budget KPI cards, interactive schedule timeline, field priority table, approval dialog with warning acknowledgement checkbox, cancel dialog with mandatory reason, and GIS side-panel integration. Strictly planning only: no autonomous actuator or pump control.
+- **Telemetry Intelligence, Anomaly Detection & Agronomic Recommendations (Milestone 08.3)**: Unified decision-support intelligence layer (`com.aquaai.intelligence`) converting canonical physical sensor telemetry into normalized `TelemetrySignal`s, temporal trend indicators ($\Delta\text{moisture}/\Delta\text{time}$), and SLA-based freshness evaluations (`FRESH`, `STALE`, `MISSING`). Features a deterministic agronomic assessment engine producing `AgronomicAssessment` aggregates (`SOIL_TOO_DRY`, `SOIL_TOO_WET`, `HIGH_TEMPERATURE`, `LOW_TEMPERATURE`, `HIGH_HUMIDITY`, `LOW_HUMIDITY`, `ABNORMAL_FLOW`, `PRESSURE_DROP`, `NO_RECENT_TELEMETRY`), integrated with the authoritative `HydraulicSafetyInterlock` and volumetric `WaterBudget`. Strictly decision-support only with zero autonomous hardware actuation. Fully verified with 466 backend tests, 51 ArchUnit architecture rules, 126 frontend tests, and complete anti-IDOR security.
 - **Future Integration (Upcoming Milestones)**:
-  - Telemetry flow meters / ultrasonic sensors feeding `IrrigationEvent.actualVolumeM3`.
-  - Quota consumption monitoring and over-allocation alert mechanisms.
-  - AI advisory proposing optimal `IrrigationPlan` candidates tailored to soil water capacity and weather conditions.
+  - High-throughput message streaming / MQTT broker integration.
+  - Advanced hydraulic model calibration and canal head-gate automation.
 
 ---
 
 ## 10. Domain Documentation References
 
+- **Telemetry Intelligence & Agronomic Recommendations**: [`docs/telemetry-intelligence.md`](file:///home/izzatbek/Desktop/agronexsus/docs/telemetry-intelligence.md)
+- **Agronomic Recommendations Architecture**: [`docs/agronomic-recommendations.md`](file:///home/izzatbek/Desktop/agronexsus/docs/agronomic-recommendations.md)
+- **Smart Irrigation Planning & Optimization Architecture**: [`docs/irrigation-planning.md`](file:///home/izzatbek/Desktop/agronexsus/docs/irrigation-planning.md)
+- **Water Allocation & Budgeting Optimization**: [`docs/water-allocation.md`](file:///home/izzatbek/Desktop/agronexsus/docs/water-allocation.md)
+- **Smart Irrigation REST API Contracts & Lifecycle**: [`docs/irrigation-api.md`](file:///home/izzatbek/Desktop/agronexsus/docs/irrigation-api.md)
+- **Milestone 08.2 Implementation Plan**: [`docs/milestone-08.2-plan.md`](file:///home/izzatbek/Desktop/agronexsus/docs/milestone-08.2-plan.md)
+- **AI Agronomic Recommendations & Decision Support**: [`docs/ai-agronomic-recommendations.md`](file:///home/izzatbek/Desktop/agronexsus/docs/ai-agronomic-recommendations.md)
+- **Recommendation REST API Contracts & Lifecycle**: [`docs/recommendation-api.md`](file:///home/izzatbek/Desktop/agronexsus/docs/recommendation-api.md)
+- **Advisory AI Provider & Reasoning Architecture**: [`docs/ai-provider.md`](file:///home/izzatbek/Desktop/agronexsus/docs/ai-provider.md)
+- **Telemetry Anomaly Detection Architecture**: [`docs/anomaly-detection.md`](file:///home/izzatbek/Desktop/agronexsus/docs/anomaly-detection.md)
+- **Configurable Anomaly Rules & Thresholds**: [`docs/anomaly-rules.md`](file:///home/izzatbek/Desktop/agronexsus/docs/anomaly-rules.md)
+- **Alert Lifecycle, Deduplication & Management**: [`docs/alert-management.md`](file:///home/izzatbek/Desktop/agronexsus/docs/alert-management.md)
+- **Anomaly REST API Contracts & Security**: [`docs/anomaly-api.md`](file:///home/izzatbek/Desktop/agronexsus/docs/anomaly-api.md)
+- **Telemetry Analytics & Historical REST API**: [`docs/telemetry-analytics.md`](file:///home/izzatbek/Desktop/agronexsus/docs/telemetry-analytics.md)
+- **Time-Series Storage & TimescaleDB Strategy**: [`docs/time-series-storage.md`](file:///home/izzatbek/Desktop/agronexsus/docs/time-series-storage.md)
+- **Telemetry Aggregation Engine & Modality Policies**: [`docs/telemetry-aggregation.md`](file:///home/izzatbek/Desktop/agronexsus/docs/telemetry-aggregation.md)
+- **Sensor Domain & Telemetry Foundation**: [`docs/sensor-domain.md`](file:///home/izzatbek/Desktop/agronexsus/docs/sensor-domain.md)
+- **Sensor REST API Specification**: [`docs/sensor-api.md`](file:///home/izzatbek/Desktop/agronexsus/docs/sensor-api.md)
+- **Sensor Telemetry & Simulation**: [`docs/sensor-abstraction.md`](file:///home/izzatbek/Desktop/agronexsus/docs/sensor-abstraction.md)
+- **Water + GIS Intelligence Architecture**: [`docs/gis-water-integration.md`](file:///home/izzatbek/Desktop/agronexsus/docs/gis-water-integration.md)
+- **GIS Water Intelligence REST API**: [`docs/gis-api.md`](file:///home/izzatbek/Desktop/agronexsus/docs/gis-api.md)
 - **Water Management UI & Dashboards**: [`docs/water-frontend.md`](file:///home/izzatbek/Desktop/agronexsus/docs/water-frontend.md)
 - **Water Management & Irrigation Domain**: [`docs/water-domain.md`](file:///home/izzatbek/Desktop/agronexsus/docs/water-domain.md)
 - **Water Application Services & REST API**: [`docs/water-api.md`](file:///home/izzatbek/Desktop/agronexsus/docs/water-api.md)
@@ -221,5 +266,4 @@ Field
 - **Database Strategy & Migrations**: [`docs/database-strategy.md`](file:///home/izzatbek/Desktop/agronexsus/docs/database-strategy.md)
 - **Authentication & Security Architecture**: [`docs/authentication.md`](file:///home/izzatbek/Desktop/agronexsus/docs/authentication.md)
 - **AI Abstraction Strategy**: [`docs/ai-abstraction.md`](file:///home/izzatbek/Desktop/agronexsus/docs/ai-abstraction.md)
-- **Sensor Telemetry & Simulation**: [`docs/sensor-abstraction.md`](file:///home/izzatbek/Desktop/agronexsus/docs/sensor-abstraction.md)
 

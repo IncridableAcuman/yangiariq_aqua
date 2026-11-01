@@ -194,4 +194,74 @@ public class WaterConsumptionQueryRepositoryImpl implements WaterConsumptionQuer
                 eventCount
         );
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Map<UUID, FieldWaterSummaryData> getFieldWaterSummaries(Collection<UUID> fieldIds, Instant from, Instant to) {
+        if (fieldIds == null || fieldIds.isEmpty()) {
+            return Collections.emptyMap();
+        }
+
+        Map<UUID, BigDecimal> allocatedMap = new HashMap<>();
+        Map<UUID, Long> allocCountMap = new HashMap<>();
+        Map<UUID, BigDecimal> consumedMap = new HashMap<>();
+        Map<UUID, Long> eventCountMap = new HashMap<>();
+
+        for (UUID fieldId : fieldIds) {
+            allocatedMap.put(fieldId, BigDecimal.ZERO);
+            allocCountMap.put(fieldId, 0L);
+            consumedMap.put(fieldId, BigDecimal.ZERO);
+            eventCountMap.put(fieldId, 0L);
+        }
+
+        List<Object[]> allocRows = springDataRepository.aggregateAllocationsByFieldIdsAndPeriod(
+                fieldIds,
+                from,
+                to,
+                WaterAllocationStatus.CANCELLED
+        );
+        if (allocRows != null) {
+            for (Object[] row : allocRows) {
+                if (row != null && row.length >= 3 && row[0] instanceof UUID fId) {
+                    if (row[1] instanceof BigDecimal sum) {
+                        allocatedMap.put(fId, sum);
+                    }
+                    if (row[2] instanceof Number count) {
+                        allocCountMap.put(fId, count.longValue());
+                    }
+                }
+            }
+        }
+
+        List<Object[]> eventRows = springDataRepository.aggregateEventsByFieldIdsAndPeriod(
+                fieldIds,
+                from,
+                to,
+                IrrigationEventStatus.COMPLETED
+        );
+        if (eventRows != null) {
+            for (Object[] row : eventRows) {
+                if (row != null && row.length >= 3 && row[0] instanceof UUID fId) {
+                    if (row[1] instanceof BigDecimal sum) {
+                        consumedMap.put(fId, sum);
+                    }
+                    if (row[2] instanceof Number count) {
+                        eventCountMap.put(fId, count.longValue());
+                    }
+                }
+            }
+        }
+
+        Map<UUID, FieldWaterSummaryData> result = new HashMap<>();
+        for (UUID fieldId : fieldIds) {
+            result.put(fieldId, new FieldWaterSummaryData(
+                    allocatedMap.get(fieldId),
+                    allocCountMap.get(fieldId),
+                    consumedMap.get(fieldId),
+                    eventCountMap.get(fieldId)
+            ));
+        }
+
+        return result;
+    }
 }

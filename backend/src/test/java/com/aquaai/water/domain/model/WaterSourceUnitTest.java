@@ -147,6 +147,103 @@ class WaterSourceUnitTest {
     }
 
     @Nested
+    @DisplayName("WaterSource Geographic Coordinates Tests")
+    class CoordinatesTests {
+
+        @Test
+        @DisplayName("Valid coordinates are preserved and rounded to 6 decimal places")
+        void shouldAcceptValidCoordinates() {
+            WaterSource source = WaterSource.create(
+                    "Palvon Main Canal Intake",
+                    WaterSourceType.CANAL,
+                    "Canal intake point",
+                    new java.math.BigDecimal("41.3456789"),
+                    new java.math.BigDecimal("60.6123454")
+            );
+
+            assertThat(source.getLatitude()).isNotNull();
+            assertThat(source.getLatitude()).isEqualByComparingTo("41.345679");
+            assertThat(source.getLongitude()).isNotNull();
+            assertThat(source.getLongitude()).isEqualByComparingTo("60.612345");
+        }
+
+        @Test
+        @DisplayName("Providing only latitude throws BusinessRuleException")
+        void shouldRejectPartialLatitude() {
+            assertThatThrownBy(() -> WaterSource.create(
+                    "Canal",
+                    WaterSourceType.CANAL,
+                    null,
+                    new java.math.BigDecimal("41.34"),
+                    null
+            ))
+                    .isInstanceOf(BusinessRuleException.class)
+                    .hasMessageContaining("Both latitude and longitude must be provided together");
+        }
+
+        @Test
+        @DisplayName("Providing only longitude throws BusinessRuleException")
+        void shouldRejectPartialLongitude() {
+            assertThatThrownBy(() -> WaterSource.create(
+                    "Canal",
+                    WaterSourceType.CANAL,
+                    null,
+                    null,
+                    new java.math.BigDecimal("60.61")
+            ))
+                    .isInstanceOf(BusinessRuleException.class)
+                    .hasMessageContaining("Both latitude and longitude must be provided together");
+        }
+
+        @Test
+        @DisplayName("Latitude out of range [-90.0, 90.0] throws BusinessRuleException")
+        void shouldRejectOutOfRangeLatitude() {
+            assertThatThrownBy(() -> WaterSource.create(
+                    "Canal",
+                    WaterSourceType.CANAL,
+                    null,
+                    new java.math.BigDecimal("91.0"),
+                    new java.math.BigDecimal("60.0")
+            ))
+                    .isInstanceOf(BusinessRuleException.class)
+                    .hasMessageContaining("between -90.0 and 90.0 degrees");
+        }
+
+        @Test
+        @DisplayName("Longitude out of range [-180.0, 180.0] throws BusinessRuleException")
+        void shouldRejectOutOfRangeLongitude() {
+            assertThatThrownBy(() -> WaterSource.create(
+                    "Canal",
+                    WaterSourceType.CANAL,
+                    null,
+                    new java.math.BigDecimal("41.0"),
+                    new java.math.BigDecimal("185.0")
+            ))
+                    .isInstanceOf(BusinessRuleException.class)
+                    .hasMessageContaining("between -180.0 and 180.0 degrees");
+        }
+
+        @Test
+        @DisplayName("Update details updates coordinates correctly")
+        void shouldUpdateCoordinates() {
+            WaterSource source = WaterSource.create("Canal", WaterSourceType.CANAL, null);
+            assertThat(source.getLatitude()).isNull();
+            assertThat(source.getLongitude()).isNull();
+
+            source.updateDetails(
+                    "Canal Updated",
+                    WaterSourceType.CANAL,
+                    "Relocated intake",
+                    new java.math.BigDecimal("41.500000"),
+                    new java.math.BigDecimal("60.700000")
+            );
+
+            assertThat(source.getLatitude()).isEqualByComparingTo("41.500000");
+            assertThat(source.getLongitude()).isEqualByComparingTo("60.700000");
+        }
+    }
+
+    @Nested
     @DisplayName("Enum Multilingual Support Tests")
     class EnumTests {
 

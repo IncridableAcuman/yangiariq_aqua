@@ -291,4 +291,29 @@ class WaterPostgresDatabaseTest {
         );
         assertThat(actualTotal).isEqualByComparingTo("290.0000");
     }
+
+    @Test
+    @DisplayName("PostgreSQL: findWithFilters executes without lower(bytea) syntax error when search is null or populated")
+    void findWithFilters_postgresQuery_succeeds() {
+        WaterSource source = waterSourceRepository.save(WaterSource.create(
+                "Filter Test Canal " + UUID.randomUUID(),
+                WaterSourceType.CANAL,
+                "Canal notes"
+        ));
+        entityManager.flush();
+        entityManager.clear();
+
+        var pageNullSearch = waterSourceRepository.findWithFilters(null, null, null, 0, 20, "createdAt", "desc");
+        assertThat(pageNullSearch.content()).isNotEmpty();
+
+        var pageWithSearch = waterSourceRepository.findWithFilters("Filter Test", WaterSourceType.CANAL, WaterSourceStatus.ACTIVE, 0, 20, "createdAt", "desc");
+        assertThat(pageWithSearch.content()).isNotEmpty();
+        assertThat(pageWithSearch.content().stream().anyMatch(s -> s.getId().equals(source.getId()))).isTrue();
+
+        var pageNonMatching = waterSourceRepository.findWithFilters("NonExistentCanalName123", null, null, 0, 20, "createdAt", "desc");
+        assertThat(pageNonMatching.content()).isEmpty();
+
+        var usersPage = userRepository.findUsersWithFilters(null, null, null, null, org.springframework.data.domain.PageRequest.of(0, 10));
+        assertThat(usersPage).isNotNull();
+    }
 }

@@ -65,8 +65,10 @@ export const Header: React.FC<HeaderProps> = ({
   const sectionTitles: Record<NavSection, string> = {
     dashboard: t.nav.dashboard,
     fields: t.nav.fields,
+    gis: t.nav.gis,
     irrigation: t.nav.irrigation,
     sensors: t.nav.sensors,
+    anomalies: t.nav.anomalies,
     'ai-advisor': t.nav.aiAdvisor,
     problems: t.nav.problems,
     settings: t.nav.settings,

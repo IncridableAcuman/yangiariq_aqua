@@ -32,6 +32,8 @@ export interface WaterSource {
   type: WaterSourceType
   description?: string | null
   status: WaterSourceStatus
+  latitude?: number | null
+  longitude?: number | null
   createdAt: string
   updatedAt: string
 }
@@ -175,12 +177,16 @@ export interface CreateWaterSourcePayload {
   name: string
   type: WaterSourceType
   description?: string | null
+  latitude?: number | null
+  longitude?: number | null
 }
 
 export interface UpdateWaterSourcePayload {
   name?: string
   type?: WaterSourceType
   description?: string | null
+  latitude?: number | null
+  longitude?: number | null
 }
 
 export interface CreateWaterAllocationPayload {

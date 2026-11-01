@@ -14,6 +14,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 /**
  * JPA entity representing the "water_sources" table.
  * Infrastructure persistence representation; never exposed to domain or API layers.
@@ -41,4 +43,10 @@ public class WaterSourceJpaEntity extends BaseAuditableEntity {
     @Column(name = "status", nullable = false, length = 32)
     @Builder.Default
     private WaterSourceStatus status = WaterSourceStatus.ACTIVE;
+
+    @Column(name = "latitude", precision = 9, scale = 6)
+    private BigDecimal latitude;
+
+    @Column(name = "longitude", precision = 9, scale = 6)
+    private BigDecimal longitude;
 }

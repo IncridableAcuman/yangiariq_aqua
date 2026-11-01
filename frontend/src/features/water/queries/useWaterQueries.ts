@@ -124,6 +124,7 @@ export function useCreateWaterSourceMutation(): UseMutationResult<
     mutationFn: (payload: CreateWaterSourcePayload) => createWaterSource(payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: waterKeys.sources() })
+      queryClient.invalidateQueries({ queryKey: ['gis'] })
     },
   })
 }
@@ -140,6 +141,7 @@ export function useUpdateWaterSourceMutation(): UseMutationResult<
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: waterKeys.sourceDetail(data.id) })
       queryClient.invalidateQueries({ queryKey: waterKeys.sources() })
+      queryClient.invalidateQueries({ queryKey: ['gis'] })
     },
   })
 }
@@ -155,6 +157,7 @@ export function useActivateWaterSourceMutation(): UseMutationResult<
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: waterKeys.sourceDetail(data.id) })
       queryClient.invalidateQueries({ queryKey: waterKeys.sources() })
+      queryClient.invalidateQueries({ queryKey: ['gis'] })
     },
   })
 }
@@ -170,6 +173,7 @@ export function useDeactivateWaterSourceMutation(): UseMutationResult<
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: waterKeys.sourceDetail(data.id) })
       queryClient.invalidateQueries({ queryKey: waterKeys.sources() })
+      queryClient.invalidateQueries({ queryKey: ['gis'] })
     },
   })
 }
@@ -217,6 +221,7 @@ export function useCreateWaterAllocationMutation(): UseMutationResult<
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: waterKeys.allocations() })
       queryClient.invalidateQueries({ queryKey: waterKeys.fieldSummaries() })
+      queryClient.invalidateQueries({ queryKey: ['gis'] })
     },
   })
 }
@@ -235,6 +240,7 @@ export function useUpdateWaterAllocationMutation(): UseMutationResult<
       queryClient.invalidateQueries({ queryKey: waterKeys.allocationConsumption(data.id) })
       queryClient.invalidateQueries({ queryKey: waterKeys.allocations() })
       queryClient.invalidateQueries({ queryKey: waterKeys.fieldSummaries() })
+      queryClient.invalidateQueries({ queryKey: ['gis'] })
     },
   })
 }
@@ -253,6 +259,7 @@ export function useCloseWaterAllocationMutation(): UseMutationResult<
       queryClient.invalidateQueries({ queryKey: waterKeys.allocationConsumption(data.id) })
       queryClient.invalidateQueries({ queryKey: waterKeys.allocations() })
       queryClient.invalidateQueries({ queryKey: waterKeys.fieldSummaries() })
+      queryClient.invalidateQueries({ queryKey: ['gis'] })
     },
   })
 }
@@ -271,6 +278,7 @@ export function useCancelWaterAllocationMutation(): UseMutationResult<
       queryClient.invalidateQueries({ queryKey: waterKeys.allocationConsumption(data.id) })
       queryClient.invalidateQueries({ queryKey: waterKeys.allocations() })
       queryClient.invalidateQueries({ queryKey: waterKeys.fieldSummaries() })
+      queryClient.invalidateQueries({ queryKey: ['gis'] })
     },
   })
 }
@@ -440,6 +448,7 @@ export function useRecordCompletedIrrigationEventMutation(): UseMutationResult<
       queryClient.invalidateQueries({ queryKey: waterKeys.plans() })
       queryClient.invalidateQueries({ queryKey: waterKeys.allocations() })
       queryClient.invalidateQueries({ queryKey: waterKeys.fieldSummaries() })
+      queryClient.invalidateQueries({ queryKey: ['gis'] })
     },
   })
 }
@@ -459,6 +468,7 @@ export function useCompleteIrrigationEventMutation(): UseMutationResult<
       queryClient.invalidateQueries({ queryKey: waterKeys.plans() })
       queryClient.invalidateQueries({ queryKey: waterKeys.allocations() })
       queryClient.invalidateQueries({ queryKey: waterKeys.fieldSummaries() })
+      queryClient.invalidateQueries({ queryKey: ['gis'] })
     },
   })
 }

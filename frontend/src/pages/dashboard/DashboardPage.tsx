@@ -3,6 +3,7 @@ import {
   Droplets,
   Activity,
   Layers,
+  Map,
   Sparkles,
   ArrowUpRight,
   TrendingDown,
@@ -58,11 +59,20 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ lang, onNavigate }
             <Button
               variant="default"
               size="sm"
-              onClick={() => onNavigate('irrigation')}
+              onClick={() => onNavigate('gis')}
               className="gap-1.5 shadow-xs"
             >
+              <Map className="h-4 w-4" />
+              <span>{lang === 'uz' ? 'GIS Xarita' : 'ГИС Карта'}</span>
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => onNavigate('irrigation')}
+              className="gap-1.5"
+            >
               <Droplets className="h-4 w-4" />
-              <span>{lang === 'uz' ? 'Sugʻorish soʻrovi' : 'Запрос на полив'}</span>
+              <span>{lang === 'uz' ? 'Sugʻorish jurnali' : 'Журнал полива'}</span>
             </Button>
             <Button
               variant="outline"

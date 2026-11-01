@@ -26,10 +26,10 @@ public interface SpringDataWaterSourceRepository extends JpaRepository<WaterSour
         SELECT s FROM WaterSourceJpaEntity s
         WHERE (:type IS NULL OR s.type = :type)
           AND (:status IS NULL OR s.status = :status)
-          AND (:search IS NULL OR LOWER(s.name) LIKE LOWER(CONCAT('%', :search, '%')))
+          AND (cast(:searchPattern as string) IS NULL OR LOWER(s.name) LIKE cast(:searchPattern as string))
     """)
     org.springframework.data.domain.Page<WaterSourceJpaEntity> findWithFilters(
-            @org.springframework.data.repository.query.Param("search") String search,
+            @org.springframework.data.repository.query.Param("searchPattern") String searchPattern,
             @org.springframework.data.repository.query.Param("type") WaterSourceType type,
             @org.springframework.data.repository.query.Param("status") WaterSourceStatus status,
             org.springframework.data.domain.Pageable pageable

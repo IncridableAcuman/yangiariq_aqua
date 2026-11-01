@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useMemo } from 'react'
 import {
   Tabs,
   TabsList,
@@ -7,9 +7,25 @@ import {
 } from '@/shared/ui/tabs'
 import { Button } from '@/shared/ui/button'
 import { useToast } from '@/shared/ui/toast'
-import { Plus, Play, Droplets } from 'lucide-react'
+import { Plus, Play, Droplets, Sparkles, Filter, RefreshCw } from 'lucide-react'
 import { useAuth } from '@/features/auth'
 import { useFieldsQuery } from '@/features/field'
+import {
+  useSmartIrrigationPlans,
+  useGenerateSmartPlanMutation,
+  useApproveSmartPlanMutation,
+  useCancelSmartPlanMutation,
+  useCompleteSmartPlanMutation,
+  WaterBudgetKpiCards,
+  SmartPlanCard,
+  PlanApprovalDialog,
+  PlanCancelDialog,
+  ScheduleTimeline,
+  FieldPriorityTable,
+} from '@/features/irrigation-planning'
+import {
+  SmartIrrigationPlan,
+} from '@/entities/irrigation'
 import {
   WaterAllocation,
   IrrigationPlan,
@@ -75,7 +91,19 @@ export const IrrigationPage: React.FC<IrrigationPageProps> = ({ lang }) => {
   const { user } = useAuth()
   const { success: toastSuccess, error: toastError } = useToast()
 
-  const [activeTab, setActiveTab] = useState<string>('quotas')
+  const [activeTab, setActiveTab] = useState<string>('smart-planning')
+
+  // Smart Irrigation Planning States
+  const [approvalPlan, setApprovalPlan] = useState<SmartIrrigationPlan | null>(null)
+  const [approvalDialogOpen, setApprovalDialogOpen] = useState<boolean>(false)
+  const [cancelPlan, setCancelPlan] = useState<SmartIrrigationPlan | null>(null)
+  const [cancelPlanDialogOpen, setCancelPlanDialogOpen] = useState<boolean>(false)
+  const [quickGenerateFieldId, setQuickGenerateFieldId] = useState<string>('')
+
+  // Smart Plan Filters
+  const [filterField, setFilterField] = useState<string>('ALL')
+  const [filterStatus, setFilterStatus] = useState<string>('ALL')
+  const [filterPriority, setFilterPriority] = useState<string>('ALL')
 
   // Dialog states
   const [recordCompletedOpen, setRecordCompletedOpen] = useState<boolean>(false)
@@ -153,6 +181,145 @@ export const IrrigationPage: React.FC<IrrigationPageProps> = ({ lang }) => {
   const recordCompletedEventMut = useRecordCompletedIrrigationEventMutation()
   const completeEventMut = useCompleteIrrigationEventMutation()
   const cancelEventMut = useCancelIrrigationEventMutation()
+
+  // Smart Irrigation Queries & Mutations
+  const { data: smartPlansPage } = useSmartIrrigationPlans({ size: 100 })
+  const smartPlans = smartPlansPage?.content || []
+
+  const generateSmartPlanMut = useGenerateSmartPlanMutation()
+  const approveSmartPlanMut = useApproveSmartPlanMutation()
+  const cancelSmartPlanMut = useCancelSmartPlanMutation()
+  const completeSmartPlanMut = useCompleteSmartPlanMutation()
+
+  // Lookup dictionaries
+  const fieldNamesById = useMemo(() => {
+    const map: Record<string, string> = {}
+    for (const f of fields) {
+      map[f.id] = f.name
+    }
+    return map
+  }, [fields])
+
+  const cropsById = useMemo(() => {
+    const map: Record<string, string> = {}
+    for (const f of fields) {
+      map[f.id] = f.cropType
+    }
+    return map
+  }, [fields])
+
+  const fieldAreasById = useMemo(() => {
+    const map: Record<string, number> = {}
+    for (const f of fields) {
+      map[f.id] = Number(f.areaHectares)
+    }
+    return map
+  }, [fields])
+
+  // Water Budget Calculations
+  const committedVolumeM3 = smartPlans
+    .filter((p) => p.status === 'SCHEDULED' || p.status === 'IN_PROGRESS')
+    .reduce((acc, p) => acc + (p.recommendedVolumeM3 || 0), 0)
+
+  const reservedVolumeM3 = smartPlans
+    .filter((p) => p.status === 'APPROVED' || p.status === 'PROPOSED')
+    .reduce((acc, p) => acc + (p.recommendedVolumeM3 || 0), 0)
+
+  const remainingAvailableM3 = Math.max(
+    totalAllocatedVolumeM3 - totalConsumedVolumeM3 - committedVolumeM3 - reservedVolumeM3,
+    0
+  )
+
+  const blockedPlansCount = smartPlans.filter((p) => p.isBlocked).length
+  const criticalPlansCount = smartPlans.filter((p) => p.priority === 'CRITICAL').length
+
+  // Filtered Smart Plans
+  const filteredSmartPlans = smartPlans.filter((p) => {
+    if (filterField !== 'ALL' && p.fieldId !== filterField) return false
+    if (filterStatus !== 'ALL' && p.status !== filterStatus) return false
+    if (filterPriority !== 'ALL' && p.priority !== filterPriority) return false
+    return true
+  })
+
+  // Priority Items for FieldPriorityTable
+  const priorityItems = fields.map((f) => {
+    const active = smartPlans.find(
+      (p) =>
+        p.fieldId === f.id &&
+        p.status !== 'CANCELLED' &&
+        p.status !== 'EXPIRED' &&
+        p.status !== 'COMPLETED'
+    )
+    return {
+      field: {
+        id: f.id,
+        name: f.name,
+        cropType: f.cropType,
+        areaHectares: Number(f.areaHectares),
+        soilType: f.soilType,
+      },
+      activePlan: active || null,
+      soilMoisturePercent: active?.currentMoisturePercent || null,
+      targetMoisturePercent: active?.targetMoisturePercent || null,
+      calculatedPriority: (active?.priority || 'MEDIUM') as 'CRITICAL' | 'HIGH' | 'MEDIUM' | 'LOW',
+      isBlocked: active?.isBlocked || false,
+    }
+  })
+
+  // Handlers for Smart Irrigation
+  const handleGenerateSmartPlan = async (fieldId: string) => {
+    try {
+      await generateSmartPlanMut.mutateAsync({ fieldId })
+      toastSuccess('Aqlli sugʻorish rejasi muvaffaqiyatli generatsiya qilindi')
+    } catch (err: unknown) {
+      toastError(err instanceof Error ? err.message : 'Reja generatsiyasida xatolik')
+    }
+  }
+
+  const handleOpenApproveDialog = (plan: SmartIrrigationPlan) => {
+    setApprovalPlan(plan)
+    setApprovalDialogOpen(true)
+  }
+
+  const handleConfirmApprove = async (planId: string, acknowledgeWarnings: boolean) => {
+    try {
+      await approveSmartPlanMut.mutateAsync({
+        id: planId,
+        request: { acknowledgeWarnings },
+      })
+      toastSuccess('Sugʻorish rejasi tasdiqlandi')
+      setApprovalDialogOpen(false)
+    } catch (err: unknown) {
+      toastError(err instanceof Error ? err.message : 'Tasdiqlashda xatolik')
+    }
+  }
+
+  const handleOpenCancelSmartPlanDialog = (plan: SmartIrrigationPlan) => {
+    setCancelPlan(plan)
+    setCancelPlanDialogOpen(true)
+  }
+
+  const handleConfirmCancelSmartPlan = async (planId: string, reason: string) => {
+    try {
+      await cancelSmartPlanMut.mutateAsync({
+        id: planId,
+        request: { reason },
+      })
+      toastSuccess('Sugʻorish rejasi bekor qilindi')
+      setCancelPlanDialogOpen(false)
+    } catch (err: unknown) {
+      toastError(err instanceof Error ? err.message : 'Bekor qilishda xatolik')
+    }
+  }
+
+  const handleCompleteSmartPlan = async (plan: SmartIrrigationPlan) => {
+    try {
+      await completeSmartPlanMut.mutateAsync({ id: plan.id })
+      toastSuccess('Sugʻorish rejasi yakunlandi va sarf qayd etildi')
+    } catch (err: unknown) {
+      toastError(err instanceof Error ? err.message : 'Rejani yakunlashda xatolik')
+    }
+  }
 
   // Handlers for Water Sources
   const handleSaveWaterSource = async (data: WaterSourceFormData, id?: string) => {
@@ -419,6 +586,10 @@ export const IrrigationPage: React.FC<IrrigationPageProps> = ({ lang }) => {
       {/* Navigation Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
         <TabsList className="bg-muted/60 p-1 rounded-lg flex flex-wrap gap-1 max-w-full overflow-x-auto justify-start">
+          <TabsTrigger value="smart-planning" className="text-xs px-3 py-1.5 font-bold flex items-center gap-1.5 text-primary">
+            <Sparkles className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400" />
+            <span>{t.irrigationPlanning?.tabs?.smartPlanning || 'Smart Rejalashtirish & Jadval'}</span>
+          </TabsTrigger>
           <TabsTrigger value="quotas" className="text-xs px-3 py-1.5 font-medium">
             {t.water.tabs.quotas}
           </TabsTrigger>
@@ -435,6 +606,184 @@ export const IrrigationPage: React.FC<IrrigationPageProps> = ({ lang }) => {
             {t.water.tabs.sources}
           </TabsTrigger>
         </TabsList>
+
+        {/* Tab 0: Smart Irrigation Planning & Optimization */}
+        <TabsContent value="smart-planning" className="space-y-6">
+          {/* Water Budget Accounting KPI Cards */}
+          <WaterBudgetKpiCards
+            totalAllocatedM3={totalAllocatedVolumeM3}
+            consumedM3={totalConsumedVolumeM3}
+            committedM3={committedVolumeM3}
+            reservedM3={reservedVolumeM3}
+            remainingAvailableM3={remainingAvailableM3}
+            requiringIrrigationCount={priorityItems.filter((i) => !i.activePlan || i.activePlan.status === 'PROPOSED').length}
+            blockedCount={blockedPlansCount}
+            criticalCount={criticalPlansCount}
+            lang={lang}
+          />
+
+          {/* Operational Timeline & Dispatch Schedule */}
+          <ScheduleTimeline
+            plans={smartPlans}
+            fieldNamesById={fieldNamesById}
+            cropsById={cropsById}
+            onSelectPlan={handleOpenApproveDialog}
+            lang={lang}
+          />
+
+          {/* Field Priority & Turn Distribution Table */}
+          <FieldPriorityTable
+            items={priorityItems}
+            onGeneratePlan={handleGenerateSmartPlan}
+            onSelectPlan={handleOpenApproveDialog}
+            isGenerating={generateSmartPlanMut.isPending}
+            lang={lang}
+          />
+
+          {/* Smart Plans Catalog with Filters */}
+          <div className="space-y-4 pt-2">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div>
+                <h3 className="text-base font-bold text-foreground flex items-center gap-2">
+                  <Sparkles className="w-4 h-4 text-purple-600 dark:text-purple-400" />
+                  <span>{t.irrigationPlanning?.title || 'Smart Sugʻorish Rejalari'}</span>
+                </h3>
+                <p className="text-xs text-muted-foreground">
+                  {t.irrigationPlanning?.subtitle || 'AI va agronomik qoidalar asosidagi operatsion tavsiyalar'}
+                </p>
+              </div>
+
+              {/* Action: Quick Generate Plan */}
+              {canManageWater && (
+                <div className="flex items-center gap-2">
+                  <select
+                    value={quickGenerateFieldId}
+                    onChange={(e) => setQuickGenerateFieldId(e.target.value)}
+                    className="text-xs rounded-md border border-border bg-background px-2.5 py-1.5 text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+                  >
+                    <option value="">{t.irrigationPlanning?.allFieldsFilter || 'Dala tanlang...'}</option>
+                    {fields.map((f) => (
+                      <option key={f.id} value={f.id}>
+                        {f.name} ({f.cropType})
+                      </option>
+                    ))}
+                  </select>
+
+                  <Button
+                    size="sm"
+                    disabled={!quickGenerateFieldId || generateSmartPlanMut.isPending}
+                    onClick={() => {
+                      if (quickGenerateFieldId) {
+                        handleGenerateSmartPlan(quickGenerateFieldId)
+                        setQuickGenerateFieldId('')
+                      }
+                    }}
+                    className="text-xs gap-1.5 bg-purple-600 hover:bg-purple-700 text-white font-semibold"
+                  >
+                    <Sparkles className="w-3.5 h-3.5" />
+                    <span>{t.irrigationPlanning?.generateNewPlan || 'Reja generatsiya qilish'}</span>
+                  </Button>
+                </div>
+              )}
+            </div>
+
+            {/* Filters Bar */}
+            <div className="p-3 rounded-xl border border-border/70 bg-card flex flex-wrap items-center gap-3 text-xs">
+              <div className="flex items-center gap-1.5 text-muted-foreground font-semibold">
+                <Filter className="w-3.5 h-3.5 text-primary" />
+                <span>Filtr:</span>
+              </div>
+
+              {/* Field filter */}
+              <select
+                value={filterField}
+                onChange={(e) => setFilterField(e.target.value)}
+                className="rounded-md border border-border bg-background px-2.5 py-1 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+              >
+                <option value="ALL">{t.irrigationPlanning?.allFieldsFilter || 'Barcha dalalar'}</option>
+                {fields.map((f) => (
+                  <option key={f.id} value={f.id}>
+                    {f.name}
+                  </option>
+                ))}
+              </select>
+
+              {/* Status filter */}
+              <select
+                value={filterStatus}
+                onChange={(e) => setFilterStatus(e.target.value)}
+                className="rounded-md border border-border bg-background px-2.5 py-1 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+              >
+                <option value="ALL">{t.irrigationPlanning?.allStatusesFilter || 'Barcha holatlar'}</option>
+                <option value="PROPOSED">PROPOSED (Tavsiya etilgan)</option>
+                <option value="APPROVED">APPROVED (Tasdiqlangan)</option>
+                <option value="SCHEDULED">SCHEDULED (Jadvalga kiritilgan)</option>
+                <option value="IN_PROGRESS">IN_PROGRESS (Sugʻorilmoqda)</option>
+                <option value="COMPLETED">COMPLETED (Bajarilgan)</option>
+                <option value="CANCELLED">CANCELLED (Bekor qilingan)</option>
+              </select>
+
+              {/* Priority filter */}
+              <select
+                value={filterPriority}
+                onChange={(e) => setFilterPriority(e.target.value)}
+                className="rounded-md border border-border bg-background px-2.5 py-1 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+              >
+                <option value="ALL">{t.irrigationPlanning?.allPrioritiesFilter || 'Barcha ustuvorliklar'}</option>
+                <option value="CRITICAL">CRITICAL (Kritik)</option>
+                <option value="HIGH">HIGH (Yuqori)</option>
+                <option value="MEDIUM">MEDIUM (Oʻrtacha)</option>
+                <option value="LOW">LOW (Past)</option>
+              </select>
+
+              {(filterField !== 'ALL' || filterStatus !== 'ALL' || filterPriority !== 'ALL') && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => {
+                    setFilterField('ALL')
+                    setFilterStatus('ALL')
+                    setFilterPriority('ALL')
+                  }}
+                  className="h-7 text-xs px-2 text-muted-foreground hover:text-foreground"
+                >
+                  <RefreshCw className="w-3 h-3 mr-1" />
+                  Tozalash
+                </Button>
+              )}
+            </div>
+
+            {/* Plans List */}
+            {filteredSmartPlans.length === 0 ? (
+              <div className="py-12 text-center rounded-xl border border-dashed border-border bg-muted/10 text-xs text-muted-foreground space-y-1.5">
+                <Sparkles className="w-8 h-8 mx-auto text-muted-foreground/40 mb-1" />
+                <p className="font-semibold text-foreground text-sm">
+                  {t.irrigationPlanning?.emptyPlansTitle || 'Hozircha sugʻorish rejalari mavjud emas'}
+                </p>
+                <p className="max-w-md mx-auto text-[11px]">
+                  {t.irrigationPlanning?.emptyPlansDesc ||
+                    'Tanlangan filtrlar boʻyicha rejalar topilmadi. Yuqoridagi tugma orqali yangi aqlli reja yaratishingiz mumkin.'}
+                </p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {filteredSmartPlans.map((plan) => (
+                  <SmartPlanCard
+                    key={plan.id}
+                    plan={plan}
+                    fieldName={fieldNamesById[plan.fieldId]}
+                    cropType={cropsById[plan.fieldId]}
+                    areaHectares={fieldAreasById[plan.fieldId]}
+                    onApprove={handleOpenApproveDialog}
+                    onCancel={handleOpenCancelSmartPlanDialog}
+                    onComplete={handleCompleteSmartPlan}
+                    lang={lang}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+        </TabsContent>
 
         {/* Tab 1: Water Allocations */}
         <TabsContent value="quotas">
@@ -643,6 +992,27 @@ export const IrrigationPage: React.FC<IrrigationPageProps> = ({ lang }) => {
         }
         lang={lang}
         onConfirm={handleConfirmCancelTarget}
+      />
+
+      {/* Smart Irrigation Planning Dialogs */}
+      <PlanApprovalDialog
+        plan={approvalPlan}
+        fieldName={approvalPlan ? fieldNamesById[approvalPlan.fieldId] : undefined}
+        cropType={approvalPlan ? cropsById[approvalPlan.fieldId] : undefined}
+        open={approvalDialogOpen}
+        onOpenChange={setApprovalDialogOpen}
+        onConfirm={handleConfirmApprove}
+        isSubmitting={approveSmartPlanMut.isPending}
+        lang={lang}
+      />
+
+      <PlanCancelDialog
+        planId={cancelPlan ? cancelPlan.id : null}
+        open={cancelPlanDialogOpen}
+        onOpenChange={setCancelPlanDialogOpen}
+        onConfirm={handleConfirmCancelSmartPlan}
+        isSubmitting={cancelSmartPlanMut.isPending}
+        lang={lang}
       />
     </div>
   )

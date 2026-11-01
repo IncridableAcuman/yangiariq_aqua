@@ -5,6 +5,7 @@ import com.aquaai.water.domain.model.WaterSourceStatus;
 import com.aquaai.water.domain.model.WaterSourceType;
 import io.swagger.v3.oas.annotations.media.Schema;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;
 
@@ -25,6 +26,12 @@ public record WaterSourceResponse(
         @Schema(description = "Operational status", example = "ACTIVE")
         WaterSourceStatus status,
 
+        @Schema(description = "Representative geographic latitude", example = "41.345678")
+        BigDecimal latitude,
+
+        @Schema(description = "Representative geographic longitude", example = "60.612345")
+        BigDecimal longitude,
+
         @Schema(description = "Registration timestamp")
         Instant createdAt,
 
@@ -41,6 +48,8 @@ public record WaterSourceResponse(
                 domain.getType(),
                 domain.getDescription(),
                 domain.getStatus(),
+                domain.getLatitude(),
+                domain.getLongitude(),
                 domain.getCreatedAt(),
                 domain.getUpdatedAt()
         );

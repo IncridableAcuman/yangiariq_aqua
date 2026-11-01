@@ -57,6 +57,7 @@ export function useCreateFieldMutation(): UseMutationResult<
     mutationFn: (payload: CreateFieldPayload) => createField(payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: fieldKeys.lists() })
+      queryClient.invalidateQueries({ queryKey: ['gis'] })
     },
   })
 }
@@ -74,6 +75,7 @@ export function useUpdateFieldMutation(): UseMutationResult<
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: fieldKeys.detail(data.id) })
       queryClient.invalidateQueries({ queryKey: fieldKeys.lists() })
+      queryClient.invalidateQueries({ queryKey: ['gis'] })
     },
   })
 }
@@ -90,6 +92,7 @@ export function useDeactivateFieldMutation(): UseMutationResult<
     onSuccess: (_data, id) => {
       queryClient.invalidateQueries({ queryKey: fieldKeys.detail(id) })
       queryClient.invalidateQueries({ queryKey: fieldKeys.lists() })
+      queryClient.invalidateQueries({ queryKey: ['gis'] })
     },
   })
 }
@@ -106,6 +109,7 @@ export function useReactivateFieldMutation(): UseMutationResult<
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: fieldKeys.detail(data.id) })
       queryClient.invalidateQueries({ queryKey: fieldKeys.lists() })
+      queryClient.invalidateQueries({ queryKey: ['gis'] })
     },
   })
 }

@@ -54,7 +54,13 @@ public class UpdateWaterSourceUseCase {
             }
         }
 
-        source.updateDetails(request.name(), request.type(), request.description());
+        source.updateDetails(
+                request.name(),
+                request.type(),
+                request.description(),
+                request.latitude(),
+                request.longitude()
+        );
         WaterSource saved = waterSourceRepository.save(source);
 
         log.info("Water source {} updated by user {}", id, currentUserId);

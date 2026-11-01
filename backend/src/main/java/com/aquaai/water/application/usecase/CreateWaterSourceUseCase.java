@@ -43,7 +43,13 @@ public class CreateWaterSourceUseCase {
             throw new DuplicateResourceException("An active water source with name '" + normalizedName + "' already exists");
         }
 
-        WaterSource source = WaterSource.create(request.name(), request.type(), request.description());
+        WaterSource source = WaterSource.create(
+                request.name(),
+                request.type(),
+                request.description(),
+                request.latitude(),
+                request.longitude()
+        );
         WaterSource saved = waterSourceRepository.save(source);
 
         log.info("Water source '{}' created with ID {} by user {}", saved.getName(), saved.getId(), currentUserId);

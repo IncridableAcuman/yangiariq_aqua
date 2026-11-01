@@ -155,10 +155,12 @@ public class WaterSourceRepositoryImpl implements WaterSourceRepository {
         org.springframework.data.domain.Pageable pageable =
                 org.springframework.data.domain.PageRequest.of(safePage, safeSize, org.springframework.data.domain.Sort.by(direction, safeSortBy));
 
-        String safeSearch = (search != null && !search.isBlank()) ? search.trim() : null;
+        String searchPattern = (search != null && !search.isBlank())
+                ? "%" + search.trim().toLowerCase() + "%"
+                : null;
 
         org.springframework.data.domain.Page<WaterSourceJpaEntity> pageResult =
-                springDataRepository.findWithFilters(safeSearch, type, status, pageable);
+                springDataRepository.findWithFilters(searchPattern, type, status, pageable);
 
         List<WaterSource> domainItems = pageResult.getContent().stream()
                 .map(mapper::toDomain)

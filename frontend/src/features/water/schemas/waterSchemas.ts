@@ -21,22 +21,52 @@ export const IRRIGATION_METHODS = [
 // -------------------------------------------------------------
 // Water Source Schema
 // -------------------------------------------------------------
-export const waterSourceSchema = z.object({
-  name: z
-    .string()
-    .trim()
-    .min(1, { message: 'water.validation.nameRequired' })
-    .max(128, { message: 'water.validation.nameTooLong' }),
-  type: z.enum(WATER_SOURCE_TYPES, {
-    errorMap: () => ({ message: 'water.validation.typeRequired' }),
-  }),
-  description: z
-    .string()
-    .trim()
-    .max(500, { message: 'water.validation.descriptionTooLong' })
-    .optional()
-    .or(z.literal('')),
-})
+export const waterSourceSchema = z
+  .object({
+    name: z
+      .string()
+      .trim()
+      .min(1, { message: 'water.validation.nameRequired' })
+      .max(128, { message: 'water.validation.nameTooLong' }),
+    type: z.enum(WATER_SOURCE_TYPES, {
+      errorMap: () => ({ message: 'water.validation.typeRequired' }),
+    }),
+    description: z
+      .string()
+      .trim()
+      .max(500, { message: 'water.validation.descriptionTooLong' })
+      .optional()
+      .or(z.literal('')),
+    latitude: z
+      .preprocess(
+        (val) => (val === '' || val === null || val === undefined ? undefined : Number(val)),
+        z
+          .number({ invalid_type_error: 'water.validation.latRange' })
+          .min(-90, { message: 'water.validation.latRange' })
+          .max(90, { message: 'water.validation.latRange' })
+          .optional()
+      ),
+    longitude: z
+      .preprocess(
+        (val) => (val === '' || val === null || val === undefined ? undefined : Number(val)),
+        z
+          .number({ invalid_type_error: 'water.validation.lonRange' })
+          .min(-180, { message: 'water.validation.lonRange' })
+          .max(180, { message: 'water.validation.lonRange' })
+          .optional()
+      ),
+  })
+  .refine(
+    (data) => {
+      const hasLat = data.latitude !== undefined && data.latitude !== null
+      const hasLon = data.longitude !== undefined && data.longitude !== null
+      return (hasLat && hasLon) || (!hasLat && !hasLon)
+    },
+    {
+      message: 'water.validation.coordsBothOrNeither',
+      path: ['latitude'],
+    }
+  )
 
 export type WaterSourceFormData = z.infer<typeof waterSourceSchema>
 

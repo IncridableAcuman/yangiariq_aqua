@@ -16,6 +16,8 @@ public interface SpringDataWaterAllocationRepository extends JpaRepository<Water
 
     List<WaterAllocationJpaEntity> findByFieldId(UUID fieldId);
 
+    List<WaterAllocationJpaEntity> findByFieldIdIn(java.util.Collection<UUID> fieldIds);
+
     List<WaterAllocationJpaEntity> findByFieldIdAndStatus(UUID fieldId, WaterAllocationStatus status);
 
     List<WaterAllocationJpaEntity> findByWaterSourceId(UUID waterSourceId);

@@ -70,6 +70,13 @@ public class FieldRepositoryImpl implements FieldRepository {
     }
 
     @Override
+    public List<Field> findAll() {
+        return springDataFieldRepository.findAll().stream()
+                .map(mapper::toDomain)
+                .toList();
+    }
+
+    @Override
     public Optional<Field> findByIdAndOwnerId(UUID id, UUID ownerId) {
         if (id == null || ownerId == null) {
             return Optional.empty();

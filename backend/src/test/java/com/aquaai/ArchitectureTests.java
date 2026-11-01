@@ -204,4 +204,298 @@ class ArchitectureTests {
                 .should().dependOnClassesThat().resideInAPackage("org.springframework..")
                 .check(importedClasses);
     }
+
+    @Test
+    @DisplayName("20. Sensor domain must not depend on JPA or persistence annotations")
+    void sensorDomainMustNotDependOnJpa() {
+        noClasses()
+                .that().resideInAPackage("..sensor.domain..")
+                .should().dependOnClassesThat().resideInAnyPackage("jakarta.persistence..", "org.springframework.data..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("21. Sensor domain must not depend on Spring MVC or PostgreSQL vendor classes")
+    void sensorDomainMustNotDependOnWebOrPostgres() {
+        noClasses()
+                .that().resideInAPackage("..sensor.domain..")
+                .should().dependOnClassesThat().resideInAnyPackage("org.springframework.web..", "org.postgresql..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("22. Sensor persistence entities must reside in sensor.infrastructure.persistence")
+    void sensorPersistenceEntitiesMustResideInInfrastructurePersistence() {
+        classes()
+                .that().resideInAPackage("..sensor..")
+                .and().areAnnotatedWith(Entity.class)
+                .should().resideInAPackage("..sensor.infrastructure.persistence..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("23. Sensor domain must not depend on Spring framework classes")
+    void sensorDomainMustNotDependOnSpring() {
+        noClasses()
+                .that().resideInAPackage("..sensor.domain..")
+                .should().dependOnClassesThat().resideInAnyPackage("org.springframework..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("24. Sensor domain must not depend on other business domain modules directly")
+    void sensorDomainMustNotDependOnOtherModules() {
+        noClasses()
+                .that().resideInAPackage("..sensor.domain..")
+                .should().dependOnClassesThat().resideInAnyPackage("..water..", "..user..", "..auth..", "..field.domain..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("25. Anomaly domain must not depend on JPA or persistence annotations")
+    void anomalyDomainMustNotDependOnJpa() {
+        noClasses()
+                .that().resideInAPackage("..anomaly.domain..")
+                .should().dependOnClassesThat().resideInAnyPackage("jakarta.persistence..", "org.springframework.data..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("26. Anomaly domain must not depend on Spring MVC or PostgreSQL vendor classes")
+    void anomalyDomainMustNotDependOnWebOrPostgres() {
+        noClasses()
+                .that().resideInAPackage("..anomaly.domain..")
+                .should().dependOnClassesThat().resideInAnyPackage("org.springframework.web..", "org.postgresql..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("27. Anomaly persistence entities must reside in anomaly.infrastructure.persistence")
+    void anomalyPersistenceEntitiesMustResideInInfrastructurePersistence() {
+        classes()
+                .that().resideInAPackage("..anomaly..")
+                .and().areAnnotatedWith(Entity.class)
+                .should().resideInAPackage("..anomaly.infrastructure.persistence..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("28. Anomaly domain must not depend on Spring framework classes")
+    void anomalyDomainMustNotDependOnSpring() {
+        noClasses()
+                .that().resideInAPackage("..anomaly.domain..")
+                .should().dependOnClassesThat().resideInAnyPackage("org.springframework..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("29. Recommendation domain must not depend on JPA or persistence annotations")
+    void recommendationDomainMustNotDependOnJpa() {
+        noClasses()
+                .that().resideInAPackage("..recommendation.domain..")
+                .should().dependOnClassesThat().resideInAnyPackage("jakarta.persistence..", "org.springframework.data..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("30. Recommendation domain must not depend on Spring MVC or web classes")
+    void recommendationDomainMustNotDependOnWeb() {
+        noClasses()
+                .that().resideInAPackage("..recommendation.domain..")
+                .should().dependOnClassesThat().resideInAnyPackage("org.springframework.web..", "org.postgresql..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("31. Recommendation persistence entities must reside in recommendation.infrastructure.persistence")
+    void recommendationPersistenceEntitiesMustResideInInfrastructurePersistence() {
+        classes()
+                .that().resideInAPackage("..recommendation..")
+                .and().areAnnotatedWith(Entity.class)
+                .should().resideInAPackage("..recommendation.infrastructure.persistence..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("32. Recommendation domain must not depend on Spring framework classes")
+    void recommendationDomainMustNotDependOnSpring() {
+        noClasses()
+                .that().resideInAPackage("..recommendation.domain..")
+                .should().dependOnClassesThat().resideInAnyPackage("org.springframework..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("33. Irrigation domain must not depend on JPA or persistence annotations")
+    void irrigationDomainMustNotDependOnJpa() {
+        noClasses()
+                .that().resideInAPackage("..irrigation.domain..")
+                .should().dependOnClassesThat().resideInAnyPackage("jakarta.persistence..", "org.springframework.data..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("34. Irrigation domain must not depend on Spring MVC or web classes")
+    void irrigationDomainMustNotDependOnWeb() {
+        noClasses()
+                .that().resideInAPackage("..irrigation.domain..")
+                .should().dependOnClassesThat().resideInAnyPackage("org.springframework.web..", "org.postgresql..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("35. Irrigation persistence entities must reside in irrigation.infrastructure.persistence")
+    void irrigationPersistenceEntitiesMustResideInInfrastructurePersistence() {
+        classes()
+                .that().resideInAPackage("..irrigation..")
+                .and().areAnnotatedWith(Entity.class)
+                .should().resideInAPackage("..irrigation.infrastructure.persistence..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("36. Irrigation domain must not depend on Spring framework classes")
+    void irrigationDomainMustNotDependOnSpring() {
+        noClasses()
+                .that().resideInAPackage("..irrigation.domain..")
+                .should().dependOnClassesThat().resideInAnyPackage("org.springframework..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("37. Irrigation domain must not depend on other business domain modules directly")
+    void irrigationDomainMustNotDependOnOtherModules() {
+        noClasses()
+                .that().resideInAPackage("..irrigation.domain..")
+                .should().dependOnClassesThat().resideInAnyPackage("..water..", "..user..", "..auth..", "..field..", "..sensor..", "..anomaly..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("38. Intelligence domain must not depend on Spring framework classes")
+    void intelligenceDomainMustNotDependOnSpring() {
+        noClasses()
+                .that().resideInAPackage("..intelligence.domain..")
+                .should().dependOnClassesThat().resideInAnyPackage("org.springframework..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("39. Intelligence domain must not depend on JPA or persistence annotations")
+    void intelligenceDomainMustNotDependOnJpa() {
+        noClasses()
+                .that().resideInAPackage("..intelligence.domain..")
+                .should().dependOnClassesThat().resideInAnyPackage("jakarta.persistence..", "org.springframework.data..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("40. Intelligence domain must not depend on PostgreSQL vendor classes")
+    void intelligenceDomainMustNotDependOnPostgres() {
+        noClasses()
+                .that().resideInAPackage("..intelligence.domain..")
+                .should().dependOnClassesThat().resideInAnyPackage("org.postgresql..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("41. Intelligence domain must not depend on Gemini SDK or vendor classes")
+    void intelligenceDomainMustNotDependOnGemini() {
+        noClasses()
+                .that().resideInAPackage("..intelligence.domain..")
+                .should().dependOnClassesThat().resideInAnyPackage("com.google..", "org.springframework.ai..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("42. Intelligence domain must not depend on HTTP or web classes")
+    void intelligenceDomainMustNotDependOnWeb() {
+        noClasses()
+                .that().resideInAPackage("..intelligence.domain..")
+                .should().dependOnClassesThat().resideInAnyPackage("org.springframework.web..", "jakarta.servlet..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("43. Intelligence domain must not depend on sensor infrastructure")
+    void intelligenceDomainMustNotDependOnSensorInfrastructure() {
+        noClasses()
+                .that().resideInAPackage("..intelligence.domain..")
+                .should().dependOnClassesThat().resideInAPackage("..sensor.infrastructure..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("44. Intelligence application must not depend on controllers")
+    void intelligenceApplicationMustNotDependOnControllers() {
+        noClasses()
+                .that().resideInAPackage("..intelligence.application..")
+                .should().dependOnClassesThat().areAnnotatedWith(RestController.class)
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("45. Intelligence persistence entities must reside in intelligence.infrastructure.persistence")
+    void intelligencePersistenceEntitiesMustResideInInfrastructurePersistence() {
+        classes()
+                .that().resideInAPackage("..intelligence..")
+                .and().areAnnotatedWith(Entity.class)
+                .should().resideInAPackage("..intelligence.infrastructure.persistence..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("46. AI provider implementations must remain infrastructure adapters")
+    void aiProviderImplementationsMustRemainInfrastructureAdapters() {
+        classes()
+                .that().haveSimpleNameEndingWith("AIAdapter").or().haveSimpleNameEndingWith("AIProvider")
+                .and().areNotInterfaces()
+                .should().resideInAPackage("..infrastructure..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("47. Deterministic agronomic engines must not depend on AI providers directly")
+    void deterministicEnginesMustNotDependOnAi() {
+        noClasses()
+                .that().haveSimpleNameContaining("Deterministic").or().haveSimpleNameContaining("AgronomicAssessmentEngine")
+                .should().dependOnClassesThat().haveSimpleNameContaining("Gemini")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("48. Intelligence must not create circular dependency with irrigation")
+    void intelligenceMustNotCreateCircularDependencyWithIrrigation() {
+        noClasses()
+                .that().resideInAPackage("..irrigation..")
+                .should().dependOnClassesThat().resideInAPackage("..intelligence..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("49. Intelligence must not directly control hardware or actuator SDKs")
+    void intelligenceMustNotControlHardware() {
+        noClasses()
+                .that().resideInAPackage("..intelligence..")
+                .should().dependOnClassesThat().resideInAnyPackage("org.eclipse.paho..", "com.pi4j..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("50. Intelligence recommendation engine must synthesize assessments")
+    void intelligenceRecommendationEngineMustSynthesizeAssessments() {
+        classes()
+                .that().haveSimpleName("IntelligenceRecommendationEngine")
+                .should().dependOnClassesThat().haveSimpleName("AgronomicAssessment")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("51. Intelligence adapter must evaluate hydraulic safety interlock")
+    void intelligenceAdapterMustEvaluateHydraulicSafetyInterlock() {
+        classes()
+                .that().haveSimpleName("IntelligenceHydraulicSafetyAdapter")
+                .should().dependOnClassesThat().haveSimpleName("HydraulicSafetyInterlock")
+                .check(importedClasses);
+    }
 }

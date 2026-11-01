@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Plus, Search, Waves, CheckCircle2, Power, Edit } from 'lucide-react'
+import { Plus, Search, Waves, CheckCircle2, Power, Edit, MapPin } from 'lucide-react'
 import { Card } from '@/shared/ui/card'
 import { Button } from '@/shared/ui/button'
 import { Input } from '@/shared/ui/input'
@@ -154,6 +154,15 @@ export const WaterSourceCatalog: React.FC<WaterSourceCatalogProps> = ({
             <p className="text-xs text-muted-foreground min-h-[36px] line-clamp-2">
               {source.description || 'No hydraulic description provided.'}
             </p>
+
+            {source.latitude != null && source.longitude != null && (
+              <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground font-mono">
+                <MapPin className="w-3 h-3 text-sky-500 shrink-0" />
+                <span>
+                  {Number(source.latitude).toFixed(4)}°N, {Number(source.longitude).toFixed(4)}°E
+                </span>
+              </div>
+            )}
 
             <div className="pt-2 border-t border-border/50 flex items-center justify-between text-[11px] text-muted-foreground">
               <span>Registered {formatDate(source.createdAt)}</span>

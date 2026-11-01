@@ -52,6 +52,8 @@ export const WaterSourceFormDialog: React.FC<WaterSourceFormDialogProps> = ({
       name: '',
       type: 'CANAL',
       description: '',
+      latitude: undefined,
+      longitude: undefined,
     },
   })
 
@@ -62,12 +64,16 @@ export const WaterSourceFormDialog: React.FC<WaterSourceFormDialogProps> = ({
           name: sourceToEdit.name,
           type: sourceToEdit.type,
           description: sourceToEdit.description || '',
+          latitude: sourceToEdit.latitude ?? undefined,
+          longitude: sourceToEdit.longitude ?? undefined,
         })
       } else {
         reset({
           name: '',
           type: 'CANAL',
           description: '',
+          latitude: undefined,
+          longitude: undefined,
         })
       }
     }
@@ -146,6 +152,41 @@ export const WaterSourceFormDialog: React.FC<WaterSourceFormDialogProps> = ({
             {errors.description && (
               <p className="text-xs text-rose-500">{errors.description.message}</p>
             )}
+          </div>
+
+          {/* Geographic Coordinates (Optional) */}
+          <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-1.5">
+              <Label htmlFor="source-latitude" className="text-xs font-semibold">
+                Latitude (°N)
+              </Label>
+              <Input
+                id="source-latitude"
+                type="number"
+                step="any"
+                placeholder="41.341400"
+                {...register('latitude')}
+              />
+              {errors.latitude && (
+                <p className="text-xs text-rose-500">{errors.latitude.message}</p>
+              )}
+            </div>
+
+            <div className="space-y-1.5">
+              <Label htmlFor="source-longitude" className="text-xs font-semibold">
+                Longitude (°E)
+              </Label>
+              <Input
+                id="source-longitude"
+                type="number"
+                step="any"
+                placeholder="60.609400"
+                {...register('longitude')}
+              />
+              {errors.longitude && (
+                <p className="text-xs text-rose-500">{errors.longitude.message}</p>
+              )}
+            </div>
           </div>
 
           <DialogFooter className="gap-2 sm:gap-0 pt-2">

@@ -3,6 +3,8 @@ package com.aquaai.water.domain.model;
 import com.aquaai.shared.domain.BusinessRuleException;
 import lombok.Getter;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.Instant;
 import java.util.Objects;
 import java.util.UUID;
@@ -17,6 +19,7 @@ import java.util.UUID;
  *   <li>Type must not be null.</li>
  *   <li>Description cannot exceed 500 characters.</li>
  *   <li>Status defaults to ACTIVE.</li>
+ *   <li>Coordinates (latitude, longitude) are optional; if provided, both must be present and valid.</li>
  * </ul>
  */
 @Getter
@@ -25,26 +28,40 @@ public class WaterSource {
     public static final int MAX_NAME_LENGTH = 128;
     public static final int MAX_DESCRIPTION_LENGTH = 500;
 
+    public static final BigDecimal MIN_LATITUDE = new BigDecimal("-90.0");
+    public static final BigDecimal MAX_LATITUDE = new BigDecimal("90.0");
+    public static final BigDecimal MIN_LONGITUDE = new BigDecimal("-180.0");
+    public static final BigDecimal MAX_LONGITUDE = new BigDecimal("180.0");
+
     private final UUID id;
     private String name;
     private WaterSourceType type;
     private String description;
     private WaterSourceStatus status;
+    private BigDecimal latitude;
+    private BigDecimal longitude;
     private final Instant createdAt;
     private Instant updatedAt;
     private Long version;
 
     /**
-     * Domain factory method for creating a brand-new water source.
+     * Domain factory method for creating a brand-new water source with coordinates.
      */
-    public static WaterSource create(String name, WaterSourceType type, String description) {
-        return create(UUID.randomUUID(), name, type, description);
+    public static WaterSource create(String name, WaterSourceType type, String description, BigDecimal latitude, BigDecimal longitude) {
+        return create(UUID.randomUUID(), name, type, description, latitude, longitude);
     }
 
     /**
-     * Domain factory method with explicit ID (for testing or client-assigned identifiers).
+     * Domain factory method for creating a brand-new water source without coordinates.
      */
-    public static WaterSource create(UUID id, String name, WaterSourceType type, String description) {
+    public static WaterSource create(String name, WaterSourceType type, String description) {
+        return create(UUID.randomUUID(), name, type, description, null, null);
+    }
+
+    /**
+     * Domain factory method with explicit ID and coordinates.
+     */
+    public static WaterSource create(UUID id, String name, WaterSourceType type, String description, BigDecimal latitude, BigDecimal longitude) {
         Instant now = Instant.now();
         return new WaterSource(
                 id,
@@ -52,6 +69,8 @@ public class WaterSource {
                 type,
                 description,
                 WaterSourceStatus.ACTIVE,
+                latitude,
+                longitude,
                 now,
                 now,
                 null
@@ -59,7 +78,14 @@ public class WaterSource {
     }
 
     /**
-     * Reconstitution constructor (used by repository/persistence mapper).
+     * Domain factory method with explicit ID (for testing or client-assigned identifiers).
+     */
+    public static WaterSource create(UUID id, String name, WaterSourceType type, String description) {
+        return create(id, name, type, description, null, null);
+    }
+
+    /**
+     * Full reconstitution constructor (used by repository/persistence mapper).
      */
     public WaterSource(
             UUID id,
@@ -67,6 +93,8 @@ public class WaterSource {
             WaterSourceType type,
             String description,
             WaterSourceStatus status,
+            BigDecimal latitude,
+            BigDecimal longitude,
             Instant createdAt,
             Instant updatedAt,
             Long version
@@ -79,17 +107,42 @@ public class WaterSource {
         setNameInternal(name);
         setTypeInternal(type);
         setDescriptionInternal(description);
+        setCoordinatesInternal(latitude, longitude);
         this.status = status != null ? status : WaterSourceStatus.ACTIVE;
     }
 
     /**
-     * Updates mutable water source details while enforcing domain invariants.
+     * Backward-compatible reconstitution constructor without coordinates.
      */
-    public void updateDetails(String name, WaterSourceType type, String description) {
+    public WaterSource(
+            UUID id,
+            String name,
+            WaterSourceType type,
+            String description,
+            WaterSourceStatus status,
+            Instant createdAt,
+            Instant updatedAt,
+            Long version
+    ) {
+        this(id, name, type, description, status, null, null, createdAt, updatedAt, version);
+    }
+
+    /**
+     * Updates mutable water source details including coordinates while enforcing domain invariants.
+     */
+    public void updateDetails(String name, WaterSourceType type, String description, BigDecimal latitude, BigDecimal longitude) {
         setNameInternal(name);
         setTypeInternal(type);
         setDescriptionInternal(description);
+        setCoordinatesInternal(latitude, longitude);
         this.updatedAt = Instant.now();
+    }
+
+    /**
+     * Updates mutable water source details while preserving existing coordinates.
+     */
+    public void updateDetails(String name, WaterSourceType type, String description) {
+        updateDetails(name, type, description, this.latitude, this.longitude);
     }
 
     public void activate() {
@@ -138,5 +191,24 @@ public class WaterSource {
         } else {
             this.description = null;
         }
+    }
+
+    private void setCoordinatesInternal(BigDecimal latitude, BigDecimal longitude) {
+        if (latitude == null && longitude == null) {
+            this.latitude = null;
+            this.longitude = null;
+            return;
+        }
+        if (latitude == null || longitude == null) {
+            throw new BusinessRuleException("Both latitude and longitude must be provided together");
+        }
+        if (latitude.compareTo(MIN_LATITUDE) < 0 || latitude.compareTo(MAX_LATITUDE) > 0) {
+            throw new BusinessRuleException("Water source latitude must be between -90.0 and 90.0 degrees: " + latitude);
+        }
+        if (longitude.compareTo(MIN_LONGITUDE) < 0 || longitude.compareTo(MAX_LONGITUDE) > 0) {
+            throw new BusinessRuleException("Water source longitude must be between -180.0 and 180.0 degrees: " + longitude);
+        }
+        this.latitude = latitude.setScale(6, RoundingMode.HALF_UP);
+        this.longitude = longitude.setScale(6, RoundingMode.HALF_UP);
     }
 }

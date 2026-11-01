@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import {
-  Sparkles,
   Bot,
   Send,
   Droplets,
@@ -8,12 +7,16 @@ import {
   Sun,
   ShieldCheck,
   Clock,
+  Lightbulb,
+  MessageSquare,
 } from 'lucide-react'
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/shared/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card'
 import { Button } from '@/shared/ui/button'
 import { Badge } from '@/shared/ui/badge'
 import { Input } from '@/shared/ui/input'
+import { Tabs, TabsList, TabsTrigger } from '@/shared/ui/tabs'
 import { SupportedLanguage } from '@/shared/i18n'
+import { RecommendationsPage } from '@/pages/recommendations'
 
 interface Message {
   id: string
@@ -36,6 +39,7 @@ interface AiAdvisorPageProps {
 }
 
 export const AiAdvisorPage: React.FC<AiAdvisorPageProps> = ({ lang }) => {
+  const [activeTab, setActiveTab] = useState<'recommendations' | 'chat'>('recommendations')
   const [messages, setMessages] = useState<Message[]>(INITIAL_MESSAGES)
   const [inputText, setInputText] = useState('')
   const [isTyping, setIsTyping] = useState(false)
@@ -66,8 +70,7 @@ export const AiAdvisorPage: React.FC<AiAdvisorPageProps> = ({ lang }) => {
         aiReply =
           'Yangiariq Bosh kanalida suv sarfi barqaror (14.8 m³/s). Bugungi limit boʻyicha sizning fermer xoʻjaligingizga 1,200 m³ suv ajratish imkoniyati mavjud. Sugʻorish soʻrovini sugʻorish jurnalidan tasdiqlashingiz mumkin.'
       } else {
-        aiReply =
-          `Savolingiz tahlil qilindi: "${currentInput}". Yangiariq tumani agrometerologik maʼlumotlariga koʻra, tuproq shoʻrlanishini oldini olish uchun navbatdagi sugʻorishda suv sathini normada ushlab turish va datchik koʻrsatkichlarini doimiy kuzatib borish lozim.`
+        aiReply = `Savolingiz tahlil qilindi: "${currentInput}". Yangiariq tumani agrometerologik maʼlumotlariga koʻra, tuproq shoʻrlanishini oldini olish uchun navbatdagi sugʻorishda suv sathini normada ushlab turish va datchik koʻrsatkichlarini doimiy kuzatib borish lozim.`
       }
 
       const aiMsg: Message = {
@@ -84,187 +87,197 @@ export const AiAdvisorPage: React.FC<AiAdvisorPageProps> = ({ lang }) => {
 
   return (
     <div className="space-y-6">
-      {/* Title */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h2 className="text-2xl font-bold tracking-tight text-foreground flex items-center gap-2">
-            <Sparkles className="h-6 w-6 text-primary" />
-            <span>{lang === 'uz' ? 'AI Suv Maslahatchisi' : 'ИИ Водный Советник'}</span>
-          </h2>
-          <p className="text-xs text-muted-foreground mt-0.5">
-            {lang === 'uz'
-              ? 'Google Gemini API va hududiy agrometeorologik bilimlar asosida optimallashtirish'
-              : 'Оптимизация на основе Google Gemini API и локальных агрометеорологических данных'}
-          </p>
-        </div>
+      {/* Top Tabs Switcher */}
+      <div className="flex items-center justify-between border-b pb-3">
+        <Tabs value={activeTab} onValueChange={(val) => setActiveTab(val as 'recommendations' | 'chat')}>
+          <TabsList className="grid grid-cols-2 w-80 h-9">
+            <TabsTrigger value="recommendations" className="text-xs gap-1.5">
+              <Lightbulb className="w-3.5 h-3.5" />
+              <span>
+                {lang === 'uz'
+                  ? 'Tavsiyalar va Qarorlar'
+                  : lang === 'ru'
+                  ? 'Рекомендации и Решения'
+                  : 'Recommendations & Decisions'}
+              </span>
+            </TabsTrigger>
+            <TabsTrigger value="chat" className="text-xs gap-1.5">
+              <MessageSquare className="w-3.5 h-3.5" />
+              <span>
+                {lang === 'uz'
+                  ? 'Interaktiv Maslahatchi'
+                  : lang === 'ru'
+                  ? 'Интерактивный Чат'
+                  : 'Interactive Chat'}
+              </span>
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
 
-        <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20 gap-1.5 py-1 px-3">
+        <Badge
+          variant="outline"
+          className="bg-primary/10 text-primary border-primary/20 gap-1.5 py-1 px-3 hidden sm:flex"
+        >
           <ShieldCheck className="h-4 w-4" />
-          <span>Gemini-1.5-Pro Engine</span>
+          <span>Gemini & Hybrid Engine</span>
         </Badge>
       </div>
 
-      {/* Advisory Insight Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card className="border-primary/30 bg-gradient-to-br from-primary/5 to-card">
-          <CardHeader className="pb-2">
-            <div className="flex items-center justify-between">
-              <Badge variant="outline" className="bg-emerald-500/10 text-emerald-600 border-emerald-500/30 text-[10px]">
-                Yuqori Samara
-              </Badge>
-              <Sun className="h-4 w-4 text-amber-500" />
-            </div>
-            <CardTitle className="text-sm font-bold mt-1">
-              {lang === 'uz' ? 'Tungi sugʻorish strategiyasi' : 'Стратегия ночного полива'}
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-2">
-            <p className="text-xs text-muted-foreground">
-              {lang === 'uz'
-                ? 'Kunduzgi bugʻlanish koeffitsienti 1.8x yuqori. Tungi soat 22:00 dan 05:00 gacha sugʻorish tavsiya qilinadi.'
-                : 'Дневное испарение выше в 1.8 раза. Рекомендуется ночной полив с 22:00 до 05:00.'}
-            </p>
-            <div className="text-xs font-semibold text-emerald-600 flex items-center gap-1">
-              <TrendingDown className="h-3.5 w-3.5" />
-              <span>-22% suv isrofi tejaladi</span>
-            </div>
-          </CardContent>
-        </Card>
+      {activeTab === 'recommendations' ? (
+        <RecommendationsPage lang={lang} />
+      ) : (
+        <div className="space-y-6">
+          {/* Advisory Insight Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <Card className="border-primary/30 bg-gradient-to-br from-primary/5 to-card">
+              <CardHeader className="pb-2">
+                <div className="flex items-center justify-between">
+                  <Badge variant="outline" className="bg-emerald-500/10 text-emerald-600 border-emerald-500/30 text-[10px]">
+                    Yuqori Samara
+                  </Badge>
+                  <Sun className="h-4 w-4 text-amber-500" />
+                </div>
+                <CardTitle className="text-sm font-bold mt-1">
+                  {lang === 'uz' ? 'Tungi sugʻorish strategiyasi' : 'Стратегия ночного полива'}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-2">
+                <p className="text-xs text-muted-foreground">
+                  {lang === 'uz'
+                    ? 'Kunduzgi bugʻlanish koeffitsienti 1.8x yuqori. Tungi soat 22:00 dan 05:00 gacha sugʻorish tavsiya qilinadi.'
+                    : 'Дневное испарение выше в 1.8 раза. Рекомендуется ночной полив с 22:00 до 05:00.'}
+                </p>
+                <div className="text-xs font-semibold text-emerald-600 flex items-center gap-1">
+                  <TrendingDown className="h-3.5 w-3.5" />
+                  <span>-22% suv isrofi tejaladi</span>
+                </div>
+              </CardContent>
+            </Card>
 
-        <Card>
-          <CardHeader className="pb-2">
-            <div className="flex items-center justify-between">
-              <Badge variant="outline" className="bg-amber-500/10 text-amber-600 border-amber-500/30 text-[10px]">
-                Diqqat
-              </Badge>
-              <Clock className="h-4 w-4 text-primary" />
-            </div>
-            <CardTitle className="text-sm font-bold mt-1">
-              {lang === 'uz' ? 'Dala №09: Qurgʻoqchilik xavfi' : 'Поле №09: Риск стресса'}
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-2">
-            <p className="text-xs text-muted-foreground">
-              {lang === 'uz'
-                ? 'Tuproq namligi 46% gacha pasaygan. Poliz ekinlarida ildiz stressini oldini olish uchun 12 soat ichida suv berish zarur.'
-                : 'Влажность упала до 46%. Требуется полив бахчевых культур в течение 12 часов.'}
-            </p>
-            <div className="text-xs font-semibold text-amber-600">
-              Kutilayotgan suv hajmi: 600 m³
-            </div>
-          </CardContent>
-        </Card>
+            <Card>
+              <CardHeader className="pb-2">
+                <div className="flex items-center justify-between">
+                  <Badge variant="outline" className="bg-amber-500/10 text-amber-600 border-amber-500/30 text-[10px]">
+                    Diqqat
+                  </Badge>
+                  <Clock className="h-4 w-4 text-primary" />
+                </div>
+                <CardTitle className="text-sm font-bold mt-1">
+                  {lang === 'uz' ? 'Bugʻlanish monitoringi' : 'Мониторинг испарения'}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-2">
+                <p className="text-xs text-muted-foreground">
+                  {lang === 'uz'
+                    ? 'Yozgi quruq havo (garmsel) taʼsirida tuproq namligi odatdagidan tez pasayishi mumkin.'
+                    : 'В период суховея влажность почвы снижается быстрее нормы.'}
+                </p>
+                <div className="text-xs font-semibold text-amber-600 flex items-center gap-1">
+                  <Droplets className="h-3.5 w-3.5" />
+                  <span>Datchiklar nazoratda</span>
+                </div>
+              </CardContent>
+            </Card>
 
-        <Card>
-          <CardHeader className="pb-2">
-            <div className="flex items-center justify-between">
-              <Badge variant="outline" className="bg-sky-500/10 text-sky-600 border-sky-500/30 text-[10px]">
-                Barqaror
-              </Badge>
-              <Droplets className="h-4 w-4 text-hydro-600" />
-            </div>
-            <CardTitle className="text-sm font-bold mt-1">
-              {lang === 'uz' ? 'Yangiariq gidro-balansi' : 'Гидробаланс Янгиарыка'}
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-2">
-            <p className="text-xs text-muted-foreground">
-              {lang === 'uz'
-                ? 'Magistral kanaldan suv oqimi 14.8 m³/s bilan taʼminlangan. Tuman boʻyicha taqsimot meʼyordan 4% yuqori.'
-                : 'Расход в канале 14.8 м³/с. Распределение по району выше нормы на 4%.'}
-            </p>
-            <div className="text-xs font-semibold text-primary">
-              Tizim holati: Barqaror
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Interactive AI Chat Box */}
-      <Card className="flex flex-col h-[460px] border-border shadow-xs">
-        <CardHeader className="py-3 px-4 border-b border-border flex flex-row items-center justify-between space-y-0">
-          <div className="flex items-center gap-2.5">
-            <div className="h-8 w-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
-              <Bot className="h-4 w-4" />
-            </div>
-            <div>
-              <CardTitle className="text-sm font-bold">Aqua AI Maslahat Darchasi</CardTitle>
-              <CardDescription className="text-[11px]">
-                Yangiariq tumani agronomik maʼlumotlari bilan bogʻlangan
-              </CardDescription>
-            </div>
+            <Card>
+              <CardHeader className="pb-2">
+                <div className="flex items-center justify-between">
+                  <Badge variant="outline" className="bg-primary/10 text-primary border-primary/30 text-[10px]">
+                    Limit Nazorati
+                  </Badge>
+                  <Droplets className="h-4 w-4 text-primary" />
+                </div>
+                <CardTitle className="text-sm font-bold mt-1">
+                  {lang === 'uz' ? 'Kanal suvi taqsimoti' : 'Распределение по каналам'}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-2">
+                <p className="text-xs text-muted-foreground">
+                  {lang === 'uz'
+                    ? 'Yangiariq tuman magistral kanallaridagi suv oqimi normativ talablarga mos kelmoqda.'
+                    : 'Расход воды в магистральных каналах соответствует нормам.'}
+                </p>
+                <div className="text-xs font-semibold text-primary flex items-center gap-1">
+                  <ShieldCheck className="h-3.5 w-3.5" />
+                  <span>Barqaror taqsimot</span>
+                </div>
+              </CardContent>
+            </Card>
           </div>
-          <span className="text-[11px] font-mono text-emerald-600 bg-emerald-500/10 px-2 py-0.5 rounded-full">
-            Onlayn
-          </span>
-        </CardHeader>
 
-        {/* Chat message list */}
-        <CardContent className="flex-1 overflow-y-auto p-4 space-y-3">
-          {messages.map((msg) => (
-            <div
-              key={msg.id}
-              className={`flex items-start gap-2.5 ${
-                msg.sender === 'user' ? 'justify-end' : 'justify-start'
-              }`}
-            >
-              {msg.sender === 'ai' && (
-                <div className="h-7 w-7 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0 mt-0.5">
-                  <Bot className="h-4 w-4" />
+          {/* Interactive Chat Card */}
+          <Card className="h-[480px] flex flex-col">
+            <CardHeader className="border-b py-3 px-4">
+              <div className="flex items-center gap-2">
+                <Bot className="h-5 w-5 text-primary" />
+                <CardTitle className="text-sm">
+                  {lang === 'uz' ? 'AI bilan toʻgʻridan-toʻgʻri muloqot' : 'Диалог с ИИ-ассистентом'}
+                </CardTitle>
+              </div>
+            </CardHeader>
+
+            <CardContent className="flex-1 overflow-y-auto p-4 space-y-3">
+              {messages.map((msg) => (
+                <div
+                  key={msg.id}
+                  className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+                >
+                  <div
+                    className={`max-w-[85%] rounded-2xl px-3.5 py-2.5 text-xs shadow-sm ${
+                      msg.sender === 'user'
+                        ? 'bg-primary text-primary-foreground rounded-br-none'
+                        : 'bg-muted text-foreground border border-border/60 rounded-bl-none'
+                    }`}
+                  >
+                    <p className="leading-relaxed">{msg.text}</p>
+                    <p
+                      className={`text-[9px] mt-1 ${
+                        msg.sender === 'user'
+                          ? 'text-primary-foreground/75 text-right'
+                          : 'text-muted-foreground'
+                      }`}
+                    >
+                      {msg.timestamp}
+                    </p>
+                  </div>
+                </div>
+              ))}
+
+              {isTyping && (
+                <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                  <div className="h-7 w-7 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0">
+                    <Bot className="h-4 w-4 animate-spin" />
+                  </div>
+                  <div className="bg-muted px-3 py-2 rounded-xl text-xs border border-border/60">
+                    Gemini tavsiya ishlab chiqmoqda...
+                  </div>
                 </div>
               )}
-              <div
-                className={`max-w-xl rounded-2xl px-4 py-2.5 text-xs sm:text-sm leading-relaxed ${
-                  msg.sender === 'user'
-                    ? 'bg-primary text-primary-foreground font-medium rounded-tr-none'
-                    : 'bg-muted text-foreground border border-border/60 rounded-tl-none'
-                }`}
-              >
-                <p>{msg.text}</p>
-                <span
-                  className={`text-[10px] mt-1 block text-right ${
-                    msg.sender === 'user' ? 'text-primary-foreground/70' : 'text-muted-foreground'
-                  }`}
-                >
-                  {msg.timestamp}
-                </span>
-              </div>
-            </div>
-          ))}
+            </CardContent>
 
-          {isTyping && (
-            <div className="flex items-center gap-2 text-xs text-muted-foreground">
-              <div className="h-7 w-7 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0">
-                <Bot className="h-4 w-4 animate-spin" />
-              </div>
-              <div className="bg-muted px-3 py-2 rounded-xl text-xs border border-border/60">
-                Gemini tavsiya ishlab chiqmoqda...
-              </div>
-            </div>
-          )}
-        </CardContent>
-
-        {/* Input area */}
-        <form
-          onSubmit={handleSendMessage}
-          className="p-3 border-t border-border flex items-center gap-2 bg-card/60"
-        >
-          <Input
-            placeholder={
-              lang === 'uz'
-                ? 'Savol bering (masalan: Paxta maydonini qachon sugʻorish kerak?)...'
-                : 'Задайте вопрос по поливу...'
-            }
-            value={inputText}
-            onChange={(e) => setInputText(e.target.value)}
-            className="flex-1"
-          />
-          <Button type="submit" size="sm" disabled={!inputText.trim() || isTyping}>
-            <Send className="h-4 w-4 mr-1" />
-            <span>{lang === 'uz' ? 'Yuborish' : 'Отправить'}</span>
-          </Button>
-        </form>
-      </Card>
+            {/* Input area */}
+            <form
+              onSubmit={handleSendMessage}
+              className="p-3 border-t border-border flex items-center gap-2 bg-card/60"
+            >
+              <Input
+                placeholder={
+                  lang === 'uz'
+                    ? 'Savol bering (masalan: Paxta maydonini qachon sugʻorish kerak?)...'
+                    : 'Задайте вопрос по поливу...'
+                }
+                value={inputText}
+                onChange={(e) => setInputText(e.target.value)}
+                className="flex-1"
+              />
+              <Button type="submit" size="sm" disabled={!inputText.trim() || isTyping}>
+                <Send className="h-4 w-4 mr-1" />
+                <span>{lang === 'uz' ? 'Yuborish' : 'Отправить'}</span>
+              </Button>
+            </form>
+          </Card>
+        </div>
+      )}
     </div>
   )
 }

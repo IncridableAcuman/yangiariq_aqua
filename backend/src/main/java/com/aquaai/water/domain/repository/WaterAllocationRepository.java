@@ -21,6 +21,10 @@ public interface WaterAllocationRepository {
 
     List<WaterAllocation> findByFieldId(UUID fieldId);
 
+    List<WaterAllocation> findByFieldIdIn(java.util.Collection<UUID> fieldIds);
+
+    List<WaterAllocation> findAll();
+
     List<WaterAllocation> findByFieldIdAndStatus(UUID fieldId, WaterAllocationStatus status);
 
     List<WaterAllocation> findByWaterSourceId(UUID waterSourceId);
