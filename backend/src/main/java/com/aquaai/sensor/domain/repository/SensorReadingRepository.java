@@ -25,5 +25,7 @@ public interface SensorReadingRepository {
 
     List<SensorReading> findLatestByFieldIdGroupedByType(UUID fieldId);
 
+    List<SensorReading> findLatestSoilMoistureByFieldIdIn(java.util.Collection<UUID> fieldIds);
+
     int deleteByMeasuredAtBefore(Instant cutoff);
 }

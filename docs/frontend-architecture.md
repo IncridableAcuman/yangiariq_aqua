@@ -84,3 +84,28 @@ Developed in Milestone 05.5, the GIS subsystem provides interactive mapping, cen
 - **RFC 7946 GeoJSON Standard**: Strict `[longitude, latitude]` order enforcement and automatic ring closure.
 - **Validation**: Strict boundary checks against Uzbekistan bounds (`37.0 - 45.6°N`, `56.0 - 73.2°E`).
 
+---
+
+## 8. Farm Intelligence Workspace & Action Center (`src/features/dashboard` & `src/entities/dashboard`)
+
+Developed in Milestone 08.4, the Farm Intelligence Workspace unifies all agricultural subsystems into a high-density, action-first operational center:
+- **Technical Blueprint**: [`docs/dashboard-architecture.md`](file:///home/izzatbek/Desktop/agronexsus/docs/dashboard-architecture.md) & [`docs/ux-guidelines.md`](file:///home/izzatbek/Desktop/agronexsus/docs/ux-guidelines.md)
+- **Entities (`src/entities/dashboard`)**:
+  - `types.ts`: Comprehensive TypeScript interfaces for `DashboardOverviewResponse`, `FieldMetrics`, `WaterMetrics`, `SensorMetrics`, `AnomalyMetrics`, `RecommendationMetrics`, `IrrigationMetrics`, `WaterBudgetSummary`, `PriorityFieldItem`, `UrgentActionItem`, and `RecentActivityItem`.
+  - `api.ts`: Typed read-model API client `fetchDashboardOverview(signal)`.
+- **Features (`src/features/dashboard`)**:
+  - `useDashboardQueries.ts`: TanStack Query integration with `staleTime: 60s` and automatic 2-minute refetch interval.
+  - `PriorityBadge.tsx`: Visual token mapping `CRITICAL`, `HIGH`, `MEDIUM`, and `LOW` priority levels to semantic color tokens.
+  - `FarmOverviewMetrics.tsx`: Five high-contrast operational metric cards (Parcels, Water Quota, Sensor Fleet, Active Issues, Irrigation Pipeline).
+  - `ActionCenter.tsx`: Urgent action banner highlighting critical anomalies, pending recommendations, and irrigation execution readiness with one-click navigation CTAs.
+  - `PriorityFieldsTable.tsx`: Ranked agricultural parcel list with search, priority filter, crop filter, explainable priority rationale popup modal, and responsive mobile cards.
+  - `WaterBudgetOverviewCard.tsx`: Multi-segment volumetric progress bar visualizing Allocated vs. Consumed vs. Approved vs. Committed water, accompanied by the authoritative arithmetic formula.
+  - `IrrigationLifecycleTracker.tsx`: 6-stage operational pipeline tracker displaying real-time counts from draft to completed today.
+  - `RecentActivityFeed.tsx`: Chronological stream of operational events with relative timestamps.
+  - `DashboardFieldMap.tsx`: Spatial GIS integration visualizing prioritized parcels on Leaflet with interactive popups and one-click field inspections.
+- **Page (`src/pages/dashboard/DashboardPage.tsx`)**:
+  - Replaces all static mockups with the unified farm workspace.
+  - Renders skeleton loaders matching card geometry for zero layout shift (CLS = 0).
+  - Provides graceful error recovery with retry mechanisms and multi-language support (`uz`, `ru`, `en`).
+
+

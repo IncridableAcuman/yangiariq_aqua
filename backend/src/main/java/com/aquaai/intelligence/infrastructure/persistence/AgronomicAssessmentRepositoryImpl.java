@@ -44,6 +44,15 @@ public class AgronomicAssessmentRepositoryImpl implements AgronomicAssessmentRep
 
     @Override
     @Transactional(readOnly = true)
+    public List<AgronomicAssessment> findLatestByFieldIdIn(java.util.Collection<UUID> fieldIds) {
+        if (fieldIds == null || fieldIds.isEmpty()) return Collections.emptyList();
+        return springDataRepository.findLatestByFieldIdIn(fieldIds).stream()
+                .map(mapper::toDomain)
+                .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public List<AgronomicAssessment> findByFieldId(UUID fieldId, Instant from, Instant to, int page, int size) {
         if (fieldId == null) return Collections.emptyList();
 

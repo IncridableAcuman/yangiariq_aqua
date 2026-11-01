@@ -29,6 +29,11 @@ public interface SpringDataRecommendationRepository extends JpaRepository<Recomm
             "ORDER BY r.generatedAt DESC")
     List<RecommendationJpaEntity> findActiveByFieldId(@Param("fieldId") UUID fieldId);
 
+    @Query("SELECT r FROM RecommendationJpaEntity r WHERE r.fieldId IN :fieldIds " +
+            "AND r.status IN ('GENERATED', 'VIEWED', 'ACCEPTED') " +
+            "ORDER BY r.generatedAt DESC")
+    List<RecommendationJpaEntity> findActiveByFieldIdIn(@Param("fieldIds") java.util.Collection<UUID> fieldIds);
+
     @Query("SELECT r FROM RecommendationJpaEntity r WHERE r.fieldId = :fieldId ORDER BY r.generatedAt DESC")
     Page<RecommendationJpaEntity> findByFieldId(@Param("fieldId") UUID fieldId, Pageable pageable);
 

@@ -50,6 +50,16 @@ public class RecommendationRepositoryImpl implements RecommendationRepository {
     }
 
     @Override
+    public List<AgronomicRecommendation> findActiveByFieldIdIn(java.util.Collection<UUID> fieldIds) {
+        if (fieldIds == null || fieldIds.isEmpty()) {
+            return java.util.Collections.emptyList();
+        }
+        return springDataRepository.findActiveByFieldIdIn(fieldIds).stream()
+                .map(mapper::toDomain)
+                .toList();
+    }
+
+    @Override
     public List<AgronomicRecommendation> findByFieldId(UUID fieldId, int page, int size) {
         PageRequest pageRequest = PageRequest.of(Math.max(0, page), Math.max(1, size), Sort.by(Sort.Direction.DESC, "generatedAt"));
         return springDataRepository.findByFieldId(fieldId, pageRequest).getContent().stream()

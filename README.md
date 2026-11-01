@@ -17,6 +17,7 @@
 **Yangiariq Aqua AI** is an agricultural technology platform engineered to deliver decision support for water distribution operators and local farmers in Yangiariq district (Khorezm, Uzbekistan).
 
 The platform addresses regional challenges in canal water scheduling, soil salinization risk, and irrigation optimization through:
+- **Farm Intelligence Workspace & Action Center**: Unified 10-second operational overview, deterministic parcel priority scoring, explainable rationale dialogs, centralized action center with one-click resolution CTAs, volumetric water budget breakdown, and 6-stage irrigation lifecycle tracking.
 - **Farmer & Field Management**: Geospatial mapping of parcels, crop types, and soil parameters.
 - **Irrigation Auditing**: Quantitative records of water volume delivered per field.
 - **Incident Reporting**: Real-time reporting of canal blockages, leakages, and water disputes.
@@ -90,6 +91,8 @@ docker compose up --build -d
 
 ## Documentation Index
 
+- [Unified Farm Intelligence Dashboard & Action Center](docs/dashboard-architecture.md)
+- [Agricultural UX & Action Center Guidelines](docs/ux-guidelines.md)
 - [Architecture Blueprint](ARCHITECTURE.md)
 - [Architecture Overview](docs/architecture-overview.md)
 - [Water + GIS Intelligence Architecture](docs/gis-water-integration.md)

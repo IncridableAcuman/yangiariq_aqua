@@ -42,6 +42,14 @@ public interface SpringDataSensorReadingRepository extends JpaRepository<SensorR
             "ORDER BY r.type ASC")
     List<SensorReadingJpaEntity> findLatestByFieldIdGroupedByType(@Param("fieldId") UUID fieldId);
 
+    @Query("SELECT r FROM SensorReadingJpaEntity r " +
+            "WHERE r.fieldId IN :fieldIds AND r.type = 'SOIL_MOISTURE' " +
+            "AND r.measuredAt = (" +
+            "   SELECT MAX(r2.measuredAt) FROM SensorReadingJpaEntity r2 " +
+            "   WHERE r2.fieldId = r.fieldId AND r2.type = 'SOIL_MOISTURE'" +
+            ")")
+    List<SensorReadingJpaEntity> findLatestSoilMoistureByFieldIdIn(@Param("fieldIds") java.util.Collection<UUID> fieldIds);
+
     @Query("SELECT r.id AS id, r.sensorId AS sensorId, r.fieldId AS fieldId, r.type AS type, " +
             "r.value AS value, r.unit AS unit, r.quality AS quality, r.source AS source, r.measuredAt AS measuredAt " +
             "FROM SensorReadingJpaEntity r " +

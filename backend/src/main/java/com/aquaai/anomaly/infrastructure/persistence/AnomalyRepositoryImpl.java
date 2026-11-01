@@ -91,6 +91,16 @@ public class AnomalyRepositoryImpl implements AnomalyRepository {
     }
 
     @Override
+    public List<Anomaly> findActiveByFieldIdIn(java.util.Collection<UUID> fieldIds) {
+        if (fieldIds == null || fieldIds.isEmpty()) {
+            return java.util.Collections.emptyList();
+        }
+        return springDataRepository.findActiveByFieldIdIn(fieldIds).stream()
+                .map(mapper::toDomain)
+                .toList();
+    }
+
+    @Override
     public long countByStatus(AnomalyStatus status) {
         return springDataRepository.countByStatus(status);
     }

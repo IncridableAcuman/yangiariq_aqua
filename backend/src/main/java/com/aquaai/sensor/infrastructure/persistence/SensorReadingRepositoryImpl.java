@@ -162,6 +162,17 @@ public class SensorReadingRepositoryImpl implements SensorReadingRepository {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public List<SensorReading> findLatestSoilMoistureByFieldIdIn(java.util.Collection<UUID> fieldIds) {
+        if (fieldIds == null || fieldIds.isEmpty()) {
+            return Collections.emptyList();
+        }
+        return springDataRepository.findLatestSoilMoistureByFieldIdIn(fieldIds).stream()
+                .map(mapper::toDomain)
+                .toList();
+    }
+
+    @Override
     @Transactional
     public int deleteByMeasuredAtBefore(Instant cutoff) {
         if (cutoff == null) {

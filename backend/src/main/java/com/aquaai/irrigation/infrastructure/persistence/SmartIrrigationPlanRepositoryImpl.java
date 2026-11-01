@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -58,9 +59,33 @@ public class SmartIrrigationPlanRepositoryImpl implements SmartIrrigationPlanRep
 
     @Override
     @Transactional(readOnly = true)
+    public List<SmartIrrigationPlan> findByFieldIdIn(Collection<UUID> fieldIds) {
+        if (fieldIds == null || fieldIds.isEmpty()) {
+            return Collections.emptyList();
+        }
+        return springDataRepository.findByFieldIdInOrderByPlannedDateDesc(fieldIds)
+                .stream()
+                .map(mapper::toDomain)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public Optional<SmartIrrigationPlan> findActiveByFieldId(UUID fieldId) {
         return springDataRepository.findFirstByFieldIdAndStatusInOrderByPlannedDateDesc(fieldId, ACTIVE_STATUSES)
                 .map(mapper::toDomain);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<SmartIrrigationPlan> findActiveByFieldIdIn(Collection<UUID> fieldIds) {
+        if (fieldIds == null || fieldIds.isEmpty()) {
+            return Collections.emptyList();
+        }
+        return springDataRepository.findByFieldIdInAndStatusInOrderByPlannedDateDesc(fieldIds, ACTIVE_STATUSES)
+                .stream()
+                .map(mapper::toDomain)
+                .collect(Collectors.toList());
     }
 
     @Override

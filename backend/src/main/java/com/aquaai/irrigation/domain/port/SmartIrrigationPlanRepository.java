@@ -22,7 +22,11 @@ public interface SmartIrrigationPlanRepository {
 
     List<SmartIrrigationPlan> findByFieldId(UUID fieldId);
 
+    List<SmartIrrigationPlan> findByFieldIdIn(Collection<UUID> fieldIds);
+
     Optional<SmartIrrigationPlan> findActiveByFieldId(UUID fieldId);
+
+    List<SmartIrrigationPlan> findActiveByFieldIdIn(Collection<UUID> fieldIds);
 
     List<SmartIrrigationPlan> findByPlannedDate(LocalDate plannedDate);
 

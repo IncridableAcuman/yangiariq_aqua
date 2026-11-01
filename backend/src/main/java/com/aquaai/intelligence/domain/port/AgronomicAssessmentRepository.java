@@ -16,6 +16,8 @@ public interface AgronomicAssessmentRepository {
 
     Optional<AgronomicAssessment> findLatestByFieldId(UUID fieldId);
 
+    List<AgronomicAssessment> findLatestByFieldIdIn(java.util.Collection<UUID> fieldIds);
+
     List<AgronomicAssessment> findByFieldId(UUID fieldId, Instant from, Instant to, int page, int size);
 
     long countByFieldId(UUID fieldId, Instant from, Instant to);

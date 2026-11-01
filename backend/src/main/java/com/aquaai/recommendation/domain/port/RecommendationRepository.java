@@ -24,6 +24,8 @@ public interface RecommendationRepository {
 
     List<AgronomicRecommendation> findActiveByFieldId(UUID fieldId);
 
+    List<AgronomicRecommendation> findActiveByFieldIdIn(java.util.Collection<UUID> fieldIds);
+
     List<AgronomicRecommendation> findByFieldId(UUID fieldId, int page, int size);
 
     List<AgronomicRecommendation> findAll(

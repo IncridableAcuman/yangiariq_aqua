@@ -498,4 +498,42 @@ class ArchitectureTests {
                 .should().dependOnClassesThat().haveSimpleName("HydraulicSafetyInterlock")
                 .check(importedClasses);
     }
+
+    @Test
+    @DisplayName("52. Dashboard controllers must reside in api package")
+    void dashboardControllersMustResideInApiPackage() {
+        classes()
+                .that().resideInAPackage("..dashboard..")
+                .and().areAnnotatedWith(RestController.class)
+                .should().resideInAPackage("..dashboard.api..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("53. Dashboard application services must reside in application package")
+    void dashboardApplicationServicesMustResideInApplicationPackage() {
+        classes()
+                .that().resideInAPackage("..dashboard..")
+                .and().areAnnotatedWith(Service.class)
+                .should().resideInAPackage("..dashboard.application..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("54. Dashboard controllers must not access repositories directly")
+    void dashboardControllersMustNotAccessRepositoriesDirectly() {
+        noClasses()
+                .that().resideInAPackage("..dashboard.api..")
+                .should().dependOnClassesThat().areAnnotatedWith(Repository.class)
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("55. Dashboard module must not depend on hardware or actuator SDKs")
+    void dashboardMustNotDependOnHardware() {
+        noClasses()
+                .that().resideInAPackage("..dashboard..")
+                .should().dependOnClassesThat().resideInAnyPackage("org.eclipse.paho..", "com.pi4j..")
+                .check(importedClasses);
+    }
 }

@@ -50,6 +50,11 @@ public interface SpringDataAnomalyRepository extends JpaRepository<AnomalyJpaEnt
     @Query("SELECT COUNT(a) FROM AnomalyJpaEntity a WHERE a.fieldId = :fieldId AND a.status IN ('DETECTED', 'ACKNOWLEDGED', 'INVESTIGATING')")
     long countActiveByFieldId(@Param("fieldId") UUID fieldId);
 
+    @Query("SELECT a FROM AnomalyJpaEntity a WHERE a.fieldId IN :fieldIds " +
+            "AND a.status IN ('DETECTED', 'ACKNOWLEDGED', 'INVESTIGATING') " +
+            "ORDER BY a.detectedAt DESC")
+    java.util.List<AnomalyJpaEntity> findActiveByFieldIdIn(@Param("fieldIds") java.util.Collection<UUID> fieldIds);
+
     long countByStatus(AnomalyStatus status);
 
     long countBySeverity(AnomalySeverity severity);

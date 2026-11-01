@@ -55,6 +55,8 @@ public interface AnomalyRepository {
 
     long countActiveByField(UUID fieldId);
 
+    List<Anomaly> findActiveByFieldIdIn(java.util.Collection<UUID> fieldIds);
+
     long countByStatus(AnomalyStatus status);
 
     long countBySeverity(AnomalySeverity severity);

@@ -21,6 +21,13 @@ public interface SpringDataSmartIrrigationPlanRepository extends JpaRepository<S
 
     List<SmartIrrigationPlanJpaEntity> findByFieldIdOrderByPlannedDateDesc(UUID fieldId);
 
+    List<SmartIrrigationPlanJpaEntity> findByFieldIdInOrderByPlannedDateDesc(Collection<UUID> fieldIds);
+
+    List<SmartIrrigationPlanJpaEntity> findByFieldIdInAndStatusInOrderByPlannedDateDesc(
+            Collection<UUID> fieldIds,
+            Collection<IrrigationPlanStatus> statuses
+    );
+
     Optional<SmartIrrigationPlanJpaEntity> findFirstByFieldIdAndStatusInOrderByPlannedDateDesc(
             UUID fieldId,
             Collection<IrrigationPlanStatus> statuses
