@@ -9,10 +9,13 @@ import {
   AlertTriangle,
   ShieldAlert,
   Settings,
+  Workflow,
   Globe,
   LogOut,
   LogIn,
   UserPlus,
+  BarChart3,
+  Compass,
 } from 'lucide-react'
 import { translations, SupportedLanguage } from '@/shared/i18n'
 import { useAuth } from '@/features/auth/context/AuthContext'
@@ -76,6 +79,27 @@ export const MobileSidebar: React.FC<MobileSidebarProps> = ({
       label: t.nav.irrigation,
       icon: Droplets,
       badge: null,
+    },
+    {
+      id: 'operations' as NavSection,
+      label: t.nav.operations,
+      icon: Workflow,
+      badge: 'Action',
+      badgeVariant: 'secondary' as const,
+    },
+    {
+      id: 'analytics' as NavSection,
+      label: t.nav.analytics,
+      icon: BarChart3,
+      badge: 'Stats',
+      badgeVariant: 'secondary' as const,
+    },
+    {
+      id: 'predictions' as NavSection,
+      label: t.nav.predictions,
+      icon: Compass,
+      badge: 'Forecast',
+      badgeVariant: 'secondary' as const,
     },
     {
       id: 'sensors' as NavSection,

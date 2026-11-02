@@ -171,3 +171,22 @@ Authorization: Bearer <accessToken>
   "timestamp": "2026-11-01T10:00:00Z"
 }
 ```
+
+---
+
+## 3. Decision-to-Action Operational Endpoints (Milestone 08.5)
+
+To eliminate multi-screen navigation and connect planning directly to field action, the Operations module provides unified operational orchestration endpoints under `/api/v1/operations/...`:
+
+| Method | Path | Description | Access Scope |
+| :--- | :--- | :--- | :--- |
+| `GET` | `/api/v1/operations/{fieldId}/context` | Returns full operational context (Situation, Anomaly, Recommendation, Active Plan, 7-step Workflow Timeline, Actions) in a single zero N+1 query. | Farmer (owner), Operator, Admin |
+| `POST` | `/api/v1/operations/{fieldId}/prepare-plan` | Prepares a new Smart Plan from recommendation with custom volume/date options. | Farmer (owner), Operator, Admin |
+| `POST` | `/api/v1/operations/plans/{planId}/approve` | Approves plan with server-side constraint verification and mandatory checkbox (`acknowledgeConstraints = true`). | Farmer (owner), Operator, Admin |
+| `POST` | `/api/v1/operations/plans/{planId}/reject` | Rejects plan with mandatory cancellation reason. | Farmer (owner), Operator, Admin |
+| `POST` | `/api/v1/operations/plans/{planId}/schedule` | Assigns hydraulic channel dispatch window with conflict detection. | Operator, Admin |
+| `POST` | `/api/v1/operations/plans/{planId}/start` | Manually records start of field watering in `IrrigationEvent`. | Farmer (owner), Operator, Admin |
+| `POST` | `/api/v1/operations/plans/{planId}/complete` | Manually records completion and actual delivered volume; completes recommendation. | Farmer (owner), Operator, Admin |
+| `GET` | `/api/v1/operations/plans/{planId}/verification` | Returns planned vs actual metrics, moisture recharge $\Delta\%$, and learning evidence. | Farmer (owner), Operator, Admin |
+
+See [`docs/operational-workflow.md`](operational-workflow.md) for full operational schemas and state derivation specifications.

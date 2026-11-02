@@ -6,6 +6,7 @@ import {
   RotateCcw,
   AlertCircle,
   ShieldCheck,
+  BarChart3,
 } from 'lucide-react'
 import { Button } from '@/shared/ui/button'
 import { Badge } from '@/shared/ui/badge'
@@ -21,11 +22,13 @@ import {
   IrrigationLifecycleTracker,
   RecentActivityFeed,
   DashboardFieldMap,
+  FarmPerformanceSummaryCard,
 } from '@/features/dashboard'
+import { PredictiveSummaryCard } from '@/features/prediction'
 
 interface DashboardPageProps {
   lang: SupportedLanguage
-  onNavigate: (section: NavSection) => void
+  onNavigate: (section: NavSection, fieldId?: string) => void
 }
 
 export const DashboardPage: React.FC<DashboardPageProps> = ({ lang, onNavigate }) => {
@@ -171,6 +174,15 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ lang, onNavigate }
               <span>{t.quickNavAdvisor}</span>
             </Button>
             <Button
+              variant="outline"
+              size="sm"
+              onClick={() => onNavigate('analytics')}
+              className="gap-1.5 text-xs border-blue-200 dark:border-blue-900 text-blue-700 dark:text-blue-300 bg-blue-50/50 dark:bg-blue-950/30 hover:bg-blue-100"
+            >
+              <BarChart3 className="h-3.5 w-3.5 text-blue-600 dark:text-blue-400" />
+              <span>{lang === 'uz' ? 'Tahlil va Statistika' : lang === 'ru' ? 'Аналитика' : 'Analytics'}</span>
+            </Button>
+            <Button
               variant="ghost"
               size="icon"
               className="h-8 w-8 text-muted-foreground hover:text-foreground"
@@ -187,6 +199,22 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ lang, onNavigate }
       <section data-testid="section-action-center">
         <ActionCenter
           urgentActions={overview.urgentActions}
+          lang={lang}
+          onNavigate={onNavigate}
+        />
+      </section>
+
+      {/* 2.5 Farm Performance Summary (Milestone 08.6) */}
+      <section data-testid="section-farm-performance-summary">
+        <FarmPerformanceSummaryCard
+          lang={lang}
+          onNavigate={onNavigate}
+        />
+      </section>
+
+      {/* 2.6 Predictive Farm Intelligence Summary (Milestone 08.7) */}
+      <section data-testid="section-predictive-summary">
+        <PredictiveSummaryCard
           lang={lang}
           onNavigate={onNavigate}
         />

@@ -52,8 +52,8 @@ public interface SpringDataSmartIrrigationPlanRepository extends JpaRepository<S
            "(:fieldId IS NULL OR p.fieldId = :fieldId) AND " +
            "(:status IS NULL OR p.status = :status) AND " +
            "(:priority IS NULL OR p.priority = :priority) AND " +
-           "(:dateFrom IS NULL OR p.plannedDate >= :dateFrom) AND " +
-           "(:dateTo IS NULL OR p.plannedDate <= :dateTo) " +
+           "(cast(:dateFrom as date) IS NULL OR p.plannedDate >= :dateFrom) AND " +
+           "(cast(:dateTo as date) IS NULL OR p.plannedDate <= :dateTo) " +
            "ORDER BY p.plannedDate DESC, p.plannedStartAt ASC")
     Page<SmartIrrigationPlanJpaEntity> findFiltered(
             @Param("fieldId") UUID fieldId,

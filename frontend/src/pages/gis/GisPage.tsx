@@ -348,6 +348,8 @@ export const GisPage: React.FC<GisPageProps> = ({ lang, onNavigate }) => {
                 onSelectWaterSource={handleSelectWaterSource}
                 onClose={handleClosePanel}
                 onNavigateToIrrigation={() => onNavigate?.('irrigation')}
+                onNavigateToAnalytics={(fieldId) => (onNavigate as any)?.('analytics', fieldId)}
+                onNavigateToPredictions={(fieldId) => (onNavigate as any)?.('predictions', fieldId)}
                 userRole={user?.role}
                 lang={lang}
               />

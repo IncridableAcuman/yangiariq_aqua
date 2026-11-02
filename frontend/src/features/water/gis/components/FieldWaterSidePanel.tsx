@@ -10,6 +10,8 @@ import {
   Activity,
   ShieldAlert,
   Sparkles,
+  BarChart3,
+  Compass,
 } from 'lucide-react'
 import {
   GisField,
@@ -44,6 +46,8 @@ interface FieldWaterSidePanelProps {
   onSelectWaterSource?: (source: GisWaterSource) => void
   onClose: () => void
   onNavigateToIrrigation?: () => void
+  onNavigateToAnalytics?: (fieldId: string) => void
+  onNavigateToPredictions?: (fieldId: string) => void
   userRole?: string
   lang: SupportedLanguage
   className?: string
@@ -65,6 +69,8 @@ export const FieldWaterSidePanel: React.FC<FieldWaterSidePanelProps> = ({
   onSelectWaterSource,
   onClose,
   onNavigateToIrrigation,
+  onNavigateToAnalytics,
+  onNavigateToPredictions,
   userRole,
   lang,
   className,
@@ -618,6 +624,50 @@ export const FieldWaterSidePanel: React.FC<FieldWaterSidePanelProps> = ({
               <span className="flex items-center gap-1.5">
                 <Sparkles className="w-3.5 h-3.5" />
                 <span>Smart Rejalashtirish</span>
+              </span>
+              <ArrowRight className="w-3.5 h-3.5 ml-2" />
+            </Button>
+          )}
+
+          {onNavigateToAnalytics && (
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => onNavigateToAnalytics(selectedField.id)}
+              className="w-full justify-between text-xs h-8 border-blue-200 dark:border-blue-900 text-blue-700 dark:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-950/40"
+            >
+              <span className="flex items-center gap-1.5">
+                <BarChart3 className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
+                <span>
+                  {lang === 'uz'
+                    ? 'Tahlil va Samaradorlik'
+                    : lang === 'ru'
+                    ? 'Аналитика и Эффективность'
+                    : 'Performance Analytics'}
+                </span>
+              </span>
+              <ArrowRight className="w-3.5 h-3.5 ml-2" />
+            </Button>
+          )}
+
+          {onNavigateToPredictions && (
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => onNavigateToPredictions(selectedField.id)}
+              className="w-full justify-between text-xs h-8 border-primary/20 text-primary hover:bg-primary/5"
+            >
+              <span className="flex items-center gap-1.5">
+                <Compass className="w-3.5 h-3.5 text-primary" />
+                <span>
+                  {lang === 'uz'
+                    ? 'Prediktiv Prognozlar'
+                    : lang === 'ru'
+                    ? 'Предиктивные Прогнозы'
+                    : 'Predictive Forecast'}
+                </span>
               </span>
               <ArrowRight className="w-3.5 h-3.5 ml-2" />
             </Button>

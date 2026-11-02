@@ -13,6 +13,8 @@ import {
   Radio,
   ShieldAlert,
   Sparkles,
+  Sliders,
+  TrendingDown,
 } from 'lucide-react'
 import { UrgentAction } from '@/entities/dashboard'
 import { SupportedLanguage } from '@/shared/i18n'
@@ -21,7 +23,7 @@ import { NavSection } from '@/widgets/sidebar'
 interface ActionCenterProps {
   urgentActions: UrgentAction[]
   lang: SupportedLanguage
-  onNavigate: (section: NavSection) => void
+  onNavigate: (section: NavSection, fieldId?: string) => void
 }
 
 export const ActionCenter: React.FC<ActionCenterProps> = ({
@@ -76,6 +78,10 @@ export const ActionCenter: React.FC<ActionCenterProps> = ({
         return <Radio className="w-5 h-5 text-sky-500 shrink-0" />
       case 'RECOMMENDATION_READY':
         return <Sparkles className="w-5 h-5 text-primary shrink-0" />
+      case 'CALIBRATION_PROPOSAL_PENDING':
+        return <Sliders className="w-5 h-5 text-purple-600 dark:text-purple-400 shrink-0" />
+      case 'MODEL_DRIFT_ALERT':
+        return <TrendingDown className="w-5 h-5 text-amber-500 shrink-0" />
       default:
         return <HelpCircle className="w-5 h-5 text-muted-foreground shrink-0" />
     }
@@ -204,7 +210,13 @@ export const ActionCenter: React.FC<ActionCenterProps> = ({
                 variant={action.severity.toUpperCase() === 'CRITICAL' ? 'destructive' : 'default'}
                 size="sm"
                 className="gap-1.5 text-xs shadow-xs"
-                onClick={() => onNavigate(action.targetSection as NavSection)}
+                onClick={() => {
+                  if (action.targetSection === 'operations' && action.fieldId) {
+                    onNavigate('operations', action.fieldId)
+                  } else {
+                    onNavigate(action.targetSection as NavSection)
+                  }
+                }}
               >
                 <span>{action.actionLabel}</span>
                 <ArrowRight className="w-3.5 h-3.5" />

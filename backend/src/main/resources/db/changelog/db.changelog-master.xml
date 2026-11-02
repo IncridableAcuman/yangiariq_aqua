@@ -18,5 +18,9 @@
     <include file="db/changelog/changes/011-create-recommendation-domain-tables.sql"/>
     <include file="db/changelog/changes/012-create-smart-irrigation-planning-tables.sql"/>
     <include file="db/changelog/changes/013-create-intelligence-domain-tables.sql"/>
+    <include file="db/changelog/changes/014-add-analytics-performance-indexes.sql"/>
+    <include file="db/changelog/changes/015-create-prediction-domain-tables.sql"/>
+    <include file="db/changelog/changes/016-create-prediction-evaluation-tables.sql"/>
+    <include file="db/changelog/changes/017-create-prediction-governance-tables.sql"/>
 
 </databaseChangeLog>

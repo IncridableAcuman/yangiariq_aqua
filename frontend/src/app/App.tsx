@@ -18,6 +18,9 @@ import { AnomaliesPage } from '@/pages/anomalies'
 import { AiAdvisorPage } from '@/pages/ai-advisor'
 import { ProblemsPage } from '@/pages/problems'
 import { SettingsPage } from '@/pages/settings'
+import { OperationsPage } from '@/pages/operations'
+import { AnalyticsPage } from '@/pages/analytics'
+import { PredictionsPage } from '@/pages/predictions'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -32,6 +35,7 @@ export function AppContent() {
   const { isAuthenticated, isLoading } = useAuth()
   const [lang, setLang] = useState<SupportedLanguage>('uz')
   const [currentSection, setCurrentSection] = useState<NavSection>('dashboard')
+  const [selectedOperationFieldId, setSelectedOperationFieldId] = useState<string | null>(null)
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false)
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false)
 
@@ -74,6 +78,13 @@ export function AppContent() {
     setCurrentSection('dashboard')
   }
 
+  const handleNavigate = (section: NavSection, fieldId?: string) => {
+    if (fieldId) {
+      setSelectedOperationFieldId(fieldId)
+    }
+    setCurrentSection(section)
+  }
+
   // If loading user profile on initial cold-start, display smooth loader
   if (isLoading) {
     return (
@@ -114,13 +125,37 @@ export function AppContent() {
   const renderPageContent = () => {
     switch (currentSection) {
       case 'dashboard':
-        return <DashboardPage lang={lang} onNavigate={setCurrentSection} />
+        return <DashboardPage lang={lang} onNavigate={handleNavigate} />
       case 'fields':
         return <FieldsPage lang={lang} />
       case 'gis':
-        return <GisPage lang={lang} onNavigate={setCurrentSection} />
+        return <GisPage lang={lang} onNavigate={handleNavigate} />
       case 'irrigation':
         return <IrrigationPage lang={lang} />
+      case 'operations':
+        return (
+          <OperationsPage
+            lang={lang}
+            initialFieldId={selectedOperationFieldId}
+            onNavigate={handleNavigate}
+          />
+        )
+      case 'analytics':
+        return (
+          <AnalyticsPage
+            lang={lang}
+            initialFieldId={selectedOperationFieldId}
+            onNavigate={handleNavigate}
+          />
+        )
+      case 'predictions':
+        return (
+          <PredictionsPage
+            lang={lang}
+            initialFieldId={selectedOperationFieldId}
+            onNavigate={handleNavigate}
+          />
+        )
       case 'sensors':
         return <SensorsPage lang={lang} />
       case 'anomalies':
@@ -132,7 +167,7 @@ export function AppContent() {
       case 'settings':
         return <SettingsPage lang={lang} />
       default:
-        return <DashboardPage lang={lang} onNavigate={setCurrentSection} />
+        return <DashboardPage lang={lang} onNavigate={handleNavigate} />
     }
   }
 

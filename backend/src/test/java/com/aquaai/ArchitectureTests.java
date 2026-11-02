@@ -536,4 +536,181 @@ class ArchitectureTests {
                 .should().dependOnClassesThat().resideInAnyPackage("org.eclipse.paho..", "com.pi4j..")
                 .check(importedClasses);
     }
+
+    @Test
+    @DisplayName("56. Operations controllers must reside in api package")
+    void operationsControllersMustResideInApiPackage() {
+        classes()
+                .that().resideInAPackage("..operations..")
+                .and().areAnnotatedWith(RestController.class)
+                .should().resideInAPackage("..operations.api..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("57. Operations application services must reside in application package")
+    void operationsApplicationServicesMustResideInApplicationPackage() {
+        classes()
+                .that().resideInAPackage("..operations..")
+                .and().areAnnotatedWith(Service.class)
+                .should().resideInAPackage("..operations.application..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("58. Operations controllers must not access repositories directly")
+    void operationsControllersMustNotAccessRepositoriesDirectly() {
+        noClasses()
+                .that().resideInAPackage("..operations.api..")
+                .should().dependOnClassesThat().areAnnotatedWith(Repository.class)
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("59. Operations module must not depend on hardware or actuator SDKs")
+    void operationsMustNotDependOnHardware() {
+        noClasses()
+                .that().resideInAPackage("..operations..")
+                .should().dependOnClassesThat().resideInAnyPackage("org.eclipse.paho..", "com.pi4j..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("60. Analytics controllers must reside in api package")
+    void analyticsControllersMustResideInApiPackage() {
+        classes()
+                .that().resideInAPackage("..analytics..")
+                .and().areAnnotatedWith(RestController.class)
+                .should().resideInAPackage("..analytics.api..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("61. Analytics application services must reside in application package")
+    void analyticsApplicationServicesMustResideInApplicationPackage() {
+        classes()
+                .that().resideInAPackage("..analytics..")
+                .and().areAnnotatedWith(Service.class)
+                .should().resideInAPackage("..analytics.application..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("62. Analytics controllers must not access repositories directly")
+    void analyticsControllersMustNotAccessRepositoriesDirectly() {
+        noClasses()
+                .that().resideInAPackage("..analytics.api..")
+                .should().dependOnClassesThat().areAnnotatedWith(Repository.class)
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("63. Analytics module must not depend on hardware or actuator SDKs")
+    void analyticsMustNotDependOnHardware() {
+        noClasses()
+                .that().resideInAPackage("..analytics..")
+                .should().dependOnClassesThat().resideInAnyPackage("org.eclipse.paho..", "com.pi4j..", "com.google..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("64. Analytics domain must not depend on JPA or persistence annotations")
+    void analyticsDomainMustNotDependOnJpa() {
+        noClasses()
+                .that().resideInAPackage("..analytics.domain..")
+                .should().dependOnClassesThat().resideInAnyPackage("jakarta.persistence..", "org.springframework.data..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("65. Analytics domain must not depend on Spring MVC or web classes")
+    void analyticsDomainMustNotDependOnWeb() {
+        noClasses()
+                .that().resideInAPackage("..analytics.domain..")
+                .should().dependOnClassesThat().resideInAnyPackage("org.springframework.web..", "jakarta.servlet..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("66. Prediction controllers must reside in api package")
+    void predictionControllersMustResideInApiPackage() {
+        classes()
+                .that().resideInAPackage("..prediction..")
+                .and().areAnnotatedWith(RestController.class)
+                .should().resideInAPackage("..prediction.api..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("67. Prediction application services must reside in application package")
+    void predictionApplicationServicesMustResideInApplicationPackage() {
+        classes()
+                .that().resideInAPackage("..prediction..")
+                .and().areAnnotatedWith(Service.class)
+                .should().resideInAPackage("..prediction.application..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("68. Prediction controllers must not access repositories directly")
+    void predictionControllersMustNotAccessRepositoriesDirectly() {
+        noClasses()
+                .that().resideInAPackage("..prediction.api..")
+                .should().dependOnClassesThat().areAnnotatedWith(Repository.class)
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("69. Prediction module must not depend on hardware or actuator SDKs")
+    void predictionMustNotDependOnHardware() {
+        noClasses()
+                .that().resideInAPackage("..prediction..")
+                .should().dependOnClassesThat().resideInAnyPackage("org.eclipse.paho..", "com.pi4j..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("70. Prediction domain must not depend on JPA or persistence annotations")
+    void predictionDomainMustNotDependOnJpa() {
+        noClasses()
+                .that().resideInAPackage("..prediction.domain..")
+                .should().dependOnClassesThat().resideInAnyPackage("jakarta.persistence..", "org.springframework.data..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("71. Prediction domain must not depend on Spring MVC or web classes")
+    void predictionDomainMustNotDependOnWeb() {
+        noClasses()
+                .that().resideInAPackage("..prediction.domain..")
+                .should().dependOnClassesThat().resideInAnyPackage("org.springframework.web..", "jakarta.servlet..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("72. Prediction domain and application contracts must not depend on Gemini SDK or vendor classes")
+    void predictionMustNotDependOnGemini() {
+        noClasses()
+                .that().resideInAnyPackage("..prediction.domain..", "..prediction.application..")
+                .should().dependOnClassesThat().resideInAnyPackage("com.google..", "org.springframework.ai..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("73. Prediction governance domain models must not depend on persistence or database classes")
+    void predictionGovernanceDomainMustNotDependOnPersistence() {
+        noClasses()
+                .that().resideInAPackage("..prediction.domain..")
+                .should().dependOnClassesThat().resideInAnyPackage("jakarta.persistence..", "org.springframework.data..", "org.hibernate..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("74. Prediction governance domain services must not depend on web or servlet classes")
+    void predictionGovernanceDomainMustNotDependOnWeb() {
+        noClasses()
+                .that().resideInAPackage("..prediction.domain..")
+                .should().dependOnClassesThat().resideInAnyPackage("org.springframework.web..", "jakarta.servlet..")
+                .check(importedClasses);
+    }
 }

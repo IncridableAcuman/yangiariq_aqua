@@ -17,6 +17,8 @@
 **Yangiariq Aqua AI** is an agricultural technology platform engineered to deliver decision support for water distribution operators and local farmers in Yangiariq district (Khorezm, Uzbekistan).
 
 The platform addresses regional challenges in canal water scheduling, soil salinization risk, and irrigation optimization through:
+- **Farm Performance, Historical Intelligence & Analytics**: Historical intelligence workspace answering *"What happened before?", "What changed?", "How well did we perform?", "What patterns can we see?", "What should we improve?"*. Features water quota utilization vs plan variance governance, chronological trend projections, explainable field ranking indices with safety dominance, data confidence auditing, period-over-period comparisons, and deterministic actionable insights deep-linking into execution workflows.
+- **Decision-to-Action Operations Center**: Continuous operational workspace moving from problem detected to verified field action with minimal clicks. Features deterministic 7-step workflow timeline, telemetry situation cards, precedence constraint checks, human approval with mandatory constraint acknowledgement, manual field execution logging, and post-irrigation closed-loop verification.
 - **Farm Intelligence Workspace & Action Center**: Unified 10-second operational overview, deterministic parcel priority scoring, explainable rationale dialogs, centralized action center with one-click resolution CTAs, volumetric water budget breakdown, and 6-stage irrigation lifecycle tracking.
 - **Farmer & Field Management**: Geospatial mapping of parcels, crop types, and soil parameters.
 - **Irrigation Auditing**: Quantitative records of water volume delivered per field.
@@ -29,7 +31,7 @@ The platform addresses regional challenges in canal water scheduling, soil salin
 
 ## Architectural Highlights
 
-- **Modular Monolith**: Clean boundaries between business domains (`auth`, `user`, `field`, `water`, `problem`, `dashboard`, `ai`, `sensor`, `anomaly`, `recommendation`, `irrigation`, `intelligence`, `notification`, `shared`).
+- **Modular Monolith**: Clean boundaries between business domains (`auth`, `user`, `field`, `water`, `problem`, `dashboard`, `ai`, `sensor`, `anomaly`, `recommendation`, `irrigation`, `intelligence`, `operations`, `analytics`, `notification`, `shared`).
 - **Clean Package-by-Feature**: Explicit separation between `api`, `application`, `domain`, and `infrastructure` layers.
 - **Architectural Guardrails**: Enforced via **ArchUnit** tests ensuring that controllers never access repositories or bypass DTO mappings.
 - **Pluggable AI Port**: `AiProvider` interface supporting Gemini API and mock fallbacks without leaking vendor SDK dependencies into domain logic.
@@ -91,6 +93,15 @@ docker compose up --build -d
 
 ## Documentation Index
 
+- [Predictive Model Evaluation & Continuous Intelligence](docs/prediction-evaluation.md)
+- [Prediction Outcome Matching Semantics](docs/prediction-outcome-matching.md)
+- [Prediction Evaluation Metrics & Statistical Formulation](docs/prediction-metrics.md)
+- [Prediction Data Quality, Gating & Performance Drift](docs/prediction-quality.md)
+- [Predictive Farm Intelligence & Forecasting](docs/predictive-intelligence.md)
+- [Predictive Intelligence Architecture](docs/prediction-architecture.md)
+- [Forecast Metrics & Agronomic Formulas](docs/forecast-metrics.md)
+- [Prediction Data Quality & Sufficiency](docs/prediction-data-quality.md)
+- [Farm Performance & Analytics Workspace](docs/farm-performance.md)
 - [Unified Farm Intelligence Dashboard & Action Center](docs/dashboard-architecture.md)
 - [Agricultural UX & Action Center Guidelines](docs/ux-guidelines.md)
 - [Architecture Blueprint](ARCHITECTURE.md)

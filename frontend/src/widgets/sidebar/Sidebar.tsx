@@ -16,6 +16,9 @@ import {
   Globe,
   Radio,
   ShieldAlert,
+  Workflow,
+  BarChart3,
+  Compass,
 } from 'lucide-react'
 import { translations, SupportedLanguage } from '@/shared/i18n'
 import { useAuth } from '@/features/auth/context/AuthContext'
@@ -29,6 +32,9 @@ export type NavSection =
   | 'fields'
   | 'gis'
   | 'irrigation'
+  | 'operations'
+  | 'analytics'
+  | 'predictions'
   | 'sensors'
   | 'anomalies'
   | 'ai-advisor'
@@ -84,6 +90,27 @@ export const Sidebar: React.FC<SidebarProps> = ({
       label: t.nav.irrigation,
       icon: Droplets,
       badge: null,
+    },
+    {
+      id: 'operations' as NavSection,
+      label: t.nav.operations,
+      icon: Workflow,
+      badge: 'Action',
+      badgeVariant: 'secondary' as const,
+    },
+    {
+      id: 'analytics' as NavSection,
+      label: t.nav.analytics,
+      icon: BarChart3,
+      badge: 'Stats',
+      badgeVariant: 'secondary' as const,
+    },
+    {
+      id: 'predictions' as NavSection,
+      label: t.nav.predictions,
+      icon: Compass,
+      badge: 'Forecast',
+      badgeVariant: 'secondary' as const,
     },
     {
       id: 'sensors' as NavSection,

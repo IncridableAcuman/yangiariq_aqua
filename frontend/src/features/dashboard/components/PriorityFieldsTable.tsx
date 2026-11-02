@@ -37,7 +37,7 @@ import { NavSection } from '@/widgets/sidebar'
 interface PriorityFieldsTableProps {
   fields: PriorityField[]
   lang: SupportedLanguage
-  onNavigate: (section: NavSection) => void
+  onNavigate: (section: NavSection, fieldId?: string) => void
   onSelectField?: (field: PriorityField) => void
 }
 
@@ -416,7 +416,13 @@ export const PriorityFieldsTable: React.FC<PriorityFieldsTableProps> = ({
                             className="text-xs h-7 px-2.5 gap-1 shadow-xs"
                             onClick={(e) => {
                               e.stopPropagation()
-                              onNavigate(field.actionTargetSection as NavSection)
+                              const isOperation =
+                                field.recommendedAction === 'APPROVE_PLAN' ||
+                                field.recommendedAction === 'GENERATE_PLAN' ||
+                                field.recommendedAction === 'EXECUTE_OPERATION' ||
+                                field.actionTargetSection === 'operations'
+                              const target = isOperation ? 'operations' : (field.actionTargetSection as NavSection)
+                              onNavigate(target, field.fieldId)
                             }}
                           >
                             <span>{formatActionLabel(field.recommendedAction)}</span>
@@ -555,9 +561,15 @@ export const PriorityFieldsTable: React.FC<PriorityFieldsTableProps> = ({
                   size="sm"
                   className="gap-1.5"
                   onClick={() => {
-                    const sec = explanationField.actionTargetSection as NavSection
+                    const isOperation =
+                      explanationField.recommendedAction === 'APPROVE_PLAN' ||
+                      explanationField.recommendedAction === 'GENERATE_PLAN' ||
+                      explanationField.recommendedAction === 'EXECUTE_OPERATION' ||
+                      explanationField.actionTargetSection === 'operations'
+                    const target = isOperation ? 'operations' : (explanationField.actionTargetSection as NavSection)
+                    const fId = explanationField.fieldId
                     setExplanationField(null)
-                    onNavigate(sec)
+                    onNavigate(target, fId)
                   }}
                 >
                   <span>{formatActionLabel(explanationField.recommendedAction)}</span>
