@@ -107,21 +107,21 @@ export const DataQualityImpactCard: React.FC<DataQualityImpactCardProps> = ({
                   <div className="flex justify-between items-center text-muted-foreground">
                     <span>{t.mae}:</span>
                     <span className="font-mono font-semibold text-foreground">
-                      {item.meanAbsoluteError !== null ? item.meanAbsoluteError.toFixed(2) : '—'}
+                      {typeof item.meanAbsoluteError === 'number' ? item.meanAbsoluteError.toFixed(2) : '—'}
                     </span>
                   </div>
 
                   <div className="flex justify-between items-center text-muted-foreground">
                     <span>{t.accuracy}:</span>
                     <span className="font-mono font-semibold text-foreground">
-                      {item.accuracyPercentage !== null ? `${item.accuracyPercentage.toFixed(1)}%` : '—'}
+                      {typeof item.accuracyPercentage === 'number' ? `${item.accuracyPercentage.toFixed(1)}%` : '—'}
                     </span>
                   </div>
 
                   <div className="flex justify-between items-center text-muted-foreground">
                     <span>{t.unverifiable}:</span>
                     <span className="font-mono font-semibold text-rose-600 dark:text-rose-400">
-                      {item.unverifiablePercentage !== null ? `${item.unverifiablePercentage.toFixed(1)}%` : '0%'}
+                      {typeof item.unverifiablePercentage === 'number' ? `${item.unverifiablePercentage.toFixed(1)}%` : '0%'}
                     </span>
                   </div>
                 </div>

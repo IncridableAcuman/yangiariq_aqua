@@ -106,3 +106,18 @@ Milestone 08.8 adds a dedicated evaluation and continuous intelligence loop to t
 - **Safety Interlock Preservation**: Planned irrigations halted by hydraulic safety interlocks are classified as `OUTCOME_INTERRUPTED` rather than false positives, honoring physical system integrity.
 - **Continuous Intelligence & Drift Alerts**: Automatically compares recent 7-day error rates against historical 30-day baselines, raising a performance drift warning if error exceeds baseline by $\ge 30\%$.
 - **Human-in-the-Loop Audit**: Audits the alignment between Forecast Recommendation, Human Decision (approved vs modified vs rejected), and Operational Reality.
+
+---
+
+## 8. Adaptive Intelligence, Model Governance & Controlled Calibration (Milestone 08.9)
+
+Milestone 08.9 extends evaluation insights into an end-to-end governed calibration lifecycle:
+$$\text{Insight} \longrightarrow \text{Calibration Proposal} \longrightarrow \text{Historical Backtest} \longrightarrow \text{Human Review} \longrightarrow \text{Version} \longrightarrow \text{Controlled Rollout} \longrightarrow \text{Monitoring} \longrightarrow \text{Rollback}$$
+
+- **Zero Autonomous Self-Modification**: The platform strictly prohibits automatic changes to formulas, $K_c$, $ET_0$, or thresholds without explicit human administrator approval (`ROLE_ADMIN`).
+- **Hard Safety Constraint Sovereignty**: Hard hydraulic safety parameters (`pipeBurstPressureBar`, `emergencyPressureThreshold`, `hydraulicSafetyInterlock`, etc.) are permanently immutable and blocked from calibration.
+- **Deterministic Anti-Leakage Backtesting**: Evaluates candidate parameter sets on historical ground truth using identical closed evaluation windows and strictly preventing access to post-prediction observations.
+- **Multi-Factor Regression Guard**: Blocks approval if improving one metric (e.g., MAE) degrades another (e.g., false positives or RMSE).
+- **Controlled Rollout Lifecycle**: Safe staged deployment (`DRAFT` $\to$ `CANDIDATE` $\to$ `APPROVED` $\to$ `SHADOW` $\to$ `CANARY` $\to$ `ACTIVE`).
+- **Emergency 1-Click Rollback**: Allows immediate atomic rollback to any previous immutable version with mandatory justification.
+- **Immutable Audit Trail**: Chronologically logs all proposal creation, backtest execution, human review decisions, activations, and rollbacks.

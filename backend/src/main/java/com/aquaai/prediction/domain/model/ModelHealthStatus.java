@@ -7,5 +7,6 @@ public enum ModelHealthStatus {
     HEALTHY,
     WATCH,
     DEGRADED,
-    INSUFFICIENT_DATA
+    INSUFFICIENT_DATA,
+    CANDIDATE_AVAILABLE
 }

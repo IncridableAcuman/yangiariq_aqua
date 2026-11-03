@@ -5,6 +5,7 @@ import com.aquaai.prediction.application.dto.ApproveProposalRequest;
 import com.aquaai.prediction.application.dto.BacktestRunDto;
 import com.aquaai.prediction.application.dto.CalibrationProposalDetailResponse;
 import com.aquaai.prediction.application.dto.CalibrationProposalDto;
+import com.aquaai.prediction.application.dto.CreateCandidateProposalRequest;
 import com.aquaai.prediction.application.dto.GovernanceAuditLogDto;
 import com.aquaai.prediction.application.dto.GovernanceOverviewResponse;
 import com.aquaai.prediction.application.dto.PredictionMethodVersionDto;
@@ -12,6 +13,7 @@ import com.aquaai.prediction.application.dto.RejectProposalRequest;
 import com.aquaai.prediction.application.dto.RollbackVersionRequest;
 import com.aquaai.prediction.application.usecase.ActivateVersionUseCase;
 import com.aquaai.prediction.application.usecase.ApproveCalibrationProposalUseCase;
+import com.aquaai.prediction.application.usecase.CreateCandidateProposalUseCase;
 import com.aquaai.prediction.application.usecase.GenerateCalibrationProposalUseCase;
 import com.aquaai.prediction.application.usecase.GetCalibrationProposalDetailUseCase;
 import com.aquaai.prediction.application.usecase.GetCalibrationProposalsUseCase;
@@ -21,8 +23,11 @@ import com.aquaai.prediction.application.usecase.GetPredictionMethodVersionsUseC
 import com.aquaai.prediction.application.usecase.RejectCalibrationProposalUseCase;
 import com.aquaai.prediction.application.usecase.RollbackVersionUseCase;
 import com.aquaai.prediction.application.usecase.RunBacktestUseCase;
+import com.aquaai.prediction.domain.model.PredictionMethodVersion;
 import com.aquaai.prediction.domain.model.PredictionType;
+import com.aquaai.prediction.domain.port.PredictionMethodVersionRepository;
 import com.aquaai.shared.api.ApiResponse;
+import com.aquaai.shared.domain.ResourceNotFoundException;
 import com.aquaai.shared.domain.UnauthorizedOperationException;
 import com.aquaai.shared.security.SecurityContextHelper;
 import com.aquaai.shared.security.UserPrincipal;
@@ -60,6 +65,8 @@ public class PredictionGovernanceController {
     private final RollbackVersionUseCase rollbackVersionUseCase;
     private final GetGovernanceAuditTrailUseCase getGovernanceAuditTrailUseCase;
     private final GenerateCalibrationProposalUseCase generateCalibrationProposalUseCase;
+    private final CreateCandidateProposalUseCase createCandidateProposalUseCase;
+    private final PredictionMethodVersionRepository versionRepository;
 
     @GetMapping("/overview")
     public ResponseEntity<ApiResponse<GovernanceOverviewResponse>> getOverview() {
@@ -83,6 +90,17 @@ public class PredictionGovernanceController {
     ) {
         PredictionType pType = parsePredictionType(type);
         List<CalibrationProposalDto> response = getCalibrationProposalsUseCase.execute(pType, openOnly);
+        return ResponseEntity.ok(ApiResponse.ok(response));
+    }
+
+    @PostMapping("/proposals")
+    public ResponseEntity<ApiResponse<CalibrationProposalDto>> createProposal(
+            @RequestBody CreateCandidateProposalRequest request
+    ) {
+        enforceAdminRole();
+        UserPrincipal principal = SecurityContextHelper.getRequiredPrincipal();
+        CalibrationProposalDto response = createCandidateProposalUseCase.execute(
+                request, principal.getUsername(), principal.getRole().name());
         return ResponseEntity.ok(ApiResponse.ok(response));
     }
 
@@ -163,6 +181,25 @@ public class PredictionGovernanceController {
 
         PredictionMethodVersionDto response = rollbackVersionUseCase.execute(
                 pType, request.priorVersionTag(), principal.getUsername(), principal.getRole().name(), request.reason());
+        return ResponseEntity.ok(ApiResponse.ok(response));
+    }
+
+    @PostMapping("/versions/{versionId}/rollback")
+    public ResponseEntity<ApiResponse<PredictionMethodVersionDto>> rollbackToVersionId(
+            @PathVariable UUID versionId,
+            @RequestBody(required = false) RollbackVersionRequest request
+    ) {
+        enforceAdminRole();
+        UserPrincipal principal = SecurityContextHelper.getRequiredPrincipal();
+        PredictionMethodVersion targetVersion = versionRepository.findById(versionId)
+                .orElseThrow(() -> new ResourceNotFoundException("Prediction method version not found: " + versionId));
+
+        String reason = request != null && request.reason() != null && !request.reason().isBlank()
+                ? request.reason()
+                : "Emergency rollback to target version " + targetVersion.getVersionTag();
+
+        PredictionMethodVersionDto response = rollbackVersionUseCase.execute(
+                targetVersion.getPredictionType(), targetVersion.getVersionTag(), principal.getUsername(), principal.getRole().name(), reason);
         return ResponseEntity.ok(ApiResponse.ok(response));
     }
 

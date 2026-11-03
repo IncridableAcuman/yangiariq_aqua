@@ -192,15 +192,15 @@ export const FieldEvaluationTable: React.FC<FieldEvaluationTableProps> = ({
                     </TableCell>
 
                     <TableCell className="text-right font-mono">
-                      {field.soilMoistureMae !== null ? `${field.soilMoistureMae.toFixed(1)}%` : '—'}
+                      {typeof field.soilMoistureMae === 'number' ? `${field.soilMoistureMae.toFixed(1)}%` : '—'}
                     </TableCell>
 
                     <TableCell className="text-right font-mono">
-                      {field.waterDemandMaeM3 !== null ? `${field.waterDemandMaeM3.toFixed(1)} m³` : '—'}
+                      {typeof field.waterDemandMaeM3 === 'number' ? `${field.waterDemandMaeM3.toFixed(1)} m³` : '—'}
                     </TableCell>
 
                     <TableCell className="text-center font-mono">
-                      {field.irrigationNeedAccuracyPercent !== null
+                      {typeof field.irrigationNeedAccuracyPercent === 'number'
                         ? `${field.irrigationNeedAccuracyPercent.toFixed(1)}%`
                         : '—'}
                     </TableCell>

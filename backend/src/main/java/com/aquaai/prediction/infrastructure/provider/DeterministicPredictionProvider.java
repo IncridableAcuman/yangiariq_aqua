@@ -1,5 +1,6 @@
 package com.aquaai.prediction.infrastructure.provider;
 
+import com.aquaai.prediction.application.usecase.SelectAdaptiveMethodUseCase;
 import com.aquaai.prediction.domain.model.Prediction;
 import com.aquaai.prediction.domain.model.PredictionHorizon;
 import com.aquaai.prediction.domain.model.PredictionType;
@@ -11,6 +12,7 @@ import com.aquaai.prediction.domain.port.PredictionDataProvider.TelemetryObserva
 import com.aquaai.prediction.domain.port.PredictionDataProvider.UpcomingPlanInfo;
 import com.aquaai.prediction.domain.port.PredictionDataProvider.WaterBalance;
 import com.aquaai.prediction.domain.port.PredictionDataProvider.WeatherContext;
+import com.aquaai.prediction.domain.port.PredictionMethodVersionRepository;
 import com.aquaai.prediction.domain.port.PredictionProvider;
 import com.aquaai.prediction.domain.service.DataSufficiencyEvaluator;
 import com.aquaai.prediction.domain.service.DataSufficiencyEvaluator.SufficiencyEvaluation;
@@ -20,6 +22,7 @@ import com.aquaai.prediction.domain.service.SensorReliabilityForecaster;
 import com.aquaai.prediction.domain.service.SoilMoistureForecaster;
 import com.aquaai.prediction.domain.service.WaterAvailabilityForecaster;
 import com.aquaai.prediction.domain.service.WaterDemandForecaster;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
@@ -44,6 +47,12 @@ public class DeterministicPredictionProvider implements PredictionProvider {
     private final IrrigationPlanRiskForecaster irrigationPlanRiskForecaster;
     private final SensorReliabilityForecaster sensorReliabilityForecaster;
 
+    @Autowired(required = false)
+    private PredictionMethodVersionRepository versionRepository;
+
+    @Autowired(required = false)
+    private SelectAdaptiveMethodUseCase adaptiveMethodSelector;
+
     public DeterministicPredictionProvider() {
         this.sufficiencyEvaluator = new DataSufficiencyEvaluator();
         this.soilMoistureForecaster = new SoilMoistureForecaster();
@@ -52,6 +61,18 @@ public class DeterministicPredictionProvider implements PredictionProvider {
         this.waterAvailabilityForecaster = new WaterAvailabilityForecaster();
         this.irrigationPlanRiskForecaster = new IrrigationPlanRiskForecaster();
         this.sensorReliabilityForecaster = new SensorReliabilityForecaster();
+    }
+
+    public DeterministicPredictionProvider(PredictionMethodVersionRepository versionRepository) {
+        this();
+        this.versionRepository = versionRepository;
+    }
+
+    public DeterministicPredictionProvider(PredictionMethodVersionRepository versionRepository,
+                                           SelectAdaptiveMethodUseCase adaptiveMethodSelector) {
+        this();
+        this.versionRepository = versionRepository;
+        this.adaptiveMethodSelector = adaptiveMethodSelector;
     }
 
     @Override
@@ -118,6 +139,43 @@ public class DeterministicPredictionProvider implements PredictionProvider {
                 field, horizon, sensorSummaries, now
         );
         predictions.add(sensorReliabilityPred);
+
+        // Apply governed method version tags and configuration snapshots (adaptive selection if enabled)
+        if (adaptiveMethodSelector != null || versionRepository != null) {
+            List<Prediction> versioned = new ArrayList<>(predictions.size());
+            for (Prediction p : predictions) {
+                boolean resolved = false;
+                if (adaptiveMethodSelector != null) {
+                    try {
+                        var adaptiveResult = adaptiveMethodSelector.selectForPrediction(field.fieldId(), p.getPredictionType(), p.getId());
+                        if (adaptiveResult != null && adaptiveResult.selectedVersionTag() != null) {
+                            versioned.add(p.toBuilder()
+                                    .methodVersionTag(adaptiveResult.selectedVersionTag())
+                                    .configurationSnapshot(adaptiveResult.configurationSnapshot())
+                                    .build());
+                            resolved = true;
+                        }
+                    } catch (Exception ignored) {
+                        // Safe fallback to baseline version
+                    }
+                }
+                if (!resolved && versionRepository != null) {
+                    var activeOpt = versionRepository.findActiveByPredictionType(p.getPredictionType());
+                    if (activeOpt.isPresent()) {
+                        var ver = activeOpt.get();
+                        versioned.add(p.toBuilder()
+                                .methodVersionTag(ver.getVersionTag())
+                                .configurationSnapshot(ver.getConfigurationJson())
+                                .build());
+                        resolved = true;
+                    }
+                }
+                if (!resolved) {
+                    versioned.add(p);
+                }
+            }
+            return versioned;
+        }
 
         return predictions;
     }

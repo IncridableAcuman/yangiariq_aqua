@@ -37,6 +37,8 @@ public final class PredictionJpaMapper {
                 .outcomeRecordedAt(entity.getOutcomeRecordedAt())
                 .accuracyStatus(entity.getAccuracyStatus() != null ? PredictionAccuracyStatus.valueOf(entity.getAccuracyStatus()) : PredictionAccuracyStatus.PENDING)
                 .generatedAt(entity.getGeneratedAt())
+                .methodVersionTag(entity.getMethodVersionTag() != null ? entity.getMethodVersionTag() : Prediction.getDefaultVersionTag(PredictionType.valueOf(entity.getPredictionType())))
+                .configurationSnapshot(entity.getConfigurationSnapshot() != null ? entity.getConfigurationSnapshot() : Prediction.getDefaultConfigurationSnapshot(PredictionType.valueOf(entity.getPredictionType())))
                 .build();
     }
 
@@ -65,6 +67,8 @@ public final class PredictionJpaMapper {
                 .outcomeRecordedAt(domain.getOutcomeRecordedAt())
                 .accuracyStatus(domain.getAccuracyStatus() != null ? domain.getAccuracyStatus().name() : PredictionAccuracyStatus.PENDING.name())
                 .generatedAt(domain.getGeneratedAt())
+                .methodVersionTag(domain.getMethodVersionTag() != null ? domain.getMethodVersionTag() : Prediction.getDefaultVersionTag(domain.getPredictionType()))
+                .configurationSnapshot(domain.getConfigurationSnapshot() != null ? domain.getConfigurationSnapshot() : Prediction.getDefaultConfigurationSnapshot(domain.getPredictionType()))
                 .build();
     }
 }

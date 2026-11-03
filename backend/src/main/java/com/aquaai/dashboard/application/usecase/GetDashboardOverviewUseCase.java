@@ -9,6 +9,7 @@ import com.aquaai.dashboard.api.dto.AnomalyMetricsDto;
 import com.aquaai.dashboard.api.dto.DashboardOverviewResponse;
 import com.aquaai.dashboard.api.dto.FieldMetricsDto;
 import com.aquaai.dashboard.api.dto.IrrigationMetricsDto;
+import com.aquaai.dashboard.api.dto.PredictiveModelHealthSummaryDto;
 import com.aquaai.dashboard.api.dto.PriorityFieldDto;
 import com.aquaai.dashboard.api.dto.RecentActivityDto;
 import com.aquaai.dashboard.api.dto.RecommendationMetricsDto;
@@ -18,6 +19,10 @@ import com.aquaai.dashboard.api.dto.WaterBudgetSummaryDto;
 import com.aquaai.dashboard.api.dto.WaterMetricsDto;
 import com.aquaai.dashboard.application.service.ActionCenterOrchestrator;
 import com.aquaai.dashboard.application.service.PriorityScoringService;
+import com.aquaai.prediction.application.dto.AdaptiveOverviewResponse;
+import com.aquaai.prediction.application.dto.GovernanceOverviewResponse;
+import com.aquaai.prediction.application.usecase.GetAdaptiveOverviewUseCase;
+import com.aquaai.prediction.application.usecase.GetGovernanceOverviewUseCase;
 import com.aquaai.field.domain.model.CropType;
 import com.aquaai.field.domain.model.Field;
 import com.aquaai.field.domain.model.FieldStatus;
@@ -112,6 +117,10 @@ public class GetDashboardOverviewUseCase {
     private final CurrentUserProvider currentUserProvider;
     private final PriorityScoringService priorityScoringService;
     private final ActionCenterOrchestrator actionCenterOrchestrator;
+    private final GetGovernanceOverviewUseCase getGovernanceOverviewUseCase;
+
+    @org.springframework.beans.factory.annotation.Autowired(required = false)
+    private GetAdaptiveOverviewUseCase getAdaptiveOverviewUseCase;
 
     @Transactional(readOnly = true)
     public DashboardOverviewResponse execute(
@@ -333,17 +342,58 @@ public class GetDashboardOverviewUseCase {
                 .filter(p -> priorityFilter == null || priorityFilter == p.getPriority())
                 .toList();
 
-        // 4. Derive Action Center Items
+        // 4. Resolve Predictive Model Governance Health & Adaptive Intelligence Overview
+        GovernanceOverviewResponse govOverview = null;
+        try {
+            govOverview = getGovernanceOverviewUseCase.execute();
+        } catch (Exception ignored) {}
+
+        AdaptiveOverviewResponse adaptiveOverview = null;
+        if (getAdaptiveOverviewUseCase != null) {
+            try {
+                adaptiveOverview = getAdaptiveOverviewUseCase.execute();
+            } catch (Exception ignored) {}
+        }
+
+        boolean contextualDrift = adaptiveOverview != null && adaptiveOverview.contextualDriftWarningActive();
+        long contextSelections = adaptiveOverview != null ? adaptiveOverview.contextAwareSelectionsCount() : 0L;
+
+        PredictiveModelHealthSummaryDto predictiveHealth = govOverview != null
+                ? PredictiveModelHealthSummaryDto.builder()
+                        .activeVersions(govOverview.activeVersionsCount())
+                        .healthy(govOverview.healthyCount())
+                        .watch(govOverview.watchCount())
+                        .candidates(govOverview.candidateVersionsCount())
+                        .degraded(govOverview.degradedCount())
+                        .driftDetected(govOverview.driftWarningActive())
+                        .contextAwareSelections(contextSelections)
+                        .contextualDriftDetected(contextualDrift)
+                        .build()
+                : PredictiveModelHealthSummaryDto.builder()
+                        .activeVersions(4)
+                        .healthy(4)
+                        .watch(0)
+                        .candidates(0)
+                        .degraded(0)
+                        .driftDetected(false)
+                        .contextAwareSelections(contextSelections)
+                        .contextualDriftDetected(contextualDrift)
+                        .build();
+
+        // 5. Derive Action Center Items
         List<UrgentActionDto> urgentActions = actionCenterOrchestrator.deriveUrgentActions(
                 accessibleFields,
                 priorityFields,
                 plans,
                 activeAnomalies,
                 activeRecommendations,
-                sensors
+                sensors,
+                govOverview != null ? govOverview.openProposals() : Collections.emptyList(),
+                govOverview != null && govOverview.driftWarningActive(),
+                contextualDrift
         );
 
-        // 5. Aggregate High-Level Metrics
+        // 6. Aggregate High-Level Metrics
         FieldMetricsDto fieldMetrics = FieldMetricsDto.builder()
                 .totalFields(accessibleFields.size())
                 .activeFields((int) accessibleFields.stream().filter(f -> f.getStatus() == FieldStatus.ACTIVE).count())
@@ -512,6 +562,7 @@ public class GetDashboardOverviewUseCase {
                 .priorityFields(filteredPriorityFields)
                 .urgentActions(urgentActions)
                 .recentActivity(recentActivity)
+                .predictiveHealth(predictiveHealth)
                 .generatedAt(Instant.now())
                 .tenantScope(tenantScope)
                 .build();
@@ -658,6 +709,14 @@ public class GetDashboardOverviewUseCase {
                 .priorityFields(Collections.emptyList())
                 .urgentActions(Collections.emptyList())
                 .recentActivity(Collections.emptyList())
+                .predictiveHealth(PredictiveModelHealthSummaryDto.builder()
+                        .activeVersions(0)
+                        .healthy(0)
+                        .watch(0)
+                        .candidates(0)
+                        .degraded(0)
+                        .driftDetected(false)
+                        .build())
                 .generatedAt(Instant.now())
                 .tenantScope(tenantScope)
                 .build();

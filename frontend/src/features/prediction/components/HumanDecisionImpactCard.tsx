@@ -131,7 +131,7 @@ export const HumanDecisionImpactCard: React.FC<HumanDecisionImpactCardProps> = (
               <div className="pt-2 border-t border-border/60 flex items-center justify-between text-xs text-muted-foreground">
                 <span>{t.accuracyWhenApproved}:</span>
                 <span className="font-mono font-bold text-foreground">
-                  {impact.directApprovalAccuracy !== null
+                  {typeof impact.directApprovalAccuracy === 'number'
                     ? `${impact.directApprovalAccuracy.toFixed(1)}%`
                     : '—'}
                 </span>

@@ -24,6 +24,7 @@ public class CalibrationProposal {
     private final String proposedConfigurationJson;
     private final String expectedEffect;
     private final GovernanceRiskLevel riskLevel;
+    private final String affectedScope;
     private final Instant createdAt;
     private Instant updatedAt;
     private final String createdBy;
@@ -31,6 +32,52 @@ public class CalibrationProposal {
     private Instant reviewedAt;
     private String reviewNotes;
     private Long optLockVersion;
+
+    public CalibrationProposal(
+            UUID id,
+            String proposalCode,
+            PredictionType predictionType,
+            String currentVersionTag,
+            String candidateVersionTag,
+            ProposalStatus status,
+            String reason,
+            String evidence,
+            String candidateChanges,
+            String proposedConfigurationJson,
+            String expectedEffect,
+            GovernanceRiskLevel riskLevel,
+            String affectedScope,
+            Instant createdAt,
+            Instant updatedAt,
+            String createdBy,
+            String reviewedBy,
+            Instant reviewedAt,
+            String reviewNotes,
+            Long optLockVersion
+    ) {
+        this.id = id != null ? id : UUID.randomUUID();
+        this.proposalCode = Objects.requireNonNull(proposalCode, "proposalCode must not be null");
+        this.predictionType = Objects.requireNonNull(predictionType, "predictionType must not be null");
+        this.currentVersionTag = Objects.requireNonNull(currentVersionTag, "currentVersionTag must not be null");
+        this.candidateVersionTag = Objects.requireNonNull(candidateVersionTag, "candidateVersionTag must not be null");
+        this.status = status != null ? status : ProposalStatus.DRAFT;
+        this.reason = Objects.requireNonNull(reason, "reason must not be null");
+        this.evidence = Objects.requireNonNull(evidence, "evidence must not be null");
+        this.candidateChanges = Objects.requireNonNull(candidateChanges, "candidateChanges must not be null");
+        this.proposedConfigurationJson = Objects.requireNonNull(proposedConfigurationJson, "proposedConfigurationJson must not be null");
+        this.expectedEffect = expectedEffect != null ? expectedEffect : "";
+        this.riskLevel = riskLevel != null ? riskLevel : GovernanceRiskLevel.MEDIUM;
+        this.affectedScope = affectedScope != null ? affectedScope : "ALL_PARCELS";
+        this.createdAt = createdAt != null ? createdAt : Instant.now();
+        this.updatedAt = updatedAt != null ? updatedAt : Instant.now();
+        this.createdBy = createdBy != null ? createdBy : "SYSTEM_DIAGNOSTICS";
+        this.reviewedBy = reviewedBy;
+        this.reviewedAt = reviewedAt;
+        this.reviewNotes = reviewNotes;
+        this.optLockVersion = optLockVersion != null ? optLockVersion : 0L;
+
+        PredictionMethodVersion.validateSafetyParameters(this.proposedConfigurationJson);
+    }
 
     public CalibrationProposal(
             UUID id,
@@ -53,25 +100,10 @@ public class CalibrationProposal {
             String reviewNotes,
             Long optLockVersion
     ) {
-        this.id = id != null ? id : UUID.randomUUID();
-        this.proposalCode = Objects.requireNonNull(proposalCode, "proposalCode must not be null");
-        this.predictionType = Objects.requireNonNull(predictionType, "predictionType must not be null");
-        this.currentVersionTag = Objects.requireNonNull(currentVersionTag, "currentVersionTag must not be null");
-        this.candidateVersionTag = Objects.requireNonNull(candidateVersionTag, "candidateVersionTag must not be null");
-        this.status = status != null ? status : ProposalStatus.DRAFT;
-        this.reason = Objects.requireNonNull(reason, "reason must not be null");
-        this.evidence = Objects.requireNonNull(evidence, "evidence must not be null");
-        this.candidateChanges = Objects.requireNonNull(candidateChanges, "candidateChanges must not be null");
-        this.proposedConfigurationJson = Objects.requireNonNull(proposedConfigurationJson, "proposedConfigurationJson must not be null");
-        this.expectedEffect = expectedEffect != null ? expectedEffect : "";
-        this.riskLevel = riskLevel != null ? riskLevel : GovernanceRiskLevel.MEDIUM;
-        this.createdAt = createdAt != null ? createdAt : Instant.now();
-        this.updatedAt = updatedAt != null ? updatedAt : Instant.now();
-        this.createdBy = createdBy != null ? createdBy : "SYSTEM_DIAGNOSTICS";
-        this.reviewedBy = reviewedBy;
-        this.reviewedAt = reviewedAt;
-        this.reviewNotes = reviewNotes;
-        this.optLockVersion = optLockVersion != null ? optLockVersion : 0L;
+        this(id, proposalCode, predictionType, currentVersionTag, candidateVersionTag,
+                status, reason, evidence, candidateChanges, proposedConfigurationJson,
+                expectedEffect, riskLevel, "ALL_PARCELS", createdAt, updatedAt,
+                createdBy, reviewedBy, reviewedAt, reviewNotes, optLockVersion);
     }
 
     public static CalibrationProposal create(
@@ -85,6 +117,7 @@ public class CalibrationProposal {
             String proposedConfigurationJson,
             String expectedEffect,
             GovernanceRiskLevel riskLevel,
+            String affectedScope,
             String createdBy
     ) {
         return new CalibrationProposal(
@@ -100,6 +133,7 @@ public class CalibrationProposal {
                 proposedConfigurationJson,
                 expectedEffect,
                 riskLevel,
+                affectedScope != null ? affectedScope : "ALL_PARCELS",
                 Instant.now(),
                 Instant.now(),
                 createdBy,
@@ -107,6 +141,35 @@ public class CalibrationProposal {
                 null,
                 null,
                 0L
+        );
+    }
+
+    public static CalibrationProposal create(
+            String proposalCode,
+            PredictionType predictionType,
+            String currentVersionTag,
+            String candidateVersionTag,
+            String reason,
+            String evidence,
+            String candidateChanges,
+            String proposedConfigurationJson,
+            String expectedEffect,
+            GovernanceRiskLevel riskLevel,
+            String createdBy
+    ) {
+        return create(
+                proposalCode,
+                predictionType,
+                currentVersionTag,
+                candidateVersionTag,
+                reason,
+                evidence,
+                candidateChanges,
+                proposedConfigurationJson,
+                expectedEffect,
+                riskLevel,
+                "ALL_PARCELS",
+                createdBy
         );
     }
 
@@ -172,6 +235,7 @@ public class CalibrationProposal {
     public String getProposedConfigurationJson() { return proposedConfigurationJson; }
     public String getExpectedEffect() { return expectedEffect; }
     public GovernanceRiskLevel getRiskLevel() { return riskLevel; }
+    public String getAffectedScope() { return affectedScope; }
     public Instant getCreatedAt() { return createdAt; }
     public Instant getUpdatedAt() { return updatedAt; }
     public String getCreatedBy() { return createdBy; }

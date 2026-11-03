@@ -68,6 +68,7 @@ public class PredictionGovernanceJpaMapper {
                 e.getProposedConfigurationJson(),
                 e.getExpectedEffect(),
                 GovernanceRiskLevel.valueOf(e.getRiskLevel()),
+                e.getAffectedScope() != null ? e.getAffectedScope() : "ALL_PARCELS",
                 e.getCreatedAt(),
                 e.getUpdatedAt(),
                 e.getCreatedBy(),
@@ -93,6 +94,7 @@ public class PredictionGovernanceJpaMapper {
                 .proposedConfigurationJson(d.getProposedConfigurationJson())
                 .expectedEffect(d.getExpectedEffect())
                 .riskLevel(d.getRiskLevel().name())
+                .affectedScope(d.getAffectedScope() != null ? d.getAffectedScope() : "ALL_PARCELS")
                 .createdAt(d.getCreatedAt())
                 .updatedAt(d.getUpdatedAt())
                 .createdBy(d.getCreatedBy())

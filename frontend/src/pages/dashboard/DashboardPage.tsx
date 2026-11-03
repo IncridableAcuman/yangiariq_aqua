@@ -23,6 +23,7 @@ import {
   RecentActivityFeed,
   DashboardFieldMap,
   FarmPerformanceSummaryCard,
+  PredictiveModelHealthCard,
 } from '@/features/dashboard'
 import { PredictiveSummaryCard } from '@/features/prediction'
 
@@ -217,6 +218,15 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ lang, onNavigate }
         <PredictiveSummaryCard
           lang={lang}
           onNavigate={onNavigate}
+        />
+      </section>
+
+      {/* 2.7 Compact Predictive Model Health (Milestone 08.9) */}
+      <section data-testid="section-predictive-health">
+        <PredictiveModelHealthCard
+          predictiveHealth={overview.predictiveHealth}
+          lang={lang}
+          onOpenGovernance={() => onNavigate('predictions')}
         />
       </section>
 

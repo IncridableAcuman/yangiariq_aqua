@@ -17,6 +17,9 @@
 **Yangiariq Aqua AI** is an agricultural technology platform engineered to deliver decision support for water distribution operators and local farmers in Yangiariq district (Khorezm, Uzbekistan).
 
 The platform addresses regional challenges in canal water scheduling, soil salinization risk, and irrigation optimization through:
+- **Adaptive Intelligence, Model Governance & Controlled Calibration**: Continuous model governance lifecycle moving from degradation detection to controlled calibration: Insight $\to$ Proposal $\to$ Backtest $\to$ Human Review $\to$ Version $\to$ Controlled Rollout $\to$ Monitoring $\to$ Rollback. Enforces zero autonomous self-modification, permanent immutability of hard hydraulic safety parameters, anti-leakage historical backtesting, multi-factor regression guarding, staged rollout (`SHADOW`, `CANARY`, `ACTIVE`), and 1-click emergency rollback with complete auditability.
+- **Predictive Model Evaluation & Continuous Intelligence**: Empirical verification and continuous intelligence feedback loop answering *"How accurate was that prediction?", "Where did it succeed/fail?", "Is the model drifting over time?"*. Features arbitrary-precision regression and classification metrics, safety interlock outcome interruption classification, minimum sample size gating ($n \ge 10$), and temporal performance drift detection.
+- **Predictive Farm Intelligence & Forecasting**: Forward-looking decision support forecasting soil moisture trajectories, irrigation need likelihood, water demand volume, allocation headroom risk, and telemetry reliability across standardized horizons (`NEXT_24_HOURS`, `NEXT_48_HOURS`, `NEXT_7_DAYS`).
 - **Farm Performance, Historical Intelligence & Analytics**: Historical intelligence workspace answering *"What happened before?", "What changed?", "How well did we perform?", "What patterns can we see?", "What should we improve?"*. Features water quota utilization vs plan variance governance, chronological trend projections, explainable field ranking indices with safety dominance, data confidence auditing, period-over-period comparisons, and deterministic actionable insights deep-linking into execution workflows.
 - **Decision-to-Action Operations Center**: Continuous operational workspace moving from problem detected to verified field action with minimal clicks. Features deterministic 7-step workflow timeline, telemetry situation cards, precedence constraint checks, human approval with mandatory constraint acknowledgement, manual field execution logging, and post-irrigation closed-loop verification.
 - **Farm Intelligence Workspace & Action Center**: Unified 10-second operational overview, deterministic parcel priority scoring, explainable rationale dialogs, centralized action center with one-click resolution CTAs, volumetric water budget breakdown, and 6-stage irrigation lifecycle tracking.
@@ -93,6 +96,14 @@ docker compose up --build -d
 
 ## Documentation Index
 
+- [Context-Aware Prediction Engine](docs/context-aware-prediction.md)
+- [Adaptive Method Selection & 9-Level Hierarchy](docs/adaptive-selection.md)
+- [Context Performance & Local Drift Detection](docs/context-performance.md)
+- [Adaptive Intelligence Architecture](docs/adaptive-intelligence.md)
+- [Model Governance Architecture](docs/model-governance.md)
+- [Prediction Method Versioning & Immutability](docs/prediction-versioning.md)
+- [Historical Backtesting & Calibration Engine](docs/calibration-and-backtesting.md)
+- [Controlled Rollout & Rollback](docs/controlled-rollout.md)
 - [Predictive Model Evaluation & Continuous Intelligence](docs/prediction-evaluation.md)
 - [Prediction Outcome Matching Semantics](docs/prediction-outcome-matching.md)
 - [Prediction Evaluation Metrics & Statistical Formulation](docs/prediction-metrics.md)

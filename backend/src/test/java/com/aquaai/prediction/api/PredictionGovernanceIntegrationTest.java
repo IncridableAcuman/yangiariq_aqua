@@ -4,6 +4,7 @@ import com.aquaai.auth.api.dto.AuthResponse;
 import com.aquaai.auth.api.dto.RegisterRequest;
 import com.aquaai.prediction.application.dto.ActivateVersionRequest;
 import com.aquaai.prediction.application.dto.ApproveProposalRequest;
+import com.aquaai.prediction.application.dto.CreateCandidateProposalRequest;
 import com.aquaai.prediction.application.dto.RollbackVersionRequest;
 import com.aquaai.prediction.domain.model.CalibrationProposal;
 import com.aquaai.prediction.domain.model.GovernanceRiskLevel;
@@ -189,5 +190,68 @@ class PredictionGovernanceIntegrationTest {
                 .andExpect(jsonPath("$.data").isArray())
                 .andExpect(jsonPath("$.data[?(@.action == 'VERSION_ACTIVATED')]").exists())
                 .andExpect(jsonPath("$.data[?(@.action == 'VERSION_ROLLBACK')]").exists());
+    }
+
+    @Test
+    @DisplayName("POST /api/v1/predictions/governance/proposals should create candidate proposal or reject unsafe parameters")
+    void shouldCreateProposalViaApiAndRejectIllegalSafetyOverrides() throws Exception {
+        // 1. Valid proposal with agronomic soft parameters
+        CreateCandidateProposalRequest validReq = new CreateCandidateProposalRequest(
+                "WATER_DEMAND_FORECAST",
+                "Late season Kc adjustment needed",
+                "Increase application efficiency to 0.84",
+                "{\"applicationEfficiency\":0.84,\"leachingFraction\":0.10}",
+                "Projected 15% reduction in MAE",
+                "LOW"
+        );
+
+        mockMvc.perform(post("/api/v1/predictions/governance/proposals")
+                        .header("Authorization", "Bearer " + adminToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(validReq)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.data.predictionType").value("WATER_DEMAND_FORECAST"))
+                .andExpect(jsonPath("$.data.candidateVersionTag").exists())
+                .andExpect(jsonPath("$.data.status").value("DRAFT"));
+
+        // 2. Illegal proposal attempting to modify hydraulic safety interlocks
+        CreateCandidateProposalRequest unsafeReq = new CreateCandidateProposalRequest(
+                "WATER_DEMAND_FORECAST",
+                "Dangerous attempt to modify pipe burst threshold",
+                "Override pipe burst threshold",
+                "{\"applicationEfficiency\":0.84,\"pipeBurstPressureBar\":9.0}",
+                "Dangerous override",
+                "CRITICAL"
+        );
+
+        mockMvc.perform(post("/api/v1/predictions/governance/proposals")
+                        .header("Authorization", "Bearer " + adminToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(unsafeReq)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.success").value(false));
+    }
+
+    @Test
+    @DisplayName("POST /api/v1/predictions/governance/versions/{versionId}/rollback should rollback to previous version")
+    void shouldRollbackByVersionIdEndpoint() throws Exception {
+        // Find active version for SOIL_MOISTURE_FORECAST
+        PredictionMethodVersion active = versionRepository.findActiveByPredictionType(PredictionType.SOIL_MOISTURE_FORECAST)
+                .orElseThrow();
+
+        RollbackVersionRequest rollbackReq = new RollbackVersionRequest(
+                active.getVersionTag(),
+                "Operational rollback to verified baseline"
+        );
+
+        mockMvc.perform(post("/api/v1/predictions/governance/versions/" + active.getId() + "/rollback")
+                        .header("Authorization", "Bearer " + adminToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(rollbackReq)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.data.versionTag").value(active.getVersionTag()))
+                .andExpect(jsonPath("$.data.status").value("ACTIVE"));
     }
 }

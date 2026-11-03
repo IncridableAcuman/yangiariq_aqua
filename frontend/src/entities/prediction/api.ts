@@ -5,6 +5,7 @@ import {
   BacktestRun,
   CalibrationProposal,
   CalibrationProposalDetailResponse,
+  CreateCandidateProposalRequest,
   EvaluateBatchResponse,
   EvaluationHistoryResponse,
   FieldEvaluationResponse,
@@ -422,4 +423,125 @@ export const generateCalibrationProposal = async (
   )
   return response.data || null
 }
+
+export const createCandidateProposal = async (
+  request: CreateCandidateProposalRequest,
+  signal?: AbortSignal
+): Promise<CalibrationProposal> => {
+  const response = await apiClient<CalibrationProposal>(
+    `/predictions/governance/proposals`,
+    {
+      method: 'POST',
+      body: JSON.stringify(request),
+      signal,
+    }
+  )
+  if (!response.data) throw new Error('Failed to create candidate proposal')
+  return response.data
+}
+
+// ============================================================================
+// MILESTONE 08.10: CONTEXT-AWARE ADAPTIVE INTELLIGENCE API CLIENT
+// ============================================================================
+
+export const getAdaptiveOverview = async (
+  signal?: AbortSignal
+): Promise<import('./types').AdaptiveOverviewResponse> => {
+  const response = await apiClient<import('./types').AdaptiveOverviewResponse>(
+    '/predictions/adaptive/overview',
+    {
+      method: 'GET',
+      signal,
+    }
+  )
+  if (!response.data) throw new Error('Adaptive overview not returned by server')
+  return response.data
+}
+
+export const getFieldPredictionContext = async (
+  fieldId: string,
+  signal?: AbortSignal
+): Promise<import('./types').PredictionContext> => {
+  const response = await apiClient<import('./types').PredictionContext>(
+    `/predictions/adaptive/context/${encodeURIComponent(fieldId)}`,
+    {
+      method: 'GET',
+      signal,
+    }
+  )
+  if (!response.data) throw new Error('Field prediction context not returned by server')
+  return response.data
+}
+
+export const getContextPerformanceProfiles = async (
+  params?: { predictionType?: string; versionTag?: string },
+  signal?: AbortSignal
+): Promise<import('./types').ContextPerformanceProfile[]> => {
+  const searchParams = new URLSearchParams()
+  if (params?.predictionType) searchParams.set('predictionType', params.predictionType)
+  if (params?.versionTag) searchParams.set('versionTag', params.versionTag)
+  const query = searchParams.toString()
+
+  const response = await apiClient<import('./types').ContextPerformanceProfile[]>(
+    `/predictions/adaptive/performance${query ? `?${query}` : ''}`,
+    {
+      method: 'GET',
+      signal,
+    }
+  )
+  if (!response.data) throw new Error('Contextual performance profiles not returned by server')
+  return response.data
+}
+
+export const getAdaptiveSelectionHistory = async (
+  params?: { fieldId?: string; limit?: number },
+  signal?: AbortSignal
+): Promise<import('./types').AdaptiveSelectionDecision[]> => {
+  const searchParams = new URLSearchParams()
+  if (params?.fieldId) searchParams.set('fieldId', params.fieldId)
+  if (params?.limit) searchParams.set('limit', String(params.limit))
+  const query = searchParams.toString()
+
+  const response = await apiClient<import('./types').AdaptiveSelectionDecision[]>(
+    `/predictions/adaptive/selections${query ? `?${query}` : ''}`,
+    {
+      method: 'GET',
+      signal,
+    }
+  )
+  if (!response.data) throw new Error('Adaptive selections history not returned by server')
+  return response.data
+}
+
+export const selectAdaptiveMethod = async (
+  request: import('./types').SelectAdaptiveMethodRequest,
+  signal?: AbortSignal
+): Promise<import('./types').AdaptiveSelectionDecision> => {
+  const response = await apiClient<import('./types').AdaptiveSelectionDecision>(
+    '/predictions/adaptive/select',
+    {
+      method: 'POST',
+      body: JSON.stringify(request),
+      signal,
+    }
+  )
+  if (!response.data) throw new Error('Adaptive method selection failed')
+  return response.data
+}
+
+export const getPredictionAdaptiveDecision = async (
+  predictionId: string,
+  signal?: AbortSignal
+): Promise<import('./types').AdaptiveSelectionDecision> => {
+  const response = await apiClient<import('./types').AdaptiveSelectionDecision>(
+    `/predictions/${encodeURIComponent(predictionId)}/adaptive-decision`,
+    {
+      method: 'GET',
+      signal,
+    }
+  )
+  if (!response.data) throw new Error('Prediction adaptive decision not returned by server')
+  return response.data
+}
+
 

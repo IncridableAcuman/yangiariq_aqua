@@ -20,6 +20,7 @@ import { Field } from '@/entities/field'
 import {
   PredictionHorizon,
   PredictionItem,
+  AdaptiveSelectionDecision,
 } from '@/entities/prediction'
 import {
   usePredictionOverviewQuery,
@@ -42,6 +43,10 @@ import {
   useActivateVersionMutation,
   useRollbackVersionMutation,
   useGenerateProposalMutation,
+  useAdaptiveOverviewQuery,
+  useContextPerformanceProfilesQuery,
+  useAdaptiveSelectionHistoryQuery,
+  useSelectAdaptiveMethodMutation,
   PredictionHorizonSelector,
   SoilMoistureForecastCard,
   WaterDemandForecastCard,
@@ -63,6 +68,10 @@ import {
   BacktestComparisonModal,
   RollbackModal,
   GovernanceAuditTrailTable,
+  AdaptiveHealthStrip,
+  ContextPerformanceTable,
+  AdaptiveSelectionsLedger,
+  ExplainableSelectionModal,
 } from '@/features/prediction'
 import { useFieldsQuery } from '@/features/field/queries/useFieldQueries'
 
@@ -79,8 +88,9 @@ export const PredictionsPage: React.FC<PredictionsPageProps> = ({
 }) => {
   const [horizon, setHorizon] = useState<PredictionHorizon>('NEXT_48_HOURS')
   const [selectedFieldId, setSelectedFieldId] = useState<string | null>(initialFieldId || null)
-  const [activeTab, setActiveTab] = useState<'forecasts' | 'evaluation' | 'governance' | 'history'>('forecasts')
+  const [activeTab, setActiveTab] = useState<'forecasts' | 'evaluation' | 'governance' | 'adaptive' | 'history'>('forecasts')
   const [explainingPrediction, setExplainingPrediction] = useState<PredictionItem | null>(null)
+  const [explainingAdaptiveDecision, setExplainingAdaptiveDecision] = useState<AdaptiveSelectionDecision | null>(null)
 
   // Evaluation Sub-State
   const [fieldEvalPage, setFieldEvalPage] = useState<number>(0)
@@ -193,6 +203,26 @@ export const PredictionsPage: React.FC<PredictionsPageProps> = ({
   const { mutate: rollbackVersion, isPending: isRollingBack } = useRollbackVersionMutation()
   const { mutate: generateProposal, isPending: isGeneratingProposal } = useGenerateProposalMutation()
 
+  // Milestone 08.10: Context-Aware Adaptive Intelligence Queries & Mutation
+  const {
+    data: adaptiveOverview,
+    isLoading: isAdaptiveOverviewLoading,
+  } = useAdaptiveOverviewQuery()
+
+  const {
+    data: contextProfiles = [],
+    isLoading: isProfilesLoading,
+  } = useContextPerformanceProfilesQuery()
+
+  const {
+    data: selectionDecisions = [],
+    isLoading: isSelectionsLoading,
+  } = useAdaptiveSelectionHistoryQuery()
+
+  const {
+    mutate: selectAdaptiveMethod,
+  } = useSelectAdaptiveMethodMutation()
+
   const t = {
     uz: {
       title: 'Prediktiv Ferma Intellekti va Prognozlash',
@@ -203,6 +233,7 @@ export const PredictionsPage: React.FC<PredictionsPageProps> = ({
       rankingTab: 'Sug‘orish Ehtiyoji Reytingi',
       evaluationTab: 'Model Baholash va Salomatlik (Milestone 08.8)',
       governanceTab: 'Model Boshqaruvi va Kalibratsiya (Milestone 08.9)',
+      adaptiveTab: 'Adaptiv Intellekt Dvigateli (Milestone 08.10)',
       historyTab: 'Prognozlar Tarixi va Aniqlik',
       refresh: 'Yangilash',
       needIrrigation: 'Sug‘orish ehtiyoji',
@@ -220,6 +251,7 @@ export const PredictionsPage: React.FC<PredictionsPageProps> = ({
       rankingTab: 'Рейтинг Потребности в Поливе',
       evaluationTab: 'Оценка Моделей и Точность (Milestone 08.8)',
       governanceTab: 'Управление Моделями и Калибровка (Milestone 08.9)',
+      adaptiveTab: 'Адаптивный Интеллект (Milestone 08.10)',
       historyTab: 'История Прогнозов и Точность',
       refresh: 'Обновить',
       needIrrigation: 'Потребность в поливе',
@@ -237,6 +269,7 @@ export const PredictionsPage: React.FC<PredictionsPageProps> = ({
       rankingTab: 'Irrigation Need Ranking',
       evaluationTab: 'Model Evaluation & Health (Continuous Intelligence)',
       governanceTab: 'Model Governance & Calibration (Milestone 08.9)',
+      adaptiveTab: 'Adaptive Intelligence Engine (Milestone 08.10)',
       historyTab: 'Calibration History & Accuracy',
       refresh: 'Refresh',
       needIrrigation: 'Irrigation Need',
@@ -458,8 +491,18 @@ export const PredictionsPage: React.FC<PredictionsPageProps> = ({
             className="text-xs h-8 gap-1.5 font-medium"
             data-testid="tab-governance"
           >
-            <Sliders className="h-3.5 w-3.5 text-emerald-500" />
+            <Sliders className="h-3.5 w-3.5 text-blue-500" />
             <span>{t.governanceTab}</span>
+          </Button>
+          <Button
+            variant={activeTab === 'adaptive' ? 'default' : 'ghost'}
+            size="sm"
+            onClick={() => setActiveTab('adaptive')}
+            className="text-xs h-8 gap-1.5 font-medium"
+            data-testid="tab-adaptive"
+          >
+            <Cpu className="h-3.5 w-3.5 text-emerald-500" />
+            <span>{t.adaptiveTab}</span>
           </Button>
           <Button
             variant={activeTab === 'history' ? 'default' : 'ghost'}
@@ -587,6 +630,41 @@ export const PredictionsPage: React.FC<PredictionsPageProps> = ({
           </div>
         )}
 
+        {/* Milestone 08.10: Context-Aware Adaptive Intelligence Engine */}
+        {activeTab === 'adaptive' && (
+          <div className="space-y-6 animate-in fade-in duration-200" data-testid="adaptive-dashboard-view">
+            {/* Top KPI & Principle Banner */}
+            <AdaptiveHealthStrip
+              overview={adaptiveOverview}
+              isLoading={isAdaptiveOverviewLoading}
+              lang={lang}
+            />
+
+            {/* Context Performance Matrix Table */}
+            <ContextPerformanceTable
+              profiles={contextProfiles}
+              isLoading={isProfilesLoading}
+              lang={lang}
+            />
+
+            {/* Chronological Selections Ledger */}
+            <AdaptiveSelectionsLedger
+              decisions={selectionDecisions}
+              isLoading={isSelectionsLoading}
+              onExplainDecision={(d) => setExplainingAdaptiveDecision(d)}
+              onTestParcelSelection={() => {
+                if (selectedFieldId) {
+                  selectAdaptiveMethod({
+                    fieldId: selectedFieldId,
+                    predictionType: 'SOIL_MOISTURE_FORECAST',
+                  })
+                }
+              }}
+              lang={lang}
+            />
+          </div>
+        )}
+
         {activeTab === 'history' && (
           <ForecastHistoryTable
             historyData={historyData}
@@ -602,6 +680,14 @@ export const PredictionsPage: React.FC<PredictionsPageProps> = ({
         onClose={() => setExplainingPrediction(null)}
         lang={lang}
         onNavigateToModule={(module, fieldId) => onNavigate(module as NavSection, fieldId)}
+      />
+
+      {/* 6b. Milestone 08.10: Explainable Adaptive Selection Decision Modal */}
+      <ExplainableSelectionModal
+        decision={explainingAdaptiveDecision}
+        isOpen={!!explainingAdaptiveDecision}
+        onClose={() => setExplainingAdaptiveDecision(null)}
+        lang={lang}
       />
 
       {/* 7. Backtest & Candidate Comparison Modal */}

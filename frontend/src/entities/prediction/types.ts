@@ -49,6 +49,8 @@ export interface PredictionItem {
   actualOutcomeValue?: number | null
   accuracyStatus?: PredictionAccuracyStatus
   generatedAt: string
+  methodVersionTag?: string
+  configurationSnapshot?: string
 }
 
 export interface PredictionOverview {
@@ -187,7 +189,7 @@ export type EvaluationFailureReason =
 
 export type EvaluationDataQuality = 'DATA_COMPLETE' | 'DATA_PARTIAL' | 'DATA_INSUFFICIENT'
 
-export type ModelHealthStatus = 'HEALTHY' | 'WATCH' | 'DEGRADED' | 'INSUFFICIENT_DATA'
+export type ModelHealthStatus = 'HEALTHY' | 'WATCH' | 'DEGRADED' | 'INSUFFICIENT_DATA' | 'CANDIDATE_AVAILABLE'
 
 export interface NumericalEvaluationMetrics {
   sampleSize: number
@@ -428,12 +430,22 @@ export interface CalibrationProposal {
   proposedConfigurationJson: string
   expectedEffect: string
   riskLevel: GovernanceRiskLevel
+  affectedScope?: string
   createdAt: string
   updatedAt: string
   createdBy: string
   reviewedBy: string | null
   reviewedAt: string | null
   reviewNotes: string | null
+}
+
+export interface CreateCandidateProposalRequest {
+  predictionType: PredictionType
+  reason: string
+  candidateChanges: string
+  proposedConfigurationJson: string
+  expectedEffect?: string
+  riskLevel?: GovernanceRiskLevel
 }
 
 export interface BacktestRun {
@@ -539,4 +551,94 @@ export interface RollbackVersionRequest {
   priorVersionTag: string
   reason: string
 }
+
+// =========================================================================
+// Milestone 08.10: Context-Aware Adaptive Intelligence Engine Types
+// =========================================================================
+
+export type AgriculturalSeason = 'SPRING' | 'SUMMER' | 'AUTUMN' | 'WINTER'
+
+export type TelemetryQualityLevel = 'HIGH' | 'MEDIUM' | 'LOW' | 'INSUFFICIENT' | 'UNKNOWN'
+
+export type SensorAvailabilityStatus = 'COMPLETE' | 'PARTIAL' | 'MISSING' | 'UNKNOWN'
+
+export type WaterAvailabilityContext = 'ABUNDANT' | 'NORMAL' | 'CONSTRAINED' | 'CRITICAL' | 'UNKNOWN'
+
+export type AnomalySeverityContext = 'NONE' | 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL' | 'UNKNOWN'
+
+export type ContextMatchLevel =
+  | 'EXACT_CONTEXT'
+  | 'PARTIAL_CONTEXT'
+  | 'SIMILAR_CONTEXT'
+  | 'BASELINE_FALLBACK'
+  | 'INSUFFICIENT_DATA'
+
+export interface PredictionContext {
+  fieldId: string
+  cropType: string
+  soilType: string
+  irrigationMethod: string
+  fieldAreaHectares: number
+  season: AgriculturalSeason
+  telemetryQuality: TelemetryQualityLevel
+  sensorAvailability: SensorAvailabilityStatus
+  waterAvailability: WaterAvailabilityContext
+  recentAnomalySeverity: AnomalySeverityContext
+  temperatureContext: string
+  rainfallContext: string
+  capturedAt: string
+}
+
+export interface ContextPerformanceProfile {
+  predictionType: PredictionType
+  versionTag: string
+  cropType: string
+  soilType: string
+  irrigationMethod: string
+  telemetryQuality: TelemetryQualityLevel
+  season: AgriculturalSeason
+  sampleSize: number
+  hasSufficientSample: boolean
+  meanAbsoluteError: number | null
+  rootMeanSquaredError: number | null
+  meanBiasError: number | null
+  accuracyPercent: number | null
+  globalModelHealth: ModelHealthStatus
+  contextualModelHealth: ModelHealthStatus
+  contextDriftDetected: boolean
+  driftDiagnosis: string | null
+}
+
+export interface AdaptiveSelectionDecision {
+  id: string
+  predictionId: string | null
+  fieldId: string
+  fieldName: string
+  predictionType: PredictionType
+  selectedVersionTag: string
+  selectionMode: ContextMatchLevel
+  selectionReason: string
+  evidenceSummary: string
+  contextSnapshotJson: string
+  alternativesJson: string
+  confidencePercent: number
+  createdAt: string
+}
+
+export interface AdaptiveOverviewResponse {
+  totalAdaptiveMethodsCount: number
+  activeVersionsCount: number
+  contextAwareSelectionsCount: number
+  baselineFallbackCount: number
+  insufficientContextCount: number
+  contextualDriftWarningActive: boolean
+  recentSelections: AdaptiveSelectionDecision[]
+  contextualProfiles: ContextPerformanceProfile[]
+}
+
+export interface SelectAdaptiveMethodRequest {
+  fieldId: string
+  predictionType: string
+}
+
 

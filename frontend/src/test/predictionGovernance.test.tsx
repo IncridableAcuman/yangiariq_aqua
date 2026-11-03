@@ -8,7 +8,10 @@ import {
   BacktestComparisonModal,
   RollbackModal,
   GovernanceAuditTrailTable,
+  PredictionTypeEvaluationCard,
+  FieldEvaluationTable,
 } from '@/features/prediction/components'
+import { PredictiveModelHealthCard } from '@/features/dashboard/components'
 import { PredictionsPage } from '@/pages/predictions/PredictionsPage'
 import {
   CalibrationProposal,
@@ -405,5 +408,104 @@ describe('Milestone 08.9: Adaptive Intelligence, Model Governance & Controlled C
     await waitFor(() => {
       expect(screen.getByTestId('governance-dashboard-view')).toBeInTheDocument()
     })
+  })
+
+  it('9. PredictiveModelHealthCard: renders overview metrics and drift alerts', () => {
+    const onOpenGov = vi.fn()
+    render(
+      <PredictiveModelHealthCard
+        predictiveHealth={{
+          activeVersions: 4,
+          healthy: 3,
+          watch: 1,
+          candidates: 1,
+          degraded: 0,
+          driftDetected: true,
+        }}
+        lang="en"
+        onOpenGovernance={onOpenGov}
+      />
+    )
+
+    expect(screen.getByText('Predictive Health')).toBeInTheDocument()
+    expect(screen.getByText(/Warning: Performance drift detected/i)).toBeInTheDocument()
+
+    const openBtn = screen.getByRole('button', { name: /Open Governance/i })
+    fireEvent.click(openBtn)
+    expect(onOpenGov).toHaveBeenCalledTimes(1)
+  })
+
+  it('10. PredictionTypeEvaluationCard and FieldEvaluationTable: handle undefined metrics without throwing', () => {
+    // Render FieldEvaluationTable with missing/undefined numerical properties
+    render(
+      <FieldEvaluationTable
+        data={{
+          fields: [
+            {
+              fieldId: 'f-1',
+              fieldName: 'Field 1',
+              cropType: 'WHEAT',
+              totalEvaluations: 5,
+              soilMoistureMae: undefined as unknown as number,
+              waterDemandMaeM3: undefined as unknown as number,
+              irrigationNeedAccuracyPercent: undefined as unknown as number,
+              interruptedCount: 0,
+              dataQualityStatus: 'DATA_COMPLETE',
+              healthStatus: 'HEALTHY',
+              hasSufficientData: true,
+            },
+          ],
+          page: 0,
+          size: 10,
+          totalElements: 1,
+          totalPages: 1,
+        }}
+        currentPage={0}
+        onPageChange={vi.fn()}
+        isLoading={false}
+        lang="en"
+        onSelectField={vi.fn()}
+      />
+    )
+
+    expect(screen.getByText('Field 1')).toBeInTheDocument()
+
+    // Render PredictionTypeEvaluationCard with undefined numerical properties
+    render(
+      <PredictionTypeEvaluationCard
+        performances={[
+          {
+            predictionType: 'SOIL_MOISTURE_FORECAST',
+            displayName: 'Soil Moisture Forecast',
+            evaluationMethod: 'Sensor-grounded regression',
+            modelVersion: 'SOIL_MOISTURE_TREND_V1',
+            sampleSize: 10,
+            isSufficientSample: true,
+            minSampleSizeRequired: 5,
+            modelHealth: 'HEALTHY',
+            modelHealthReason: 'Normal operation',
+            numericalMetrics: {
+              sampleSize: 10,
+              validComparisonsCount: 10,
+              sufficientSample: true,
+              meanAbsoluteError: undefined as unknown as number,
+              rootMeanSquaredError: undefined as unknown as number,
+              meanAbsolutePercentageError: undefined as unknown as number,
+              mapeReliable: true,
+              meanBiasError: undefined as unknown as number,
+              withinToleranceCount: 8,
+              withinTolerancePercentage: undefined as unknown as number,
+            },
+            classificationMetrics: null,
+            confidenceTiers: [],
+            qualityImpacts: [],
+            insights: [],
+          },
+        ]}
+        lang="en"
+      />
+    )
+
+    expect(screen.getByText('Soil Moisture Forecast')).toBeInTheDocument()
   })
 })

@@ -139,3 +139,17 @@ The domain service `EvaluationInsightGenerator` evaluates aggregated error vecto
    - Flags fields where $\ge 3$ evaluations resulted in `INSUFFICIENT_DATA` due to probe battery or LoRaWAN gateway dropouts.
 4. **Calibration Inversion Alert (`CALIBRATION`)**:
    - Flags anomalies where High-Confidence predictions exhibited larger error variance than Low-Confidence predictions.
+
+---
+
+## 6. Transition to Milestone 08.9: From Insight to Controlled Calibration
+
+In Milestone 08.9, the diagnostic insights generated above become the actionable input for **Controlled Model Governance**:
+
+$$\text{Diagnostic Insight (MBE Drift)} \longrightarrow \text{Calibration Proposal (V2)} \longrightarrow \text{Anti-Leakage Backtest} \longrightarrow \text{Admin Review} \longrightarrow \text{Controlled Rollout}$$
+
+- Evaluations link directly to `method_version_tag` and `configuration_snapshot`.
+- When an insight indicates persistent bias, the system or operator generates a `CalibrationProposal` specifying the candidate configuration.
+- The backtesting engine deterministic validates candidate parameters against historical ground-truth evaluations before any proposal can be approved.
+- Production activation requires explicit human sign-off (`ROLE_ADMIN`).
+

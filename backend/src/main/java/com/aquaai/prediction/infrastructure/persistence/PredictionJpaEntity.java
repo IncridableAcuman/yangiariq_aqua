@@ -86,4 +86,10 @@ public class PredictionJpaEntity {
 
     @Column(name = "generated_at", nullable = false)
     private Instant generatedAt;
+
+    @Column(name = "method_version_tag", length = 64)
+    private String methodVersionTag;
+
+    @Column(name = "configuration_snapshot", columnDefinition = "TEXT")
+    private String configurationSnapshot;
 }

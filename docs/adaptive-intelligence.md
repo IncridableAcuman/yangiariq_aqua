@@ -67,3 +67,32 @@ stateDiagram-v2
 2. **`BacktestingEngine`**: Deterministic historical simulator evaluating candidate configuration against identical historical evaluations ($T_{\text{target}} \le T_{\text{gen}}$).
 3. **`RegressionGuardService`**: Enforces that candidate parameter tuning does not inflate systematic bias, reduce classification accuracy by $>5\%$, or reduce F1 score by $>0.08$.
 4. **`ControlledRolloutManager`**: Manages state transitions across `SHADOW`, `CANARY`, `ACTIVE`, and `ROLLBACK` states with audit trail emission.
+5. **`ContextNormalizer` (Milestone 08.10)**: Normalizes parcel telemetry, sensors, anomalies, and weather into standardized multidimensional `PredictionContext`.
+6. **`AdaptiveSelectionEngine` (Milestone 08.10)**: Evaluates governed methods against parcel operational context strictly adhering to the 9-level deterministic hierarchy.
+7. **`ContextualDriftDetector` (Milestone 08.10)**: Identifies localized performance degradation ($\ge 30\%$ error inflation or $\ge 8\%$ bias shift) on specific crop or soil slices.
+
+---
+
+## 6. Milestone 08.10 Context-Aware Adaptive Intelligence Extension
+
+Milestone 08.10 introduces context-aware adaptive intelligence:
+$$\text{Context} \longrightarrow \text{Candidate Methods} \longrightarrow \text{Historical Performance} \longrightarrow \text{Context Match} \longrightarrow \text{Method Selection} \longrightarrow \text{Prediction} \longrightarrow \text{Real Outcome} \longrightarrow \text{Evaluation} \longrightarrow \text{Continuous Learning Signal}$$
+
+- **Core Product Principle**: *"YANGIARIQ AQUA AI selects from human-governed prediction methods using verified historical performance for the current context."*
+- **Precedence Hierarchy**: Safety Interlock (Level 1) > Governance Status (Level 2-3) > Sensor Availability (Level 4) > Context Match (Level 5) > Historical MAE Ranking & Sample Gating $n \ge 10$ (Level 6) > Confidence Calibration (Level 7) > Contextual Drift Guard (Level 8) > Active Baseline Fallback (Level 9).
+- **Explainability**: Every decision records an audit log with context snapshot, alternatives considered, selection score, and plain language rationale.
+
+---
+
+## 7. Related Documentation
+
+- [Context-Aware Prediction Engine](context-aware-prediction.md)
+- [Adaptive Selection & 9-Level Hierarchy](adaptive-selection.md)
+- [Context Performance & Local Drift Detection](context-performance.md)
+- [Model Governance Architecture](model-governance.md)
+- [Prediction Versioning & Immutability](prediction-versioning.md)
+- [Historical Backtesting & Calibration Engine](calibration-and-backtesting.md)
+- [Controlled Rollout & Rollback](controlled-rollout.md)
+- [Prediction Architecture](prediction-architecture.md)
+- [Prediction Evaluation & Ground Truth](prediction-evaluation.md)
+- [Module Boundaries](module-boundaries.md)

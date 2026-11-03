@@ -196,6 +196,15 @@ Developed in Milestone 08.7, the Predictions workspace transforms platform telem
   - `FieldEvaluationTable.tsx`: Parcel-by-parcel breakdown with $n < 5$ limited sample badges and pagination.
   - `EvaluationHistoryTable.tsx`: Filterable, searchable evaluation ledger with status and type filters.
   - `EvaluationDetailModal.tsx`: Comprehensive audit popup showing forecast parameters, actual outcome, regression error, confusion classification, and hydraulic safety interlock context.
+- **Adaptive Intelligence & Model Governance (Milestone 08.9)**:
+  - `GovernanceOverviewCard.tsx`: Fleet overview of active and candidate versions, open calibration proposals count, model health breakdowns, performance drift warnings, and 1-click Rollback CTA.
+  - `MethodVersionTable.tsx`: Version ledger displaying method tags (`_V1`, `_V2`), status badges (`ACTIVE`, `CANDIDATE`, `APPROVED`, `SHADOW`, `CANARY`, `DEPRECATED`), immutable locks, formatted configuration JSON snapshots, and activation metadata.
+  - `CalibrationProposalList.tsx`: Proposal management queue with risk badges (`LOW`, `MEDIUM`, `HIGH`, `CRITICAL`), affected scope, backtest execution triggers, and modal drill-down.
+  - `BacktestComparisonModal.tsx`: Comprehensive candidate vs. baseline delta modal displaying MAE, RMSE, MBE, and Accuracy improvements, with multi-factor Regression Guard alerts, and human approval / rejection actions.
+  - `RollbackModal.tsx`: Emergency model rollback dialog requiring target version selection and mandatory operational justification.
+  - `GovernanceAuditTrailTable.tsx`: Chronological immutable audit trail of every governance decision and version lifecycle event.
+  - `PredictiveModelHealthCard.tsx`: Compact dashboard health card embedded in the main Farm Intelligence Dashboard (`/dashboard`) displaying active versions, health counts, candidate counts, and drift alerts.
+  - `PredictionExplanationModal.tsx`: Enhanced with Method Version and Configuration Snapshot audit view.
 
 
 

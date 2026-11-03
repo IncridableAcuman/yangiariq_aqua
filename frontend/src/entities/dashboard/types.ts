@@ -122,6 +122,15 @@ export interface RecentActivity {
   fieldName?: string | null
 }
 
+export interface PredictiveModelHealthSummary {
+  activeVersions: number
+  healthy: number
+  watch: number
+  candidates: number
+  degraded: number
+  driftDetected: boolean
+}
+
 export interface DashboardOverviewResponse {
   fieldMetrics: FieldMetrics
   waterMetrics: WaterMetrics
@@ -133,6 +142,7 @@ export interface DashboardOverviewResponse {
   priorityFields: PriorityField[]
   urgentActions: UrgentAction[]
   recentActivity: RecentActivity[]
+  predictiveHealth?: PredictiveModelHealthSummary
   generatedAt: string
   tenantScope: string
 }

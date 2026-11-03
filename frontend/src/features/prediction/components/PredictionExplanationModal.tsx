@@ -44,6 +44,9 @@ export const PredictionExplanationModal: React.FC<PredictionExplanationModalProp
       whyTitle: 'SABAB VA AGRONOMIK ASOS (WHY)',
       evidenceTitle: 'MIQDORIY DALILLAR (EVIDENCE)',
       assumptionsTitle: 'FARAZLAR VA CHEKLOVLAR (ASSUMPTIONS & LIMITATIONS)',
+      versionTitle: 'ALGORITMIK MODEL VA KONFIGURATSIYA (METHOD VERSION & AUDIT)',
+      methodVersion: 'Metod versiyasi',
+      configSnapshot: 'Konfiguratsiya surati (Snapshot)',
       actionTitle: 'TAVSIYA ETILGAN KEYINGI AMAL (NEXT STEP)',
       confidence: 'Ishonchlilik darajasi',
       risk: 'Xavf darajasi',
@@ -58,6 +61,9 @@ export const PredictionExplanationModal: React.FC<PredictionExplanationModalProp
       whyTitle: 'ПРИЧИНА И АГРОНОМИЧЕСКОЕ ОБОСНОВАНИЕ (WHY)',
       evidenceTitle: 'КОЛИЧЕСТВЕННЫЕ ДОКАЗАТЕЛЬСТВА (EVIDENCE)',
       assumptionsTitle: 'ПРЕДПОЛОЖЕНИЯ И ОГРАНИЧЕНИЯ (ASSUMPTIONS & LIMITATIONS)',
+      versionTitle: 'АЛГОРИТМИЧЕСКАЯ ВЕРСИЯ И КОНФИГУРАЦИЯ (METHOD VERSION & AUDIT)',
+      methodVersion: 'Версия метода',
+      configSnapshot: 'Снимок конфигурации (Snapshot)',
       actionTitle: 'РЕКОМЕНДУЕМОЕ ДЕЙСТВИЕ (NEXT STEP)',
       confidence: 'Уровень достоверности',
       risk: 'Уровень риска',
@@ -72,6 +78,9 @@ export const PredictionExplanationModal: React.FC<PredictionExplanationModalProp
       whyTitle: 'AGRONOMIC CAUSE (WHY)',
       evidenceTitle: 'QUANTITATIVE EVIDENCE',
       assumptionsTitle: 'ASSUMPTIONS & LIMITATIONS',
+      versionTitle: 'ALGORITHMIC METHOD & CONFIGURATION AUDIT',
+      methodVersion: 'Method Version',
+      configSnapshot: 'Configuration Snapshot',
       actionTitle: 'RECOMMENDED ACTION (NEXT STEP)',
       confidence: 'Confidence Score',
       risk: 'Risk Level',
@@ -109,6 +118,11 @@ export const PredictionExplanationModal: React.FC<PredictionExplanationModalProp
             <Badge variant="outline" className="font-mono text-[11px]">
               {prediction.horizon.replace(/_/g, ' ')}
             </Badge>
+            {prediction.methodVersionTag && (
+              <Badge variant="outline" className="font-mono text-[11px] bg-secondary/10 text-secondary-foreground">
+                {prediction.methodVersionTag}
+              </Badge>
+            )}
             <DataSufficiencyBadge sufficiency={prediction.dataSufficiency} lang={lang} />
             <span className="text-xs text-muted-foreground ml-auto font-medium">
               {t.confidence}: <strong className="text-foreground">{prediction.confidencePercent}%</strong>
@@ -164,6 +178,35 @@ export const PredictionExplanationModal: React.FC<PredictionExplanationModalProp
               {prediction.assumptions || 'Yog‘ingarchilik yoki favqulodda sug‘orish kuzatilmasligi faraz qilingan.'}
             </p>
           </div>
+
+          {/* METHOD VERSION & CONFIGURATION SNAPSHOT AUDIT */}
+          {prediction.methodVersionTag && (
+            <div className="p-3.5 rounded-xl bg-slate-50/70 dark:bg-slate-900/40 border border-slate-200/80 dark:border-slate-800/80 space-y-1.5">
+              <h4 className="text-[11px] font-bold tracking-wider text-slate-700 dark:text-slate-300 uppercase flex items-center justify-between">
+                <span className="flex items-center gap-1.5">
+                  <Compass className="h-3.5 w-3.5 text-primary" />
+                  <span>{t.versionTitle}</span>
+                </span>
+                <span className="font-mono text-[11px] font-semibold text-primary">
+                  {prediction.methodVersionTag}
+                </span>
+              </h4>
+              {prediction.configurationSnapshot && (
+                <div className="mt-1">
+                  <span className="text-[10px] text-muted-foreground block mb-0.5">{t.configSnapshot}:</span>
+                  <pre className="text-[10px] font-mono p-2 rounded bg-background/80 border border-border/50 text-foreground overflow-x-auto max-h-24">
+                    {(() => {
+                      try {
+                        return JSON.stringify(JSON.parse(prediction.configurationSnapshot), null, 2)
+                      } catch {
+                        return prediction.configurationSnapshot
+                      }
+                    })()}
+                  </pre>
+                </div>
+              )}
+            </div>
+          )}
 
           {/* ACTION */}
           <div className="p-3.5 rounded-xl bg-emerald-50/50 dark:bg-emerald-950/20 border border-emerald-200/50 dark:border-emerald-900/50 space-y-2">

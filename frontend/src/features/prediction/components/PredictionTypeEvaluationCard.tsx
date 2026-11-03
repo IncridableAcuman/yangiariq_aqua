@@ -205,7 +205,7 @@ export const PredictionTypeEvaluationCard: React.FC<PredictionTypeEvaluationCard
               <div className="p-3 rounded-lg border border-border/80 bg-card">
                 <span className="text-[11px] font-medium text-muted-foreground">{t.mae}</span>
                 <p className="text-lg font-bold font-mono text-foreground mt-0.5">
-                  {num.meanAbsoluteError !== null ? num.meanAbsoluteError.toFixed(2) : '—'}
+                  {typeof num.meanAbsoluteError === 'number' ? num.meanAbsoluteError.toFixed(2) : '—'}
                 </p>
                 <span className="text-[10px] text-muted-foreground">Absolyut og‘ish</span>
               </div>
@@ -213,7 +213,7 @@ export const PredictionTypeEvaluationCard: React.FC<PredictionTypeEvaluationCard
               <div className="p-3 rounded-lg border border-border/80 bg-card">
                 <span className="text-[11px] font-medium text-muted-foreground">{t.rmse}</span>
                 <p className="text-lg font-bold font-mono text-foreground mt-0.5">
-                  {num.rootMeanSquaredError !== null ? num.rootMeanSquaredError.toFixed(2) : '—'}
+                  {typeof num.rootMeanSquaredError === 'number' ? num.rootMeanSquaredError.toFixed(2) : '—'}
                 </p>
                 <span className="text-[10px] text-muted-foreground">Katta xatolar penalizatsiyasi</span>
               </div>
@@ -221,7 +221,7 @@ export const PredictionTypeEvaluationCard: React.FC<PredictionTypeEvaluationCard
               <div className="p-3 rounded-lg border border-border/80 bg-card">
                 <span className="text-[11px] font-medium text-muted-foreground">{t.mape}</span>
                 <p className="text-lg font-bold font-mono text-foreground mt-0.5">
-                  {num.mapeReliable && num.meanAbsolutePercentageError !== null
+                  {num.mapeReliable && typeof num.meanAbsolutePercentageError === 'number'
                     ? `${num.meanAbsolutePercentageError.toFixed(1)}%`
                     : 'N/A'}
                 </p>
@@ -234,17 +234,19 @@ export const PredictionTypeEvaluationCard: React.FC<PredictionTypeEvaluationCard
                 <span className="text-[11px] font-medium text-muted-foreground">{t.mbe}</span>
                 <div className="flex items-center gap-1 mt-0.5">
                   <p className="text-lg font-bold font-mono text-foreground">
-                    {num.meanBiasError !== null ? `${num.meanBiasError > 0 ? '+' : ''}${num.meanBiasError.toFixed(2)}` : '—'}
+                    {typeof num.meanBiasError === 'number'
+                      ? `${num.meanBiasError > 0 ? '+' : ''}${num.meanBiasError.toFixed(2)}`
+                      : '—'}
                   </p>
-                  {num.meanBiasError !== null && num.meanBiasError > 2 && (
+                  {typeof num.meanBiasError === 'number' && num.meanBiasError > 2 && (
                     <ArrowUpRight className="h-4 w-4 text-amber-500" />
                   )}
-                  {num.meanBiasError !== null && num.meanBiasError < -2 && (
+                  {typeof num.meanBiasError === 'number' && num.meanBiasError < -2 && (
                     <ArrowDownRight className="h-4 w-4 text-sky-500" />
                   )}
                 </div>
                 <span className="text-[10px] text-muted-foreground">
-                  {num.meanBiasError !== null
+                  {typeof num.meanBiasError === 'number'
                     ? num.meanBiasError > 2 ? t.overPredicting : num.meanBiasError < -2 ? t.underPredicting : t.neutralBias
                     : '—'}
                 </span>
@@ -253,10 +255,10 @@ export const PredictionTypeEvaluationCard: React.FC<PredictionTypeEvaluationCard
               <div className="p-3 rounded-lg border border-border/80 bg-card">
                 <span className="text-[11px] font-medium text-muted-foreground">{t.tolerance}</span>
                 <p className="text-lg font-bold font-mono text-emerald-600 dark:text-emerald-400 mt-0.5">
-                  {num.withinTolerancePercentage !== null ? `${num.withinTolerancePercentage.toFixed(1)}%` : '—'}
+                  {typeof num.withinTolerancePercentage === 'number' ? `${num.withinTolerancePercentage.toFixed(1)}%` : '—'}
                 </p>
                 <span className="text-[10px] text-muted-foreground">
-                  {num.withinToleranceCount} / {num.validComparisonsCount} ta oraliqda
+                  {num.withinToleranceCount ?? 0} / {num.validComparisonsCount ?? 0} ta oraliqda
                 </span>
               </div>
             </div>
@@ -275,28 +277,28 @@ export const PredictionTypeEvaluationCard: React.FC<PredictionTypeEvaluationCard
               <div className="p-3 rounded-lg border border-border/80 bg-card">
                 <span className="text-[11px] font-medium text-muted-foreground">{t.accuracy}</span>
                 <p className="text-lg font-bold font-mono text-foreground mt-0.5">
-                  {cls.accuracyPercentage !== null ? `${cls.accuracyPercentage.toFixed(1)}%` : '—'}
+                  {typeof cls.accuracyPercentage === 'number' ? `${cls.accuracyPercentage.toFixed(1)}%` : '—'}
                 </p>
               </div>
 
               <div className="p-3 rounded-lg border border-border/80 bg-card">
                 <span className="text-[11px] font-medium text-muted-foreground">{t.precision}</span>
                 <p className="text-lg font-bold font-mono text-foreground mt-0.5">
-                  {cls.precisionPercentage !== null ? `${cls.precisionPercentage.toFixed(1)}%` : '—'}
+                  {typeof cls.precisionPercentage === 'number' ? `${cls.precisionPercentage.toFixed(1)}%` : '—'}
                 </p>
               </div>
 
               <div className="p-3 rounded-lg border border-border/80 bg-card">
                 <span className="text-[11px] font-medium text-muted-foreground">{t.recall}</span>
                 <p className="text-lg font-bold font-mono text-foreground mt-0.5">
-                  {cls.recallPercentage !== null ? `${cls.recallPercentage.toFixed(1)}%` : '—'}
+                  {typeof cls.recallPercentage === 'number' ? `${cls.recallPercentage.toFixed(1)}%` : '—'}
                 </p>
               </div>
 
               <div className="p-3 rounded-lg border border-border/80 bg-card">
                 <span className="text-[11px] font-medium text-muted-foreground">{t.f1}</span>
                 <p className="text-lg font-bold font-mono text-foreground mt-0.5">
-                  {cls.f1Score !== null ? cls.f1Score.toFixed(2) : '—'}
+                  {typeof cls.f1Score === 'number' ? cls.f1Score.toFixed(2) : '—'}
                 </p>
               </div>
             </div>

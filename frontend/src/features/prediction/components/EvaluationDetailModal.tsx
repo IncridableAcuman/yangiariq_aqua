@@ -249,21 +249,21 @@ export const EvaluationDetailModal: React.FC<EvaluationDetailModalProps> = ({
                 <div className="p-2 rounded bg-muted/40 border border-border/40">
                   <span className="text-[10px] text-muted-foreground block">{t.absError}</span>
                   <span className="font-mono font-bold text-foreground">
-                    {evaluation.absoluteError !== null ? evaluation.absoluteError.toFixed(2) : '—'}
+                    {typeof evaluation.absoluteError === 'number' ? evaluation.absoluteError.toFixed(2) : '—'}
                   </span>
                 </div>
 
                 <div className="p-2 rounded bg-muted/40 border border-border/40">
                   <span className="text-[10px] text-muted-foreground block">{t.relError}</span>
                   <span className="font-mono font-bold text-foreground">
-                    {evaluation.relativeErrorPercent !== null ? `${evaluation.relativeErrorPercent.toFixed(1)}%` : '—'}
+                    {typeof evaluation.relativeErrorPercent === 'number' ? `${evaluation.relativeErrorPercent.toFixed(1)}%` : '—'}
                   </span>
                 </div>
 
                 <div className="p-2 rounded bg-muted/40 border border-border/40">
                   <span className="text-[10px] text-muted-foreground block">{t.dirError}</span>
                   <span className="font-mono font-bold text-foreground">
-                    {evaluation.directionalError !== null
+                    {typeof evaluation.directionalError === 'number'
                       ? `${evaluation.directionalError > 0 ? '+' : ''}${evaluation.directionalError.toFixed(2)}`
                       : '—'}
                   </span>

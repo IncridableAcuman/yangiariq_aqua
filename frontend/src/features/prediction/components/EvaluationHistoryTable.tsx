@@ -236,10 +236,10 @@ export const EvaluationHistoryTable: React.FC<EvaluationHistoryTableProps> = ({
                     </TableCell>
 
                     <TableCell className="text-right font-mono">
-                      {item.absoluteError !== null ? (
-                        <span className={item.directionalError && item.directionalError > 0 ? 'text-amber-600 dark:text-amber-400' : 'text-foreground'}>
-                          {item.directionalError !== null && item.directionalError > 0 ? '+' : ''}
-                          {item.directionalError !== null ? item.directionalError.toFixed(1) : item.absoluteError.toFixed(1)}
+                      {typeof item.absoluteError === 'number' ? (
+                        <span className={typeof item.directionalError === 'number' && item.directionalError > 0 ? 'text-amber-600 dark:text-amber-400' : 'text-foreground'}>
+                          {typeof item.directionalError === 'number' && item.directionalError > 0 ? '+' : ''}
+                          {typeof item.directionalError === 'number' ? item.directionalError.toFixed(1) : item.absoluteError.toFixed(1)}
                         </span>
                       ) : (
                         '—'

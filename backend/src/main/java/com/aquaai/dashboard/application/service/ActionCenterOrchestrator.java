@@ -7,8 +7,10 @@ import com.aquaai.dashboard.api.dto.UrgentActionDto;
 import com.aquaai.field.domain.model.Field;
 import com.aquaai.irrigation.domain.model.IrrigationPlanStatus;
 import com.aquaai.irrigation.domain.model.SmartIrrigationPlan;
+import com.aquaai.prediction.application.dto.CalibrationProposalDto;
 import com.aquaai.recommendation.domain.model.AgronomicRecommendation;
 import com.aquaai.recommendation.domain.model.RecommendationPriority;
+import com.aquaai.recommendation.domain.model.RecommendationStatus;
 import com.aquaai.sensor.domain.model.Sensor;
 import com.aquaai.sensor.domain.model.SensorStatus;
 import org.springframework.stereotype.Service;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +40,33 @@ public class ActionCenterOrchestrator {
             List<Anomaly> activeAnomalies,
             List<AgronomicRecommendation> recommendations,
             List<Sensor> sensors
+    ) {
+        return deriveUrgentActions(fields, priorityFields, plans, activeAnomalies, recommendations, sensors, Collections.emptyList(), false);
+    }
+
+    public List<UrgentActionDto> deriveUrgentActions(
+            List<Field> fields,
+            List<PriorityFieldDto> priorityFields,
+            List<SmartIrrigationPlan> plans,
+            List<Anomaly> activeAnomalies,
+            List<AgronomicRecommendation> recommendations,
+            List<Sensor> sensors,
+            List<CalibrationProposalDto> openProposals,
+            boolean modelDriftDetected
+    ) {
+        return deriveUrgentActions(fields, priorityFields, plans, activeAnomalies, recommendations, sensors, openProposals, modelDriftDetected, false);
+    }
+
+    public List<UrgentActionDto> deriveUrgentActions(
+            List<Field> fields,
+            List<PriorityFieldDto> priorityFields,
+            List<SmartIrrigationPlan> plans,
+            List<Anomaly> activeAnomalies,
+            List<AgronomicRecommendation> recommendations,
+            List<Sensor> sensors,
+            List<CalibrationProposalDto> openProposals,
+            boolean modelDriftDetected,
+            boolean contextualDriftDetected
     ) {
         List<UrgentActionDto> actions = new ArrayList<>();
         Map<UUID, String> fieldNameMap = fields.stream()
@@ -186,6 +216,53 @@ public class ActionCenterOrchestrator {
                             .build());
                 }
             }
+        }
+
+        // 8. Model Governance & Calibration Proposals (MEDIUM)
+        if (openProposals != null && !openProposals.isEmpty()) {
+            for (CalibrationProposalDto prop : openProposals) {
+                actions.add(UrgentActionDto.builder()
+                        .id("act-gov-" + prop.id())
+                        .actionType("CALIBRATION_PROPOSAL_PENDING")
+                        .severity("MEDIUM")
+                        .title("Calibration Proposal Awaiting Review")
+                        .description(prop.reason() != null ? prop.reason() : "Model degradation detected. Backtest available.")
+                        .fieldId(null)
+                        .fieldName(null)
+                        .targetSection("predictions")
+                        .actionLabel("Review Calibration")
+                        .actionPayload(Map.of("proposalId", prop.id().toString()))
+                        .createdAt(prop.createdAt() != null ? prop.createdAt() : Instant.now())
+                        .build());
+            }
+        }
+
+        // 9. Automated Predictive Performance Drift Alert (MEDIUM)
+        if (modelDriftDetected && (openProposals == null || openProposals.isEmpty())) {
+            actions.add(UrgentActionDto.builder()
+                    .id("act-gov-drift")
+                    .actionType("MODEL_DRIFT_ALERT")
+                    .severity("MEDIUM")
+                    .title("Predictive Model Drift Detected")
+                    .description("Recent forecast error variance exceeded baseline threshold. Review model health.")
+                    .targetSection("predictions")
+                    .actionLabel("Investigate Drift")
+                    .createdAt(Instant.now())
+                    .build());
+        }
+
+        // 10. Contextual Prediction Drift Alert (MEDIUM)
+        if (contextualDriftDetected) {
+            actions.add(UrgentActionDto.builder()
+                    .id("act-context-drift")
+                    .actionType("CONTEXTUAL_DRIFT_ALERT")
+                    .severity("MEDIUM")
+                    .title("Contextual Prediction Drift Detected")
+                    .description("Prediction error elevated for specific crop or irrigation method slice. Review adaptive intelligence matrix.")
+                    .targetSection("predictions")
+                    .actionLabel("Inspect Context Matrix")
+                    .createdAt(Instant.now())
+                    .build());
         }
 
         // Deterministic Sort: CRITICAL (1), HIGH (2), MEDIUM (3), LOW (4), then by timestamp desc

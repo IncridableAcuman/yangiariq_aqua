@@ -39,6 +39,32 @@ public class Prediction {
     private final Instant outcomeRecordedAt;
     private final PredictionAccuracyStatus accuracyStatus;
     private final Instant generatedAt;
+    private final String methodVersionTag;
+    private final String configurationSnapshot;
+
+    public static String getDefaultVersionTag(PredictionType type) {
+        if (type == null) return "V1";
+        return switch (type) {
+            case SOIL_MOISTURE_FORECAST -> "SOIL_MOISTURE_TREND_V1";
+            case WATER_DEMAND_FORECAST -> "WATER_DEMAND_RULE_V1";
+            case IRRIGATION_NEED_FORECAST -> "IRRIGATION_NEED_RULE_V1";
+            case SENSOR_RELIABILITY_FORECAST -> "SENSOR_RELIABILITY_V1";
+            case WATER_AVAILABILITY_RISK -> "WATER_AVAILABILITY_RISK_V1";
+            case IRRIGATION_PLAN_RISK -> "IRRIGATION_PLAN_RISK_V1";
+        };
+    }
+
+    public static String getDefaultConfigurationSnapshot(PredictionType type) {
+        if (type == null) return "{}";
+        return switch (type) {
+            case SOIL_MOISTURE_FORECAST -> "{\"trendWindowHours\":24,\"minDepletionObservations\":3,\"smoothingAlpha\":0.3,\"kcReference\":1.00}";
+            case WATER_DEMAND_FORECAST -> "{\"forecastPeriodDays\":2,\"et0ReferenceMm\":4.5,\"applicationEfficiency\":0.80,\"quotaBufferPercent\":10}";
+            case IRRIGATION_NEED_FORECAST -> "{\"madThresholdFraction\":0.45,\"urgencyHours\":48,\"enforceSafetyBlock\":true}";
+            case SENSOR_RELIABILITY_FORECAST -> "{\"observationWindowDays\":14,\"packetLossWarningThreshold\":0.15,\"packetLossCriticalThreshold\":0.30}";
+            case WATER_AVAILABILITY_RISK -> "{\"headroomCriticalThresholdPercent\":15,\"quotaDepletionWarningPercent\":80}";
+            case IRRIGATION_PLAN_RISK -> "{\"enforceSafetyInterlock\":true,\"stalenessThresholdHours\":6,\"maxDelayHours\":24}";
+        };
+    }
 
     public static Prediction create(
             UUID fieldId,
@@ -57,6 +83,36 @@ public class Prediction {
             String assumptions,
             String recommendedAction,
             String actionTargetModule
+    ) {
+        return create(
+                fieldId, predictionType, horizon, targetTime,
+                predictedValue, lowerBound, upperBound, unit,
+                confidencePercent, riskLevel, dataSufficiency, likelihood,
+                evidence, assumptions, recommendedAction, actionTargetModule,
+                getDefaultVersionTag(predictionType),
+                getDefaultConfigurationSnapshot(predictionType)
+        );
+    }
+
+    public static Prediction create(
+            UUID fieldId,
+            PredictionType predictionType,
+            PredictionHorizon horizon,
+            Instant targetTime,
+            BigDecimal predictedValue,
+            BigDecimal lowerBound,
+            BigDecimal upperBound,
+            String unit,
+            int confidencePercent,
+            RiskLevel riskLevel,
+            DataSufficiency dataSufficiency,
+            IrrigationLikelihood likelihood,
+            String evidence,
+            String assumptions,
+            String recommendedAction,
+            String actionTargetModule,
+            String methodVersionTag,
+            String configurationSnapshot
     ) {
         return Prediction.builder()
                 .id(UUID.randomUUID())
@@ -78,6 +134,8 @@ public class Prediction {
                 .actionTargetModule(actionTargetModule != null ? actionTargetModule : "")
                 .accuracyStatus(PredictionAccuracyStatus.PENDING)
                 .generatedAt(Instant.now())
+                .methodVersionTag(methodVersionTag != null ? methodVersionTag : getDefaultVersionTag(predictionType))
+                .configurationSnapshot(configurationSnapshot != null ? configurationSnapshot : getDefaultConfigurationSnapshot(predictionType))
                 .build();
     }
 
@@ -109,6 +167,8 @@ public class Prediction {
                 .actionTargetModule("sensors")
                 .accuracyStatus(PredictionAccuracyStatus.UNVERIFIABLE)
                 .generatedAt(now)
+                .methodVersionTag(getDefaultVersionTag(predictionType))
+                .configurationSnapshot(getDefaultConfigurationSnapshot(predictionType))
                 .build();
     }
 

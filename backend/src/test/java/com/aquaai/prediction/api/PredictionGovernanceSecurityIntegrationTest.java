@@ -130,6 +130,18 @@ class PredictionGovernanceSecurityIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(rollbackReq)))
                 .andExpect(status().isForbidden());
+
+        mockMvc.perform(post("/api/v1/predictions/governance/versions/" + UUID.randomUUID() + "/rollback")
+                        .header("Authorization", "Bearer " + farmerToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(rollbackReq)))
+                .andExpect(status().isForbidden());
+
+        mockMvc.perform(post("/api/v1/predictions/governance/proposals")
+                        .header("Authorization", "Bearer " + farmerToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"predictionType\":\"WATER_DEMAND_FORECAST\"}"))
+                .andExpect(status().isForbidden());
     }
 
     @Test
@@ -149,6 +161,12 @@ class PredictionGovernanceSecurityIntegrationTest {
                         .header("Authorization", "Bearer " + operatorToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(activateReq)))
+                .andExpect(status().isForbidden());
+
+        mockMvc.perform(post("/api/v1/predictions/governance/proposals")
+                        .header("Authorization", "Bearer " + operatorToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"predictionType\":\"WATER_DEMAND_FORECAST\"}"))
                 .andExpect(status().isForbidden());
     }
 }

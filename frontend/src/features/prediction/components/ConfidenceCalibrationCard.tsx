@@ -129,21 +129,21 @@ export const ConfidenceCalibrationCard: React.FC<ConfidenceCalibrationCardProps>
                   <div className="flex justify-between items-center text-muted-foreground">
                     <span>{t.mae}:</span>
                     <span className="font-mono font-semibold text-foreground">
-                      {tier.meanAbsoluteError !== null ? tier.meanAbsoluteError.toFixed(2) : '—'}
+                      {typeof tier.meanAbsoluteError === 'number' ? tier.meanAbsoluteError.toFixed(2) : '—'}
                     </span>
                   </div>
 
                   <div className="flex justify-between items-center text-muted-foreground">
                     <span>{t.accuracy}:</span>
                     <span className="font-mono font-semibold text-foreground">
-                      {tier.accuracyPercentage !== null ? `${tier.accuracyPercentage.toFixed(1)}%` : '—'}
+                      {typeof tier.accuracyPercentage === 'number' ? `${tier.accuracyPercentage.toFixed(1)}%` : '—'}
                     </span>
                   </div>
 
                   <div className="flex justify-between items-center text-muted-foreground">
                     <span>{t.failureRate}:</span>
                     <span className="font-mono font-semibold text-foreground">
-                      {tier.failureRatePercentage !== null ? `${tier.failureRatePercentage.toFixed(1)}%` : '0%'}
+                      {typeof tier.failureRatePercentage === 'number' ? `${tier.failureRatePercentage.toFixed(1)}%` : '0%'}
                     </span>
                   </div>
                 </div>

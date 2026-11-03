@@ -167,3 +167,36 @@ The evaluation lifecycle is persisted in an immutable audit table configured via
 - `GET /api/v1/predictions/evaluation/history`: Filtered, paginated audit ledger of prediction vs reality comparisons.
 - `GET /api/v1/predictions/{predictionId}/evaluation`: In-depth audit modal details for a single forecast.
 - `POST /api/v1/predictions/evaluation/evaluate`: Triggers batch evaluation of all pending predictions whose horizons have matured.
+
+---
+
+## 7. Model Governance & Controlled Calibration Subsystem (Milestone 08.9)
+
+### 7.1 Database Schemas
+- `prediction_method_versions`: Version tags, lifecycle status (`DRAFT`, `CANDIDATE`, `APPROVED`, `SHADOW`, `CANARY`, `ACTIVE`, `DEPRECATED`, `RETIRED`), immutable configuration JSON snapshots, activation timestamps, and audit actors.
+- `calibration_proposals`: Formal candidate proposals linking current version to candidate version, rationale, evidence, risk rating, affected scope, and human review status.
+- `backtest_runs`: Historical evaluation run results storing current vs candidate metrics (MAE, RMSE, MBE, Accuracy, F1), regression detection flags, and comparability guarantees.
+- `governance_audit_logs`: Append-only immutable log of every governance action.
+- `predictions`: Stamped with `method_version_tag` and `configuration_snapshot`.
+
+### 7.2 Governance Domain Services & Use Cases
+- `CreateCandidateProposalUseCase`: Validates parameters against hard hydraulic constraints, increments version tag (`_V2`), registers candidate version, and saves proposal.
+- `RunBacktestUseCase` / `BacktestingEngine`: Executes deterministic anti-leakage historical backtests against identical ground-truth observations.
+- `RegressionGuard`: Evaluates multi-factor regression rules and flags candidates causing unexpected degradation.
+- `ApproveCalibrationProposalUseCase`: Validates reviewer identity (`ROLE_ADMIN`) and moves proposal to `APPROVED`.
+- `ActivateVersionUseCase` / `ControlledRolloutManager`: Stages or activates approved candidates into `SHADOW`, `CANARY`, or `ACTIVE`, marking the version immutable.
+- `RollbackVersionUseCase` / `RollbackManager`: Restores prior stable active versions with zero downtime and mandatory audit trail logging.
+
+### 7.3 REST Endpoints
+- `GET /api/v1/predictions/governance/overview`: System-wide governance summary, active version fleet status, open proposal counts, and drift warnings.
+- `GET /api/v1/predictions/governance/versions`: List version history per prediction type.
+- `GET /api/v1/predictions/governance/proposals`: Query proposals with status filtering.
+- `POST /api/v1/predictions/governance/proposals`: Create a candidate calibration proposal (Admin only).
+- `GET /api/v1/predictions/governance/proposals/{id}`: Detailed proposal view with candidate comparison and latest backtest results.
+- `POST /api/v1/predictions/governance/proposals/{id}/backtest`: Trigger anti-leakage backtest run (Admin only).
+- `POST /api/v1/predictions/governance/proposals/{id}/approve`: Approve proposal for staging/activation (Admin only).
+- `POST /api/v1/predictions/governance/proposals/{id}/reject`: Reject proposal with required notes (Admin only).
+- `POST /api/v1/predictions/governance/versions/{id}/activate`: Transition version into `SHADOW`, `CANARY`, or `ACTIVE` (Admin only).
+- `POST /api/v1/predictions/governance/versions/rollback`: Emergency rollback to prior version (Admin only).
+- `POST /api/v1/predictions/governance/versions/{id}/rollback`: Direct version-targeted rollback (Admin only).
+- `GET /api/v1/predictions/governance/audit-trail`: Complete chronological governance audit trail.

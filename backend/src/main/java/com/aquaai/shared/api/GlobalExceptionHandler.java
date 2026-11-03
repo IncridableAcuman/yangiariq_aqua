@@ -85,6 +85,22 @@ public class GlobalExceptionHandler {
                 .body(ApiResponse.error(error, CorrelationIdFilter.getCurrentCorrelationId()));
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ApiResponse<Void>> handleIllegalArgumentException(IllegalArgumentException ex) {
+        log.warn("Illegal argument: {}", ex.getMessage());
+        ApiErrorResponse error = ApiErrorResponse.of("INVALID_ARGUMENT", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(ApiResponse.error(error, CorrelationIdFilter.getCurrentCorrelationId()));
+    }
+
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<ApiResponse<Void>> handleIllegalStateException(IllegalStateException ex) {
+        log.warn("Illegal state: {}", ex.getMessage());
+        ApiErrorResponse error = ApiErrorResponse.of("ILLEGAL_STATE", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(ApiResponse.error(error, CorrelationIdFilter.getCurrentCorrelationId()));
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiResponse<Void>> handleValidationExceptions(MethodArgumentNotValidException ex) {
         List<String> details = ex.getBindingResult()

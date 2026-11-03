@@ -36,6 +36,13 @@ public class PredictionOutcomeMatcher {
     private static final Duration SOIL_MOISTURE_TOLERANCE_WINDOW = Duration.ofHours(3);
     private static final Duration IRRIGATION_GRACE_PERIOD = Duration.ofHours(6);
 
+    public String resolveModelVersion(Prediction prediction) {
+        if (prediction.getMethodVersionTag() != null && !prediction.getMethodVersionTag().isBlank()) {
+            return prediction.getMethodVersionTag();
+        }
+        return Prediction.getDefaultVersionTag(prediction.getPredictionType());
+    }
+
     public PredictionEvaluation matchAndEvaluate(Prediction prediction, PredictionDataProvider dataProvider) {
         Objects.requireNonNull(prediction, "prediction must not be null");
         Objects.requireNonNull(dataProvider, "dataProvider must not be null");
@@ -51,7 +58,7 @@ public class PredictionOutcomeMatcher {
                     .fieldId(prediction.getFieldId())
                     .predictionType(prediction.getPredictionType())
                     .horizon(prediction.getHorizon())
-                    .modelVersion("DETERMINISTIC_FAO56_V1")
+                    .modelVersion(resolveModelVersion(prediction))
                     .generatedAt(prediction.getGeneratedAt())
                     .targetTime(targetTime)
                     .evaluatedAt(now)
@@ -88,7 +95,7 @@ public class PredictionOutcomeMatcher {
                     prediction.getFieldId(),
                     prediction.getPredictionType(),
                     prediction.getHorizon(),
-                    "DETERMINISTIC_FAO56_V1",
+                    resolveModelVersion(prediction),
                     prediction.getGeneratedAt(),
                     targetTime,
                     prediction.getConfidencePercent(),
@@ -123,7 +130,7 @@ public class PredictionOutcomeMatcher {
                     prediction.getFieldId(),
                     prediction.getPredictionType(),
                     prediction.getHorizon(),
-                    "DETERMINISTIC_FAO56_V1",
+                    resolveModelVersion(prediction),
                     prediction.getGeneratedAt(),
                     targetTime,
                     prediction.getConfidencePercent(),
@@ -137,7 +144,7 @@ public class PredictionOutcomeMatcher {
                 prediction.getFieldId(),
                 prediction.getPredictionType(),
                 prediction.getHorizon(),
-                "DETERMINISTIC_FAO56_V1",
+                resolveModelVersion(prediction),
                 prediction.getGeneratedAt(),
                 targetTime,
                 bestReading.measuredAt(),
@@ -192,7 +199,7 @@ public class PredictionOutcomeMatcher {
                     prediction.getFieldId(),
                     prediction.getPredictionType(),
                     prediction.getHorizon(),
-                    "DETERMINISTIC_MAD_V1",
+                    resolveModelVersion(prediction),
                     prediction.getGeneratedAt(),
                     prediction.getTargetTime(),
                     firstEvent.startedAt(),
@@ -219,7 +226,7 @@ public class PredictionOutcomeMatcher {
                     prediction.getFieldId(),
                     prediction.getPredictionType(),
                     prediction.getHorizon(),
-                    "DETERMINISTIC_MAD_V1",
+                    resolveModelVersion(prediction),
                     prediction.getGeneratedAt(),
                     prediction.getTargetTime(),
                     prediction.getTargetTime(),
@@ -256,7 +263,7 @@ public class PredictionOutcomeMatcher {
                         prediction.getFieldId(),
                         prediction.getPredictionType(),
                         prediction.getHorizon(),
-                        "DETERMINISTIC_MAD_V1",
+                        resolveModelVersion(prediction),
                         prediction.getGeneratedAt(),
                         prediction.getTargetTime(),
                         prediction.getTargetTime(),
@@ -283,7 +290,7 @@ public class PredictionOutcomeMatcher {
                     prediction.getFieldId(),
                     prediction.getPredictionType(),
                     prediction.getHorizon(),
-                    "DETERMINISTIC_MAD_V1",
+                    resolveModelVersion(prediction),
                     prediction.getGeneratedAt(),
                     prediction.getTargetTime(),
                     prediction.getTargetTime(),
@@ -311,7 +318,7 @@ public class PredictionOutcomeMatcher {
                 prediction.getFieldId(),
                 prediction.getPredictionType(),
                 prediction.getHorizon(),
-                "DETERMINISTIC_MAD_V1",
+                resolveModelVersion(prediction),
                 prediction.getGeneratedAt(),
                 prediction.getTargetTime(),
                 unpredictedEvent.startedAt(),
@@ -357,7 +364,7 @@ public class PredictionOutcomeMatcher {
                 prediction.getFieldId(),
                 prediction.getPredictionType(),
                 prediction.getHorizon(),
-                "WATER_BUDGET_FAO56_V1",
+                resolveModelVersion(prediction),
                 prediction.getGeneratedAt(),
                 prediction.getTargetTime(),
                 prediction.getTargetTime(),
@@ -389,7 +396,7 @@ public class PredictionOutcomeMatcher {
                     prediction.getFieldId(),
                     prediction.getPredictionType(),
                     prediction.getHorizon(),
-                    "SENSOR_DRIFT_V1",
+                    resolveModelVersion(prediction),
                     prediction.getGeneratedAt(),
                     prediction.getTargetTime(),
                     prediction.getConfidencePercent(),
@@ -421,7 +428,7 @@ public class PredictionOutcomeMatcher {
                 prediction.getFieldId(),
                 prediction.getPredictionType(),
                 prediction.getHorizon(),
-                "SENSOR_DRIFT_V1",
+                resolveModelVersion(prediction),
                 prediction.getGeneratedAt(),
                 prediction.getTargetTime(),
                 prediction.getTargetTime(),
@@ -450,7 +457,7 @@ public class PredictionOutcomeMatcher {
                     prediction.getFieldId(),
                     prediction.getPredictionType(),
                     prediction.getHorizon(),
-                    "QUOTA_HEADROOM_V1",
+                    resolveModelVersion(prediction),
                     prediction.getGeneratedAt(),
                     prediction.getTargetTime(),
                     prediction.getConfidencePercent(),
@@ -478,7 +485,7 @@ public class PredictionOutcomeMatcher {
                 prediction.getFieldId(),
                 prediction.getPredictionType(),
                 prediction.getHorizon(),
-                "QUOTA_HEADROOM_V1",
+                resolveModelVersion(prediction),
                 prediction.getGeneratedAt(),
                 prediction.getTargetTime(),
                 prediction.getTargetTime(),
@@ -524,7 +531,7 @@ public class PredictionOutcomeMatcher {
                 prediction.getFieldId(),
                 prediction.getPredictionType(),
                 prediction.getHorizon(),
-                "PLAN_RISK_V1",
+                resolveModelVersion(prediction),
                 prediction.getGeneratedAt(),
                 prediction.getTargetTime(),
                 prediction.getTargetTime(),

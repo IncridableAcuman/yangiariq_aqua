@@ -297,15 +297,15 @@ export const BacktestComparisonModal: React.FC<BacktestComparisonModalProps> = (
                   </tr>
 
                   {/* Classification Accuracy (if applicable) */}
-                  {latestBacktest.currentAccuracyPercent !== null && (
+                  {typeof latestBacktest.currentAccuracyPercent === 'number' && (
                     <tr>
                       <td className="py-2.5 px-3 font-semibold">{t.accuracy}</td>
                       <td className="py-2.5 px-3 font-mono">{latestBacktest.currentAccuracyPercent?.toFixed(1)}%</td>
                       <td className="py-2.5 px-3 font-mono font-bold text-primary">
-                        {latestBacktest.candidateAccuracyPercent?.toFixed(1)}%
+                        {latestBacktest.candidateAccuracyPercent?.toFixed(1) ?? '—'}%
                       </td>
                       <td className="py-2.5 px-3 text-right">
-                        {latestBacktest.candidateAccuracyPercent && latestBacktest.currentAccuracyPercent ? (
+                        {typeof latestBacktest.candidateAccuracyPercent === 'number' && typeof latestBacktest.currentAccuracyPercent === 'number' ? (
                           <span className={latestBacktest.candidateAccuracyPercent >= latestBacktest.currentAccuracyPercent ? 'text-emerald-600' : 'text-red-500 font-bold'}>
                             {(latestBacktest.candidateAccuracyPercent - latestBacktest.currentAccuracyPercent).toFixed(1)}%
                           </span>

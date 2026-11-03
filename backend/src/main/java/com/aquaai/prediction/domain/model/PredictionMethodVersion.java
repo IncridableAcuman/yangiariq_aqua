@@ -86,11 +86,20 @@ public class PredictionMethodVersion {
      * Hard safety check: Predictive governance MUST NEVER attempt to modify hydraulic safety thresholds,
      * emergency interlock cutoffs, or pump trip constraints.
      */
-    private static void validateSafetyParameters(String configurationJson) {
+    public static void validateSafetyParameters(String configurationJson) {
         if (configurationJson == null) return;
-        String lower = configurationJson.toLowerCase();
-        if (lower.contains("safetyinterlock") || lower.contains("hydraulicsafety") || lower.contains("bypass_safety")
-                || lower.contains("pipeburst") || lower.contains("emergencycutoff")) {
+        String lower = configurationJson.toLowerCase().replaceAll("\\s+", "");
+        // Baseline immutable declarations indicating that safety is enforced are allowed
+        String checkStr = lower.replace("\"enforcesafetyblock\":true", "")
+                               .replace("\"enforcesafetyinterlock\":true", "");
+
+        if (checkStr.contains("safetyinterlock") || checkStr.contains("hydraulicsafety") || checkStr.contains("bypass")
+                || checkStr.contains("pipeburst") || checkStr.contains("emergencycutoff")
+                || checkStr.contains("emergencypressure") || checkStr.contains("emergencystop")
+                || checkStr.contains("safetyblock") || checkStr.contains("interlock")
+                || checkStr.contains("actuatorsafety") || checkStr.contains("actuatorcommand")
+                || checkStr.contains("valveoverride") || checkStr.contains("pumpoverride")
+                || checkStr.contains("disablesafety")) {
             throw new IllegalArgumentException("Hard hydraulic safety parameters cannot be modified by predictive governance.");
         }
     }

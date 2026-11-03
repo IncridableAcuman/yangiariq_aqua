@@ -38,6 +38,8 @@ public class PredictionItemDto {
     private BigDecimal actualOutcomeValue;
     private String accuracyStatus;
     private Instant generatedAt;
+    private String methodVersionTag;
+    private String configurationSnapshot;
 
     public static PredictionItemDto fromDomain(Prediction p, String fieldName) {
         if (p == null) return null;
@@ -63,6 +65,8 @@ public class PredictionItemDto {
                 .actualOutcomeValue(p.getActualOutcomeValue())
                 .accuracyStatus(p.getAccuracyStatus().name())
                 .generatedAt(p.getGeneratedAt())
+                .methodVersionTag(p.getMethodVersionTag())
+                .configurationSnapshot(p.getConfigurationSnapshot())
                 .build();
     }
 }

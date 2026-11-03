@@ -23,10 +23,19 @@ import {
   rollbackVersion,
   getGovernanceAuditTrail,
   generateCalibrationProposal,
+  createCandidateProposal,
+  getAdaptiveOverview,
+  getFieldPredictionContext,
+  getContextPerformanceProfiles,
+  getAdaptiveSelectionHistory,
+  selectAdaptiveMethod,
+  getPredictionAdaptiveDecision,
+  SelectAdaptiveMethodRequest,
   ApproveProposalRequest,
   RejectProposalRequest,
   ActivateVersionRequest,
   RollbackVersionRequest,
+  CreateCandidateProposalRequest,
   PredictionHorizon,
   PredictionType,
 } from '@/entities/prediction'
@@ -49,6 +58,11 @@ export const predictionKeys = {
   governanceProposals: (params?: { type?: string; openOnly?: boolean }) => [...predictionKeys.all, 'governance', 'proposals', params] as const,
   governanceProposalDetail: (id?: string | null) => [...predictionKeys.all, 'governance', 'proposalDetail', id] as const,
   governanceAuditTrail: (limit?: number) => [...predictionKeys.all, 'governance', 'auditTrail', limit] as const,
+  adaptiveOverview: () => [...predictionKeys.all, 'adaptive', 'overview'] as const,
+  adaptiveContext: (fieldId?: string | null) => [...predictionKeys.all, 'adaptive', 'context', fieldId] as const,
+  adaptivePerformance: (params?: { predictionType?: string; versionTag?: string }) => [...predictionKeys.all, 'adaptive', 'performance', params] as const,
+  adaptiveSelections: (params?: { fieldId?: string; limit?: number }) => [...predictionKeys.all, 'adaptive', 'selections', params] as const,
+  predictionAdaptiveDecision: (predictionId?: string | null) => [...predictionKeys.all, 'adaptive', 'decision', predictionId] as const,
 }
 
 export function usePredictionOverviewQuery(horizon: PredictionHorizon = 'NEXT_48_HOURS') {
@@ -278,4 +292,77 @@ export function useGenerateProposalMutation() {
     },
   })
 }
+
+export function useCreateCandidateProposalMutation() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (request: CreateCandidateProposalRequest) => createCandidateProposal(request),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: predictionKeys.governanceProposals() })
+      queryClient.invalidateQueries({ queryKey: predictionKeys.governanceOverview() })
+      queryClient.invalidateQueries({ queryKey: predictionKeys.governanceVersions() })
+    },
+  })
+}
+
+// ============================================================================
+// MILESTONE 08.10: CONTEXT-AWARE ADAPTIVE INTELLIGENCE HOOKS
+// ============================================================================
+
+export function useAdaptiveOverviewQuery() {
+  return useQuery({
+    queryKey: predictionKeys.adaptiveOverview(),
+    queryFn: ({ signal }) => getAdaptiveOverview(signal),
+    staleTime: 30_000,
+  })
+}
+
+export function useFieldPredictionContextQuery(fieldId?: string | null) {
+  return useQuery({
+    queryKey: predictionKeys.adaptiveContext(fieldId),
+    queryFn: ({ signal }) =>
+      fieldId ? getFieldPredictionContext(fieldId, signal) : Promise.reject('No fieldId'),
+    enabled: !!fieldId,
+    staleTime: 60_000,
+  })
+}
+
+export function useContextPerformanceProfilesQuery(params?: { predictionType?: string; versionTag?: string }) {
+  return useQuery({
+    queryKey: predictionKeys.adaptivePerformance(params),
+    queryFn: ({ signal }) => getContextPerformanceProfiles(params, signal),
+    staleTime: 60_000,
+  })
+}
+
+export function useAdaptiveSelectionHistoryQuery(params?: { fieldId?: string; limit?: number }) {
+  return useQuery({
+    queryKey: predictionKeys.adaptiveSelections(params),
+    queryFn: ({ signal }) => getAdaptiveSelectionHistory(params, signal),
+    staleTime: 30_000,
+  })
+}
+
+export function useSelectAdaptiveMethodMutation() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (request: SelectAdaptiveMethodRequest) => selectAdaptiveMethod(request),
+    onSuccess: (_, vars) => {
+      queryClient.invalidateQueries({ queryKey: predictionKeys.adaptiveOverview() })
+      queryClient.invalidateQueries({ queryKey: predictionKeys.adaptiveSelections() })
+      queryClient.invalidateQueries({ queryKey: predictionKeys.adaptiveContext(vars.fieldId) })
+    },
+  })
+}
+
+export function usePredictionAdaptiveDecisionQuery(predictionId?: string | null) {
+  return useQuery({
+    queryKey: predictionKeys.predictionAdaptiveDecision(predictionId),
+    queryFn: ({ signal }) =>
+      predictionId ? getPredictionAdaptiveDecision(predictionId, signal) : Promise.reject('No predictionId'),
+    enabled: !!predictionId,
+    staleTime: 120_000,
+  })
+}
+
 

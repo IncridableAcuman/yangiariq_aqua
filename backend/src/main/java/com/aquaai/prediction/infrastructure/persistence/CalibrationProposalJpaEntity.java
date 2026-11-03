@@ -60,6 +60,9 @@ public class CalibrationProposalJpaEntity {
     @Column(name = "risk_level", nullable = false, length = 32)
     private String riskLevel;
 
+    @Column(name = "affected_scope", length = 64)
+    private String affectedScope;
+
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;
 

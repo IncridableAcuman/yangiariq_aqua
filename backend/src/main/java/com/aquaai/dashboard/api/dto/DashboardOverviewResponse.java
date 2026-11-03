@@ -19,6 +19,7 @@ public class DashboardOverviewResponse {
     private final List<PriorityFieldDto> priorityFields;
     private final List<UrgentActionDto> urgentActions;
     private final List<RecentActivityDto> recentActivity;
+    private final PredictiveModelHealthSummaryDto predictiveHealth;
     private final Instant generatedAt;
     private final String tenantScope;
 }
