@@ -43,7 +43,7 @@ services:
   # 2. React Vite Frontend (Static Site served via Global CDN)
   # ----------------------------------------------------------------------------
   - type: web
-    name: yangiariq-aqua-frontend
+    name: yangiariq-aqua
     runtime: static
     plan: free
     rootDir: frontend
