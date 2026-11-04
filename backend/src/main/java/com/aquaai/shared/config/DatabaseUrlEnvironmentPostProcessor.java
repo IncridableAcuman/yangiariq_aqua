@@ -33,6 +33,20 @@ public class DatabaseUrlEnvironmentPostProcessor implements EnvironmentPostProce
 
     @Override
     public void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application) {
+        // Skip entirely during Spring Boot test execution so in-memory test databases (H2) are preserved
+        if (environment.containsProperty("org.springframework.boot.test.context.SpringBootTestContextBootstrapper")) {
+            return;
+        }
+        for (String profile : environment.getActiveProfiles()) {
+            if ("test".equalsIgnoreCase(profile)) {
+                return;
+            }
+        }
+        String existingUrl = environment.getProperty("spring.datasource.url");
+        if (existingUrl != null && existingUrl.startsWith("jdbc:h2:")) {
+            return;
+        }
+
         Map<String, Object> props = new HashMap<>();
 
         // 1. Resolve raw database URL from environment or .env files
@@ -140,7 +154,6 @@ public class DatabaseUrlEnvironmentPostProcessor implements EnvironmentPostProce
     private String readFromDotEnvFiles(String... keys) {
         List<File> candidates = List.of(
                 new File(".env"),
-                new File("backend/.env"),
                 new File("../.env")
         );
 

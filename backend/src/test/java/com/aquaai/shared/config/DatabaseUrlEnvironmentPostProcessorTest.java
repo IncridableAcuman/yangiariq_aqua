@@ -77,4 +77,18 @@ class DatabaseUrlEnvironmentPostProcessorTest {
         assertThat(environment.getProperty("spring.datasource.url"))
                 .isEqualTo("jdbc:postgresql://localhost:5432/yangiariq_aqua");
     }
+
+    @Test
+    @DisplayName("Should skip overriding datasource when test profile is active")
+    void shouldSkipWhenTestProfileActive() {
+        ConfigurableEnvironment environment = new StandardEnvironment();
+        environment.setActiveProfiles("test");
+        environment.getPropertySources().addFirst(new MapPropertySource("testEnv", Map.of(
+                "DATABASE_URL", "postgresql://someuser:somepass@somehost:5432/somedb"
+        )));
+
+        processor.postProcessEnvironment(environment, new SpringApplication());
+
+        assertThat(environment.getProperty("spring.datasource.url")).isNull();
+    }
 }

@@ -315,7 +315,7 @@ describe('Milestone 08.11: Hybrid ML Prediction Engine & Evidence-Based Learning
       expect(screen.getByText('ds-001-s...')).toBeInTheDocument()
       expect(screen.getByText('FEAT_SOIL_MOISTURE_V1')).toBeInTheDocument()
       expect(screen.getByText('100 obs')).toBeInTheDocument()
-      expect(screen.getByText('VALID')).toBeInTheDocument()
+      expect(screen.getByText('HIGH_QUALITY')).toBeInTheDocument()
     })
   })
 
