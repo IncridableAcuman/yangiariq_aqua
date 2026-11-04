@@ -188,7 +188,7 @@ export const FieldEvaluationTable: React.FC<FieldEvaluationTableProps> = ({
                     </TableCell>
 
                     <TableCell className="text-center font-mono font-semibold">
-                      {field.totalEvaluations}
+                      {field.totalEvaluations ?? 0}
                     </TableCell>
 
                     <TableCell className="text-right font-mono">
@@ -206,7 +206,7 @@ export const FieldEvaluationTable: React.FC<FieldEvaluationTableProps> = ({
                     </TableCell>
 
                     <TableCell className="text-center">
-                      {field.interruptedCount > 0 ? (
+                      {(field.interruptedCount ?? 0) > 0 ? (
                         <Badge variant="outline" className="text-rose-600 dark:text-rose-400 border-rose-500/30 text-[10px] font-mono">
                           {field.interruptedCount}
                         </Badge>

@@ -63,8 +63,8 @@ export const ConfidenceCalibrationCard: React.FC<ConfidenceCalibrationCardProps>
   const hasInversion =
     highTier &&
     lowTier &&
-    highTier.meanAbsoluteError !== null &&
-    lowTier.meanAbsoluteError !== null &&
+    typeof highTier.meanAbsoluteError === 'number' &&
+    typeof lowTier.meanAbsoluteError === 'number' &&
     highTier.meanAbsoluteError > lowTier.meanAbsoluteError
 
   return (

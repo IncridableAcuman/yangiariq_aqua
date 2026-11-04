@@ -26,5 +26,10 @@ export * from './AdaptiveHealthStrip'
 export * from './ContextPerformanceTable'
 export * from './AdaptiveSelectionsLedger'
 export * from './ExplainableSelectionModal'
+export * from './ActiveModelComparisonCard'
+export * from './ModelCandidatesTable'
+export * from './ModelCandidateDetailModal'
+export * from './TrainingRunDialog'
+export * from './TrainingDatasetsTable'
 
 

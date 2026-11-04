@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Button } from '@/shared/ui/button'
 import { Badge } from '@/shared/ui/badge'
+import { ErrorBoundary } from '@/shared/ui/ErrorBoundary'
 import {
   Compass,
   Droplets,
@@ -13,10 +14,12 @@ import {
   MapPin,
   Activity,
   Sliders,
+  Brain,
 } from 'lucide-react'
 import { SupportedLanguage } from '@/shared/i18n'
 import { NavSection } from '@/widgets/sidebar'
 import { Field } from '@/entities/field'
+import { useAuth } from '@/features/auth/context/AuthContext'
 import {
   PredictionHorizon,
   PredictionItem,
@@ -47,6 +50,12 @@ import {
   useContextPerformanceProfilesQuery,
   useAdaptiveSelectionHistoryQuery,
   useSelectAdaptiveMethodMutation,
+  useActiveModelComparisonQuery,
+  useModelCandidatesQuery,
+  useModelCandidateDetailQuery,
+  useTrainingDatasetsQuery,
+  useTrainPredictionModelMutation,
+  usePromoteModelCandidateMutation,
   PredictionHorizonSelector,
   SoilMoistureForecastCard,
   WaterDemandForecastCard,
@@ -72,6 +81,11 @@ import {
   ContextPerformanceTable,
   AdaptiveSelectionsLedger,
   ExplainableSelectionModal,
+  ActiveModelComparisonCard,
+  ModelCandidatesTable,
+  ModelCandidateDetailModal,
+  TrainingRunDialog,
+  TrainingDatasetsTable,
 } from '@/features/prediction'
 import { useFieldsQuery } from '@/features/field/queries/useFieldQueries'
 
@@ -86,11 +100,16 @@ export const PredictionsPage: React.FC<PredictionsPageProps> = ({
   initialFieldId,
   onNavigate,
 }) => {
+  const { user } = useAuth()
   const [horizon, setHorizon] = useState<PredictionHorizon>('NEXT_48_HOURS')
   const [selectedFieldId, setSelectedFieldId] = useState<string | null>(initialFieldId || null)
-  const [activeTab, setActiveTab] = useState<'forecasts' | 'evaluation' | 'governance' | 'adaptive' | 'history'>('forecasts')
+  const [activeTab, setActiveTab] = useState<'forecasts' | 'models' | 'evaluation' | 'governance' | 'adaptive' | 'history'>('forecasts')
   const [explainingPrediction, setExplainingPrediction] = useState<PredictionItem | null>(null)
   const [explainingAdaptiveDecision, setExplainingAdaptiveDecision] = useState<AdaptiveSelectionDecision | null>(null)
+
+  // Milestone 08.11: Hybrid ML Sub-State
+  const [isTrainingOpen, setIsTrainingOpen] = useState(false)
+  const [selectedCandidateId, setSelectedCandidateId] = useState<string | null>(null)
 
   // Evaluation Sub-State
   const [fieldEvalPage, setFieldEvalPage] = useState<number>(0)
@@ -223,6 +242,36 @@ export const PredictionsPage: React.FC<PredictionsPageProps> = ({
     mutate: selectAdaptiveMethod,
   } = useSelectAdaptiveMethodMutation()
 
+  // Milestone 08.11: Hybrid ML Predictions & Evidence Queries & Mutations
+  const {
+    data: activeComparison,
+    isLoading: isComparisonLoading,
+  } = useActiveModelComparisonQuery()
+
+  const {
+    data: modelCandidates = [],
+    isLoading: isCandidatesLoading,
+  } = useModelCandidatesQuery()
+
+  const {
+    data: trainingDatasets = [],
+    isLoading: isDatasetsLoading,
+  } = useTrainingDatasetsQuery()
+
+  const {
+    data: candidateDetail = null,
+  } = useModelCandidateDetailQuery(selectedCandidateId)
+
+  const {
+    mutateAsync: trainModel,
+    isPending: isTrainingModel,
+  } = useTrainPredictionModelMutation()
+
+  const {
+    mutate: promoteCandidate,
+    isPending: isPromotingCandidate,
+  } = usePromoteModelCandidateMutation()
+
   const t = {
     uz: {
       title: 'Prediktiv Ferma Intellekti va Prognozlash',
@@ -231,6 +280,7 @@ export const PredictionsPage: React.FC<PredictionsPageProps> = ({
       allParcels: 'Barcha dalalar bo‘yicha',
       selectedFieldTitle: 'Tanlangan Dala Prognozlari',
       rankingTab: 'Sug‘orish Ehtiyoji Reytingi',
+      modelsTab: 'Prediktiv Modellar va Gibrid ML (Milestone 08.11)',
       evaluationTab: 'Model Baholash va Salomatlik (Milestone 08.8)',
       governanceTab: 'Model Boshqaruvi va Kalibratsiya (Milestone 08.9)',
       adaptiveTab: 'Adaptiv Intellekt Dvigateli (Milestone 08.10)',
@@ -249,6 +299,7 @@ export const PredictionsPage: React.FC<PredictionsPageProps> = ({
       allParcels: 'По всем полям',
       selectedFieldTitle: 'Прогнозы Выбранного Поля',
       rankingTab: 'Рейтинг Потребности в Поливе',
+      modelsTab: 'Предиктивные Модели и ML (Milestone 08.11)',
       evaluationTab: 'Оценка Моделей и Точность (Milestone 08.8)',
       governanceTab: 'Управление Моделями и Калибровка (Milestone 08.9)',
       adaptiveTab: 'Адаптивный Интеллект (Milestone 08.10)',
@@ -267,6 +318,7 @@ export const PredictionsPage: React.FC<PredictionsPageProps> = ({
       allParcels: 'All Farm Parcels',
       selectedFieldTitle: 'Selected Field Projections',
       rankingTab: 'Irrigation Need Ranking',
+      modelsTab: 'Predictive Models & Hybrid ML (Milestone 08.11)',
       evaluationTab: 'Model Evaluation & Health (Continuous Intelligence)',
       governanceTab: 'Model Governance & Calibration (Milestone 08.9)',
       adaptiveTab: 'Adaptive Intelligence Engine (Milestone 08.10)',
@@ -475,6 +527,16 @@ export const PredictionsPage: React.FC<PredictionsPageProps> = ({
             <span>{t.rankingTab}</span>
           </Button>
           <Button
+            variant={activeTab === 'models' ? 'default' : 'ghost'}
+            size="sm"
+            onClick={() => setActiveTab('models')}
+            className="text-xs h-8 gap-1.5 font-medium"
+            data-testid="tab-models"
+          >
+            <Brain className="h-3.5 w-3.5 text-purple-500" />
+            <span>{t.modelsTab}</span>
+          </Button>
+          <Button
             variant={activeTab === 'evaluation' ? 'default' : 'ghost'}
             size="sm"
             onClick={() => setActiveTab('evaluation')}
@@ -516,14 +578,15 @@ export const PredictionsPage: React.FC<PredictionsPageProps> = ({
           </Button>
         </div>
 
-        {activeTab === 'forecasts' && (
-          <IrrigationNeedMatrix
-            fields={rankingData?.rankedFields || []}
-            lang={lang}
-            onSelectField={setSelectedFieldId}
-            onNavigateToIrrigation={(fieldId) => onNavigate('irrigation', fieldId)}
-          />
-        )}
+        <ErrorBoundary fallbackTitle="Bashorat modulini yuklashda xatolik">
+          {activeTab === 'forecasts' && (
+            <IrrigationNeedMatrix
+              fields={rankingData?.rankedFields || []}
+              lang={lang}
+              onSelectField={setSelectedFieldId}
+              onNavigateToIrrigation={(fieldId) => onNavigate('irrigation', fieldId)}
+            />
+          )}
 
         {activeTab === 'evaluation' && (
           <div className="space-y-6 animate-in fade-in duration-200" data-testid="evaluation-dashboard-view">
@@ -665,12 +728,46 @@ export const PredictionsPage: React.FC<PredictionsPageProps> = ({
           </div>
         )}
 
+        {activeTab === 'models' && (
+          <div className="space-y-6 animate-in fade-in duration-200" data-testid="models-dashboard-view">
+            {/* Active Prediction Strategy & Baseline Comparison */}
+            <ActiveModelComparisonCard
+              comparison={activeComparison}
+              isLoading={isComparisonLoading}
+              onOpenTrainingDialog={() => setIsTrainingOpen(true)}
+              lang={lang}
+              userRole={user?.role}
+            />
+
+            {/* Governed ML Candidates Table */}
+            <ModelCandidatesTable
+              candidates={modelCandidates}
+              isLoading={isCandidatesLoading}
+              onSelectCandidate={(cand) => setSelectedCandidateId(cand.id)}
+              onPromoteCandidate={(candidateId, status) =>
+                promoteCandidate({ candidateId, request: { targetStatus: status, reason: 'Governed UI transition' } })
+              }
+              isPromoting={isPromotingCandidate}
+              lang={lang}
+              userRole={user?.role}
+            />
+
+            {/* Training Dataset Snapshots Table (Reproducibility) */}
+            <TrainingDatasetsTable
+              datasets={trainingDatasets}
+              isLoading={isDatasetsLoading}
+              lang={lang}
+            />
+          </div>
+        )}
+
         {activeTab === 'history' && (
           <ForecastHistoryTable
             historyData={historyData}
             lang={lang}
           />
         )}
+        </ErrorBoundary>
       </div>
 
       {/* 6. Explainable AI (XAI) Modal */}
@@ -721,6 +818,31 @@ export const PredictionsPage: React.FC<PredictionsPageProps> = ({
           setIsRollbackOpen(false)
         }}
         isRollingBack={isRollingBack}
+        lang={lang}
+      />
+
+      {/* 9. Milestone 08.11: Model Candidate Evidence & Reproducibility Modal */}
+      {selectedCandidateId && (
+        <ModelCandidateDetailModal
+          candidate={candidateDetail}
+          isOpen={!!selectedCandidateId}
+          onClose={() => setSelectedCandidateId(null)}
+          onPromote={(candidateId, status) => {
+            promoteCandidate({ candidateId, request: { targetStatus: status, reason: 'Governed UI modal action' } })
+            setSelectedCandidateId(null)
+          }}
+          isPromoting={isPromotingCandidate}
+          lang={lang}
+          userRole={user?.role}
+        />
+      )}
+
+      {/* 10. Milestone 08.11: Deliberate Controlled Training Run Dialog */}
+      <TrainingRunDialog
+        isOpen={isTrainingOpen}
+        onClose={() => setIsTrainingOpen(false)}
+        onStartTraining={(req) => trainModel(req)}
+        isTraining={isTrainingModel}
         lang={lang}
       />
     </div>

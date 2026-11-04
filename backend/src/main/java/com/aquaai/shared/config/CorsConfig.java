@@ -16,7 +16,12 @@ public class CorsConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(corsProperties.getAllowedOrigins());
+        boolean hasWildcard = corsProperties.getAllowedOrigins().stream().anyMatch(o -> o.contains("*"));
+        if (hasWildcard) {
+            configuration.setAllowedOriginPatterns(corsProperties.getAllowedOrigins());
+        } else {
+            configuration.setAllowedOrigins(corsProperties.getAllowedOrigins());
+        }
         configuration.setAllowedMethods(corsProperties.getAllowedMethods());
         configuration.setAllowedHeaders(corsProperties.getAllowedHeaders());
         configuration.setExposedHeaders(corsProperties.getExposedHeaders());

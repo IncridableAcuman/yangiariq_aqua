@@ -1,0 +1,45 @@
+# Multi-stage Dockerfile for React Vite Frontend
+
+# Stage 1: Build stage
+FROM node:22-alpine AS builder
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm ci
+
+COPY . .
+
+ARG VITE_API_BASE_URL
+ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
+
+RUN npm run build
+
+# Stage 2: Production Nginx serving stage
+FROM nginx:alpine
+WORKDIR /usr/share/nginx/html
+
+RUN rm -rf ./*
+
+COPY --from=builder /app/dist .
+
+RUN printf 'server {\n\
+    listen 80;\n\
+    server_name localhost;\n\
+    location / {\n\
+        root /usr/share/nginx/html;\n\
+        index index.html index.htm;\n\
+        try_files $uri $uri/ /index.html;\n\
+    }\n\
+    location /api/ {\n\
+        proxy_pass http://backend:8080;\n\
+        proxy_http_version 1.1;\n\
+        proxy_set_header Upgrade $http_upgrade;\n\
+        proxy_set_header Connection "upgrade";\n\
+        proxy_set_header Host $host;\n\
+        proxy_cache_bypass $http_upgrade;\n\
+    }\n\
+}\n' > /etc/nginx/conf.d/default.conf
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]

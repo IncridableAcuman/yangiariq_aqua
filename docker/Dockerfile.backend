@@ -25,8 +25,9 @@ USER aqua:aqua
 COPY --from=builder /workspace/app/build/libs/*.jar app.jar
 
 ENV SPRING_PROFILES_ACTIVE=prod \
-    JAVA_OPTS="-XX:+UseG1GC -XX:MaxRAMPercentage=75.0"
+    JAVA_OPTS="-XX:+UseG1GC -XX:MaxRAMPercentage=75.0 -XX:InitialRAMPercentage=40.0 -XX:+ExitOnOutOfMemoryError" \
+    PORT=8080
 
 EXPOSE 8080
 
-ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]
+ENTRYPOINT ["sh", "-c", "exec java $JAVA_OPTS -jar app.jar \"$@\"", "--"]

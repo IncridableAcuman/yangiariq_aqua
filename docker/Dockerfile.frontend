@@ -8,19 +8,20 @@ COPY package*.json ./
 RUN npm ci
 
 COPY . .
+
+ARG VITE_API_BASE_URL
+ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
+
 RUN npm run build
 
 # Stage 2: Production Nginx serving stage
 FROM nginx:alpine
 WORKDIR /usr/share/nginx/html
 
-# Remove default nginx static assets
 RUN rm -rf ./*
 
-# Copy built static assets from builder
 COPY --from=builder /app/dist .
 
-# Copy custom nginx configuration for SPA routing
 RUN printf 'server {\n\
     listen 80;\n\
     server_name localhost;\n\

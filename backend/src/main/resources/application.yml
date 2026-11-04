@@ -5,7 +5,7 @@ spring:
     active: ${SPRING_PROFILES_ACTIVE:dev}
 
   datasource:
-    url: ${DATABASE_URL:${SPRING_DATASOURCE_URL:jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:yangiariq_aqua}}}
+    url: ${DATABASE_URL:${DB_URL:${SPRING_DATASOURCE_URL:jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:yangiariq_aqua}}}}
     username: ${DATABASE_USERNAME:${SPRING_DATASOURCE_USERNAME:${DB_USER:aqua_user}}}
     password: ${DATABASE_PASSWORD:${SPRING_DATASOURCE_PASSWORD:${DB_PASSWORD:aqua_secure_password_dev}}}
     driver-class-name: org.postgresql.Driver
@@ -13,6 +13,8 @@ spring:
       connection-timeout: 30000
       maximum-pool-size: 10
       minimum-idle: 2
+      keepalive-time: 300000
+      max-lifetime: 600000
 
   jpa:
     open-in-view: false
@@ -31,7 +33,7 @@ spring:
     drop-first: ${SPRING_LIQUIBASE_DROP_FIRST:${LIQUIBASE_DROP_FIRST:false}}
 
 server:
-  port: ${SERVER_PORT:8080}
+  port: ${PORT:${SERVER_PORT:8080}}
   shutdown: graceful
 
 app:

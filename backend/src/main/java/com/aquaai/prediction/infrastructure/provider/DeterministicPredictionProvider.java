@@ -25,6 +25,7 @@ import com.aquaai.prediction.domain.service.WaterDemandForecaster;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -52,6 +53,12 @@ public class DeterministicPredictionProvider implements PredictionProvider {
 
     @Autowired(required = false)
     private SelectAdaptiveMethodUseCase adaptiveMethodSelector;
+
+    @Autowired(required = false)
+    private com.aquaai.prediction.domain.port.PredictionModelProvider mlModelProvider;
+
+    private final com.aquaai.prediction.domain.service.HybridPredictionEngine hybridEngine =
+            new com.aquaai.prediction.domain.service.HybridPredictionEngine();
 
     public DeterministicPredictionProvider() {
         this.sufficiencyEvaluator = new DataSufficiencyEvaluator();
@@ -174,7 +181,62 @@ public class DeterministicPredictionProvider implements PredictionProvider {
                     versioned.add(p);
                 }
             }
-            return versioned;
+
+            // Milestone 08.11: Hybrid ML Residual Adjustment for SOIL_MOISTURE_FORECAST
+            List<Prediction> finalPredictions = new ArrayList<>(versioned.size());
+            boolean criticalSafetyActive = (anomalies != null && anomalies.stream().anyMatch(a -> "CRITICAL".equalsIgnoreCase(a.severity())));
+
+            for (Prediction p : versioned) {
+                if (p.getPredictionType() == PredictionType.SOIL_MOISTURE_FORECAST
+                        && mlModelProvider != null
+                        && p.getConfigurationSnapshot() != null
+                        && p.getConfigurationSnapshot().contains("RIDGE_REGRESSION")) {
+
+                    double baselineVal = p.getPredictedValue() != null ? p.getPredictedValue().doubleValue() : 25.0;
+                    double currentVal = !moistureObs.isEmpty() ? moistureObs.get(moistureObs.size() - 1).value().doubleValue() : baselineVal;
+                    double slope = -0.15;
+                    if (moistureObs.size() >= 2) {
+                        double firstSec = moistureObs.get(0).measuredAt().getEpochSecond();
+                        double sumX = 0, sumY = 0, sumXX = 0, sumXY = 0;
+                        int n = moistureObs.size();
+                        for (TelemetryObservation o : moistureObs) {
+                            double xH = (o.measuredAt().getEpochSecond() - firstSec) / 3600.0;
+                            double yV = o.value().doubleValue();
+                            sumX += xH; sumY += yV; sumXX += xH * xH; sumXY += xH * yV;
+                        }
+                        double denom = (n * sumXX - sumX * sumX);
+                        if (Math.abs(denom) > 1e-6) slope = (n * sumXY - sumX * sumY) / denom;
+                    }
+
+                    double recentIrrig = 0.0;
+                    double headroom = 100.0;
+                    if (waterBalance != null && waterBalance.allocatedVolumeM3() != null && waterBalance.allocatedVolumeM3().compareTo(BigDecimal.ZERO) > 0) {
+                        BigDecimal consumed = waterBalance.consumedVolumeM3() != null ? waterBalance.consumedVolumeM3() : BigDecimal.ZERO;
+                        headroom = waterBalance.allocatedVolumeM3().subtract(consumed).max(BigDecimal.ZERO).doubleValue() / waterBalance.allocatedVolumeM3().doubleValue() * 100.0;
+                    }
+
+                    double qualityScore = sufficiency.sufficiency() == com.aquaai.prediction.domain.model.DataSufficiency.SUFFICIENT ? 1.0 : 0.7;
+
+                    var mlPredOpt = mlModelProvider.predictSoilMoisture(
+                            field, horizon, currentVal, slope, weather, recentIrrig, headroom, qualityScore, p.getConfigurationSnapshot()
+                    );
+
+                    var hybridRes = hybridEngine.computeHybridPrediction(baselineVal, mlPredOpt.orElse(null), 5.0, criticalSafetyActive);
+
+                    if (!hybridRes.fallbackUsed()) {
+                        finalPredictions.add(p.toBuilder()
+                                .predictedValue(hybridRes.toBigDecimalFinal())
+                                .evidence(p.getEvidence() + " | Hybrid ML residual: " + hybridRes.rationale())
+                                .build());
+                    } else {
+                        finalPredictions.add(p);
+                    }
+                } else {
+                    finalPredictions.add(p);
+                }
+            }
+
+            return finalPredictions;
         }
 
         return predictions;

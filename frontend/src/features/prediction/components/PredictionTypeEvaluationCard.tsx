@@ -312,27 +312,27 @@ export const PredictionTypeEvaluationCard: React.FC<PredictionTypeEvaluationCard
               <div className="grid grid-cols-2 sm:grid-cols-5 divide-y sm:divide-y-0 sm:divide-x divide-border bg-card text-center text-xs">
                 <div className="p-3 space-y-1">
                   <p className="text-[11px] font-semibold text-emerald-600 dark:text-emerald-400">{t.tp}</p>
-                  <p className="text-xl font-bold font-mono text-foreground" data-testid="tp-count">{cls.truePositives}</p>
+                  <p className="text-xl font-bold font-mono text-foreground" data-testid="tp-count">{cls.truePositives ?? 0}</p>
                   <p className="text-[10px] text-muted-foreground">Prognoz: HA, Fakt: HA</p>
                 </div>
                 <div className="p-3 space-y-1">
                   <p className="text-[11px] font-semibold text-emerald-600 dark:text-emerald-400">{t.tn}</p>
-                  <p className="text-xl font-bold font-mono text-foreground" data-testid="tn-count">{cls.trueNegatives}</p>
+                  <p className="text-xl font-bold font-mono text-foreground" data-testid="tn-count">{cls.trueNegatives ?? 0}</p>
                   <p className="text-[10px] text-muted-foreground">Prognoz: YO‘Q, Fakt: YO‘Q</p>
                 </div>
                 <div className="p-3 space-y-1">
                   <p className="text-[11px] font-semibold text-amber-600 dark:text-amber-400">{t.fp}</p>
-                  <p className="text-xl font-bold font-mono text-foreground" data-testid="fp-count">{cls.falsePositives}</p>
+                  <p className="text-xl font-bold font-mono text-foreground" data-testid="fp-count">{cls.falsePositives ?? 0}</p>
                   <p className="text-[10px] text-muted-foreground">Prognoz: HA, Fakt: YO‘Q</p>
                 </div>
                 <div className="p-3 space-y-1">
                   <p className="text-[11px] font-semibold text-rose-600 dark:text-rose-400">{t.fn}</p>
-                  <p className="text-xl font-bold font-mono text-foreground" data-testid="fn-count">{cls.falseNegatives}</p>
+                  <p className="text-xl font-bold font-mono text-foreground" data-testid="fn-count">{cls.falseNegatives ?? 0}</p>
                   <p className="text-[10px] text-muted-foreground">Prognoz: YO‘Q, Fakt: HA</p>
                 </div>
                 <div className="p-3 space-y-1 bg-muted/20">
                   <p className="text-[11px] font-semibold text-rose-500">{t.interrupted}</p>
-                  <p className="text-xl font-bold font-mono text-foreground" data-testid="interrupted-count">{cls.interruptedBySafetyCount}</p>
+                  <p className="text-xl font-bold font-mono text-foreground" data-testid="interrupted-count">{cls.interruptedBySafetyCount ?? 0}</p>
                   <p className="text-[10px] text-muted-foreground">Gidravlik blok (soxta xato emas)</p>
                 </div>
               </div>

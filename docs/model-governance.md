@@ -95,3 +95,18 @@ $$\text{DRAFT} \longrightarrow \text{CANDIDATE} \longrightarrow \text{APPROVED} 
   - Trigger 1-click emergency rollback (`POST /versions/{id}/rollback` or `POST /versions/rollback`).
 
 All actions write immutable records into the `governance_audit_logs` table.
+
+---
+
+## 6. Milestone 08.11: Hybrid ML Model Governance & Reproducibility
+
+Milestone 08.11 extends the model governance framework to encompass machine learning candidates alongside deterministic versions:
+1. **Governed Candidate Lifecycle**:
+   $$\text{TRAINING\_RUN} \longrightarrow \text{DATASET\_SNAPSHOT} \longrightarrow \text{CANDIDATE} \longrightarrow \text{APPROVED} \longrightarrow \text{SHADOW} \longrightarrow \text{CANARY} \longrightarrow \text{ACTIVE} \longrightarrow \text{RETIRED}$$
+2. **Deterministic Baseline Primacy**:
+   Every ML candidate is trained and evaluated in parallel with the deterministic baseline on an unseen test split.
+3. **Automated Regression Guards**:
+   If test $\text{MAE}_{\text{ML}} > \text{MAE}_{\text{baseline}}$, the model candidate is automatically flagged as `regressionDetected = true`, and promotion to production is blocked.
+4. **Reproducible Dataset Hashes**:
+   Every candidate references an immutable `PredictionTrainingDataset` with a canonical SHA-256 hash.
+

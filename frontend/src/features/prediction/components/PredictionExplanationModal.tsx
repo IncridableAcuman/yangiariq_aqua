@@ -136,7 +136,7 @@ export const PredictionExplanationModal: React.FC<PredictionExplanationModalProp
               <span>{t.whatTitle}</span>
             </h4>
             <p className="text-sm font-semibold text-foreground">
-              {prediction.predictedValue !== null
+              {prediction.predictedValue != null
                 ? `${prediction.predictedValue} ${prediction.unit || ''} (Kutilayotgan oraliq: ${prediction.lowerBound ?? 0} – ${prediction.upperBound ?? 0} ${prediction.unit || ''})`
                 : 'Maʼlumot yetarli emasligi tufayli aniq qiymat hisoblanmadi (UNKNOWN)'}
             </p>

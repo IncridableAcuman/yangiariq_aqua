@@ -24,5 +24,6 @@
     <include file="db/changelog/changes/017-create-prediction-governance-tables.sql"/>
     <include file="db/changelog/changes/018-add-prediction-version-traceability.sql"/>
     <include file="db/changelog/changes/019-create-adaptive-intelligence-tables.sql"/>
+    <include file="db/changelog/changes/020-create-hybrid-ml-prediction-tables.sql"/>
 
 </databaseChangeLog>

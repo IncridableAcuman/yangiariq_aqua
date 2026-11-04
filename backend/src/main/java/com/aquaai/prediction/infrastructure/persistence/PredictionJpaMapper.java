@@ -39,6 +39,8 @@ public final class PredictionJpaMapper {
                 .generatedAt(entity.getGeneratedAt())
                 .methodVersionTag(entity.getMethodVersionTag() != null ? entity.getMethodVersionTag() : Prediction.getDefaultVersionTag(PredictionType.valueOf(entity.getPredictionType())))
                 .configurationSnapshot(entity.getConfigurationSnapshot() != null ? entity.getConfigurationSnapshot() : Prediction.getDefaultConfigurationSnapshot(PredictionType.valueOf(entity.getPredictionType())))
+                .modelCandidateId(entity.getModelCandidateId())
+                .datasetSnapshotId(entity.getDatasetSnapshotId())
                 .build();
     }
 
@@ -69,6 +71,8 @@ public final class PredictionJpaMapper {
                 .generatedAt(domain.getGeneratedAt())
                 .methodVersionTag(domain.getMethodVersionTag() != null ? domain.getMethodVersionTag() : Prediction.getDefaultVersionTag(domain.getPredictionType()))
                 .configurationSnapshot(domain.getConfigurationSnapshot() != null ? domain.getConfigurationSnapshot() : Prediction.getDefaultConfigurationSnapshot(domain.getPredictionType()))
+                .modelCandidateId(domain.getModelCandidateId())
+                .datasetSnapshotId(domain.getDatasetSnapshotId())
                 .build();
     }
 }

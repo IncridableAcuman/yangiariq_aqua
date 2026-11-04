@@ -713,4 +713,23 @@ class ArchitectureTests {
                 .should().dependOnClassesThat().resideInAnyPackage("org.springframework.web..", "jakarta.servlet..")
                 .check(importedClasses);
     }
+
+    @Test
+    @DisplayName("75. Prediction domain and application must not depend on external ML frameworks")
+    void predictionDomainMustNotDependOnExternalMlFrameworks() {
+        noClasses()
+                .that().resideInAnyPackage("..prediction.domain..", "..prediction.application..")
+                .should().dependOnClassesThat().resideInAnyPackage("smile..", "org.tribuo..", "org.tensorflow..", "org.pytorch..", "ai.djl..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("76. Prediction model persistence entities must reside in infrastructure persistence")
+    void predictionModelEntitiesMustResideInInfrastructurePersistence() {
+        classes()
+                .that().resideInAPackage("..prediction..")
+                .and().areAnnotatedWith(Entity.class)
+                .should().resideInAPackage("..prediction.infrastructure.persistence..")
+                .check(importedClasses);
+    }
 }

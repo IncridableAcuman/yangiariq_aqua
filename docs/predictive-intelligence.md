@@ -121,3 +121,19 @@ $$\text{Insight} \longrightarrow \text{Calibration Proposal} \longrightarrow \te
 - **Controlled Rollout Lifecycle**: Safe staged deployment (`DRAFT` $\to$ `CANDIDATE` $\to$ `APPROVED` $\to$ `SHADOW` $\to$ `CANARY` $\to$ `ACTIVE`).
 - **Emergency 1-Click Rollback**: Allows immediate atomic rollback to any previous immutable version with mandatory justification.
 - **Immutable Audit Trail**: Chronologically logs all proposal creation, backtest execution, human review decisions, activations, and rollbacks.
+
+---
+
+## 9. Hybrid ML Prediction Engine & Evidence-Based Learning (Milestone 08.11)
+
+Milestone 08.11 incorporates supervised machine learning capabilities in a disciplined, hybrid configuration:
+
+$$\text{Deterministic Agronomic Baseline} + \text{Bounded ML Residual Adjustment} \pm 5.0\% \longrightarrow \text{Physical Clamp} \longrightarrow \text{Authoritative Hydraulic Interlocks}$$
+
+- **`PredictionModelProvider` Abstraction**: Clean domain port isolating the domain from concrete ML libraries or runtimes.
+- **`RidgeRegressionTrainer`**: In-process JVM-native L2-regularized linear model with feature standardization and deterministic SHA-256 weight hashing.
+- **Dataset Snapshots (`PredictionTrainingDataset`)**: Canonical historical telemetry snapshots with versioned schema (`FEAT_SOIL_MOISTURE_V1`, 14 features).
+- **Strict Temporal Partitioning**: 60% Train, 20% Validation, 20% Test (unseen future period, zero leakage).
+- **Sample Gating**: Enforces minimum $N \ge 30$ verified records for ML training; returns explicit `INSUFFICIENT_TRAINING_DATA` rather than fabricating synthetic data.
+- **Zero Actuator Authority**: ML predictions never operate valves, pumps, or safety thresholds. The deterministic safety layer remains authoritative.
+

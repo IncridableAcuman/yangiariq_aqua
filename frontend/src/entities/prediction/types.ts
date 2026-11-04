@@ -642,3 +642,125 @@ export interface SelectAdaptiveMethodRequest {
 }
 
 
+
+// =========================================================================
+// Milestone 08.11: Hybrid ML Prediction Engine & Evidence-Based Learning
+// =========================================================================
+
+export type TrainingDatasetQualityStatus = 'HIGH_QUALITY' | 'ACCEPTABLE' | 'DEGRADED' | 'INSUFFICIENT'
+
+export interface TrainingDatasetDto {
+  id: string
+  predictionType: PredictionType
+  datasetHash: string
+  featureSchemaVersion: string
+  periodStart: string
+  periodEnd: string
+  fieldScope: string
+  recordCount: number
+  qualityStatus: TrainingDatasetQualityStatus
+  createdAt: string
+  createdBy: string
+}
+
+export interface TrainingDatasetDetailResponse extends TrainingDatasetDto {
+  qualitySummaryJson: string
+}
+
+export interface ModelCandidateDto {
+  id: string
+  predictionType: PredictionType
+  modelType: string
+  versionTag: string
+  datasetSnapshotId: string
+  featureSchemaVersion: string
+  trainingSampleCount: number
+  validationSampleCount: number
+  testSampleCount: number
+  artifactHash: string
+  status: MethodVersionStatus
+  isImmutable: boolean
+  createdAt: string
+  createdBy: string
+  testMae: number | null
+  baselineMae: number | null
+  maeImprovementPercent: number | null
+  regressionDetected: boolean
+  recommendationStatus: string
+}
+
+export interface ModelCandidateDetailResponse {
+  id: string
+  predictionType: PredictionType
+  modelType: string
+  versionTag: string
+  datasetSnapshotId: string
+  featureSchemaVersion: string
+  trainingPeriodStart: string
+  trainingPeriodEnd: string
+  validationPeriodStart: string
+  validationPeriodEnd: string
+  testPeriodStart: string
+  testPeriodEnd: string
+  trainingSampleCount: number
+  validationSampleCount: number
+  testSampleCount: number
+  trainingMetricsJson: string
+  validationMetricsJson: string
+  testMetricsJson: string
+  baselineComparisonMetricsJson: string
+  configurationSnapshotJson: string
+  artifactHash: string
+  status: MethodVersionStatus
+  isImmutable: boolean
+  createdAt: string
+  createdBy: string
+  featureImportance: Record<string, number>
+  limitations: string
+}
+
+export interface TrainPredictionModelRequest {
+  predictionType: PredictionType
+  fieldId?: string | null
+  periodStart?: string | null
+  periodEnd?: string | null
+  l2Penalty?: number | null
+}
+
+export interface TrainPredictionModelResponse {
+  status: 'SUCCESS' | 'INSUFFICIENT_TRAINING_DATA' | 'FAILED'
+  message: string
+  predictionType: PredictionType
+  datasetId: string
+  datasetHash: string
+  sampleCount: number
+  minRequiredSamples: number
+  candidateId?: string | null
+  versionTag?: string | null
+  baselineComparisonSummary?: string | null
+  baselineMae?: number | null
+  candidateMae?: number | null
+  improvementPercent?: number | null
+  regressionDetected: boolean
+}
+
+export interface ActiveModelComparisonResponse {
+  predictionType: PredictionType
+  activeModelVersion: string
+  activeModelType: string
+  governanceStatus: string
+  baselineModelVersion: string
+  activeMae: number
+  baselineMae: number
+  relativeImprovementPercent: number
+  sampleSize: number
+  contextHealth: string
+  dataQualityStatus: string
+  isHybridActive: boolean
+  summaryRationale: string
+}
+
+export interface PromoteCandidateRequest {
+  targetStatus: MethodVersionStatus
+  reason?: string
+}

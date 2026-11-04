@@ -92,4 +92,10 @@ public class PredictionJpaEntity {
 
     @Column(name = "configuration_snapshot", columnDefinition = "TEXT")
     private String configurationSnapshot;
+
+    @Column(name = "model_candidate_id")
+    private UUID modelCandidateId;
+
+    @Column(name = "dataset_snapshot_id")
+    private UUID datasetSnapshotId;
 }

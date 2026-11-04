@@ -41,6 +41,8 @@ public class Prediction {
     private final Instant generatedAt;
     private final String methodVersionTag;
     private final String configurationSnapshot;
+    private final UUID modelCandidateId;
+    private final UUID datasetSnapshotId;
 
     public static String getDefaultVersionTag(PredictionType type) {
         if (type == null) return "V1";

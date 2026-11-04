@@ -84,8 +84,22 @@ $$\text{Context} \longrightarrow \text{Candidate Methods} \longrightarrow \text{
 
 ---
 
-## 7. Related Documentation
+## 7. Milestone 08.11: Hybrid ML & Evidence-Based Learning Integration
 
+Milestone 08.11 connects the adaptive intelligence engine with supervised machine learning candidates:
+- Governed ML candidates register as candidate methods under the 9-level selection hierarchy.
+- Candidates operate as hybrid residual correctors bounded strictly to $\pm 5.0\%$.
+- Historical contextual performance gates (MAE, sample size $n \ge 10$) ensure only empirically verified ML candidates can compete with the deterministic baseline in suitable contexts.
+- Localized drift or telemetry failure triggers immediate deterministic fallback.
+
+---
+
+## 8. Related Documentation
+
+- [Hybrid ML Prediction Engine Architecture](hybrid-prediction.md)
+- [ML Prediction Engine & Abstraction](ml-prediction-engine.md)
+- [Training Datasets & Reproducibility](training-datasets.md)
+- [Model Evidence & Verification](model-evidence.md)
 - [Context-Aware Prediction Engine](context-aware-prediction.md)
 - [Adaptive Selection & 9-Level Hierarchy](adaptive-selection.md)
 - [Context Performance & Local Drift Detection](context-performance.md)

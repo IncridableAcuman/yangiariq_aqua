@@ -545,3 +545,118 @@ export const getPredictionAdaptiveDecision = async (
 }
 
 
+
+// =========================================================================
+// Milestone 08.11: Hybrid ML Model Management API Client Functions
+// =========================================================================
+
+export const getModelCandidates = async (
+  type?: string,
+  signal?: AbortSignal
+): Promise<import('./types').ModelCandidateDto[]> => {
+  const query = type ? `?type=${encodeURIComponent(type)}` : ''
+  const response = await apiClient<import('./types').ModelCandidateDto[]>(
+    `/predictions/models/candidates${query}`,
+    {
+      method: 'GET',
+      signal,
+    }
+  )
+  if (!response.data) throw new Error('Model candidates not returned by server')
+  return response.data
+}
+
+export const getModelCandidateDetail = async (
+  id: string,
+  signal?: AbortSignal
+): Promise<import('./types').ModelCandidateDetailResponse> => {
+  const response = await apiClient<import('./types').ModelCandidateDetailResponse>(
+    `/predictions/models/candidates/${encodeURIComponent(id)}`,
+    {
+      method: 'GET',
+      signal,
+    }
+  )
+  if (!response.data) throw new Error('Model candidate detail not returned by server')
+  return response.data
+}
+
+export const getTrainingDatasets = async (
+  type?: string,
+  signal?: AbortSignal
+): Promise<import('./types').TrainingDatasetDto[]> => {
+  const query = type ? `?type=${encodeURIComponent(type)}` : ''
+  const response = await apiClient<import('./types').TrainingDatasetDto[]>(
+    `/predictions/models/datasets${query}`,
+    {
+      method: 'GET',
+      signal,
+    }
+  )
+  if (!response.data) throw new Error('Training datasets not returned by server')
+  return response.data
+}
+
+export const getTrainingDatasetDetail = async (
+  id: string,
+  signal?: AbortSignal
+): Promise<import('./types').TrainingDatasetDetailResponse> => {
+  const response = await apiClient<import('./types').TrainingDatasetDetailResponse>(
+    `/predictions/models/datasets/${encodeURIComponent(id)}`,
+    {
+      method: 'GET',
+      signal,
+    }
+  )
+  if (!response.data) throw new Error('Training dataset detail not returned by server')
+  return response.data
+}
+
+export const trainPredictionModel = async (
+  request: import('./types').TrainPredictionModelRequest,
+  signal?: AbortSignal
+): Promise<import('./types').TrainPredictionModelResponse> => {
+  const response = await apiClient<import('./types').TrainPredictionModelResponse>(
+    '/predictions/models/train',
+    {
+      method: 'POST',
+      body: JSON.stringify(request),
+      signal,
+    }
+  )
+  if (!response.data) throw new Error('Prediction model training failed')
+  return response.data
+}
+
+export const promoteModelCandidate = async (
+  candidateId: string,
+  request: import('./types').PromoteCandidateRequest,
+  signal?: AbortSignal
+): Promise<import('./types').ModelCandidateDetailResponse> => {
+  const response = await apiClient<import('./types').ModelCandidateDetailResponse>(
+    `/predictions/models/candidates/${encodeURIComponent(candidateId)}/promote`,
+    {
+      method: 'POST',
+      body: JSON.stringify(request),
+      signal,
+    }
+  )
+  if (!response.data) throw new Error('Model candidate promotion failed')
+  return response.data
+}
+
+export const getActiveModelComparison = async (
+  type?: string,
+  signal?: AbortSignal
+): Promise<import('./types').ActiveModelComparisonResponse> => {
+  const query = type ? `?type=${encodeURIComponent(type)}` : ''
+  const response = await apiClient<import('./types').ActiveModelComparisonResponse>(
+    `/predictions/models/comparison${query}`,
+    {
+      method: 'GET',
+      signal,
+    }
+  )
+  if (!response.data) throw new Error('Active model comparison not returned by server')
+  return response.data
+}

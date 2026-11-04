@@ -75,19 +75,19 @@ tasks.named('test') {
 }
 
 tasks.named('bootRun') {
-    def envFile = rootProject.file('.env')
-    if (!envFile.exists()) {
-        envFile = file('../.env')
-    }
-    if (!envFile.exists()) {
-        envFile = file('.env')
-    }
-    if (envFile.exists()) {
-        envFile.readLines().each { line ->
-            def trimmed = line.trim()
-            if (trimmed && !trimmed.startsWith('#') && trimmed.contains('=')) {
-                def parts = trimmed.split('=', 2)
-                environment parts[0].trim(), parts[1].trim()
+    def envFiles = [rootProject.file('.env'), file('../.env'), file('.env')]
+    envFiles.each { envFile ->
+        if (envFile.exists()) {
+            envFile.readLines().each { line ->
+                def trimmed = line.trim()
+                if (trimmed && !trimmed.startsWith('#') && trimmed.contains('=')) {
+                    def parts = trimmed.split('=', 2)
+                    def val = parts[1].trim()
+                    if ((val.startsWith('"') && val.endsWith('"')) || (val.startsWith("'") && val.endsWith("'"))) {
+                        val = val.substring(1, val.length() - 1)
+                    }
+                    environment parts[0].trim(), val
+                }
             }
         }
     }

@@ -63,6 +63,11 @@ export const predictionKeys = {
   adaptivePerformance: (params?: { predictionType?: string; versionTag?: string }) => [...predictionKeys.all, 'adaptive', 'performance', params] as const,
   adaptiveSelections: (params?: { fieldId?: string; limit?: number }) => [...predictionKeys.all, 'adaptive', 'selections', params] as const,
   predictionAdaptiveDecision: (predictionId?: string | null) => [...predictionKeys.all, 'adaptive', 'decision', predictionId] as const,
+  modelCandidates: (type?: string) => [...predictionKeys.all, 'models', 'candidates', type] as const,
+  modelCandidateDetail: (id?: string | null) => [...predictionKeys.all, 'models', 'candidateDetail', id] as const,
+  trainingDatasets: (type?: string) => [...predictionKeys.all, 'models', 'datasets', type] as const,
+  trainingDatasetDetail: (id?: string | null) => [...predictionKeys.all, 'models', 'datasetDetail', id] as const,
+  activeModelComparison: (type?: string) => [...predictionKeys.all, 'models', 'comparison', type] as const,
 }
 
 export function usePredictionOverviewQuery(horizon: PredictionHorizon = 'NEXT_48_HOURS') {
@@ -366,3 +371,78 @@ export function usePredictionAdaptiveDecisionQuery(predictionId?: string | null)
 }
 
 
+
+// ============================================================================
+// MILESTONE 08.11: HYBRID ML PREDICTION ENGINE & EVIDENCE-BASED LEARNING HOOKS
+// ============================================================================
+
+export function useModelCandidatesQuery(type?: string) {
+  return useQuery({
+    queryKey: predictionKeys.modelCandidates(type),
+    queryFn: ({ signal }) => import('@/entities/prediction').then((m) => m.getModelCandidates(type, signal)),
+    staleTime: 30_000,
+  })
+}
+
+export function useModelCandidateDetailQuery(id?: string | null) {
+  return useQuery({
+    queryKey: predictionKeys.modelCandidateDetail(id),
+    queryFn: ({ signal }) =>
+      id ? import('@/entities/prediction').then((m) => m.getModelCandidateDetail(id, signal)) : Promise.reject('No candidate ID'),
+    enabled: !!id,
+    staleTime: 60_000,
+  })
+}
+
+export function useTrainingDatasetsQuery(type?: string) {
+  return useQuery({
+    queryKey: predictionKeys.trainingDatasets(type),
+    queryFn: ({ signal }) => import('@/entities/prediction').then((m) => m.getTrainingDatasets(type, signal)),
+    staleTime: 30_000,
+  })
+}
+
+export function useTrainingDatasetDetailQuery(id?: string | null) {
+  return useQuery({
+    queryKey: predictionKeys.trainingDatasetDetail(id),
+    queryFn: ({ signal }) =>
+      id ? import('@/entities/prediction').then((m) => m.getTrainingDatasetDetail(id, signal)) : Promise.reject('No dataset ID'),
+    enabled: !!id,
+    staleTime: 60_000,
+  })
+}
+
+export function useActiveModelComparisonQuery(type?: string) {
+  return useQuery({
+    queryKey: predictionKeys.activeModelComparison(type),
+    queryFn: ({ signal }) => import('@/entities/prediction').then((m) => m.getActiveModelComparison(type, signal)),
+    staleTime: 30_000,
+  })
+}
+
+export function useTrainPredictionModelMutation() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (request: import('@/entities/prediction').TrainPredictionModelRequest) =>
+      import('@/entities/prediction').then((m) => m.trainPredictionModel(request)),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: predictionKeys.all })
+    },
+  })
+}
+
+export function usePromoteModelCandidateMutation() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: ({
+      candidateId,
+      request,
+    }: {
+      candidateId: string
+      request: import('@/entities/prediction').PromoteCandidateRequest
+    }) => import('@/entities/prediction').then((m) => m.promoteModelCandidate(candidateId, request)),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: predictionKeys.all })
+    },
+  })
+}
