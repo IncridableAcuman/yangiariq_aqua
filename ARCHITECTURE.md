@@ -21,8 +21,13 @@ To maximize development velocity during the MVP and early-growth phases while el
 |  +--------------+  +--------------+  +--------------+  +-----------------------+ |
 |                                                                                  |
 |  +--------------+  +--------------+  +--------------+  +-----------------------+ |
-|  |   problem    |  |  dashboard   |  | notification |  |        shared         | |
+|  |   problem    |  |  dashboard   |  |     risk     |  | notification          | |
 |  +--------------+  +--------------+  +--------------+  +-----------------------+ |
+|                                                                                  |
+|  +-----------------------------------------------------------------------------+ |
+|  |                     network (Regional Conveyance & Dispatch)                | |
+|  |            [CanalDispatchOptimizer / Resilience / Topology / Leaflet GIS]    | |
+|  +-----------------------------------------------------------------------------+ |
 |                                                                                  |
 |  +--------------------------------+  +-----------------------------------------+ |
 |  |         ai (Abstraction)       |  |          sensor (Abstraction)           | |
@@ -230,6 +235,15 @@ Field
 - **Predictive Farm Intelligence & Forecasting (Milestone 08.7)**: Forward-looking decision support capability (`com.aquaai.prediction`). Transforms historical analytics into predictive intelligence answering *"What is likely to happen next?"* across 3 standardized horizons (`NEXT_24_HOURS`, `NEXT_48_HOURS`, `NEXT_7_DAYS`). Strictly advisory: zero autonomous valve, pump, or allocation execution. Evaluates 6 core prediction capabilities: soil moisture trajectories via FAO-56 bounded regression, irrigation need likelihood via crop-specific MAD thresholds, volumetric water demand aggregation, water quota headroom risk, irrigation plan hydraulic safety risk (strictly enforcing `BLOCKED` status on active hydraulic anomalies), and 14-day telemetry reliability forecasting. Features deterministic provider abstraction (`PredictionProvider` SPI), immutable historical prediction persistence (`predictions` table via Liquibase migration 015), anti-IDOR isolation with 404 anti-enumeration, explainable AI modal (WHAT, WHY, EVIDENCE, ASSUMPTIONS, NEXT STEP), dashboard summary card integration, GIS forecast navigation, empirical calibration tracking, and dedicated responsive workspace at `/predictions`. Guarded by 72 ArchUnit rules, 565 backend tests, and 174 frontend tests.
 - **Predictive Model Evaluation, Accuracy & Continuous Intelligence (Milestone 08.8)**: Complete empirical verification and continuous intelligence feedback loop (`com.aquaai.prediction`). Closes the learning loop by answering *"How accurate was that prediction?", "Where did it succeed/fail?", "Why did it fail?", "Is the model improving or drifting over time?"*. Implements domain services `PredictionOutcomeMatcher` (authoritative temporal windows: $\pm 3\,\text{h}$ sensor observations, qualifying irrigation events, actual water consumption records), `PredictionEvaluationAggregator` (arbitrary-precision MAE, RMSE, safe MAPE avoiding zero division, Mean Bias Error (MBE), confusion matrix with $TP, TN, FP, FN, INT$, Precision, Recall, and F1 score), and `EvaluationInsightGenerator` (deterministic actionable recommendations for bias correction, telemetry repair, and calibration re-weighting). Operational governance: hydraulic safety interlocks halting planned irrigations are strictly classified as `OUTCOME_INTERRUPTED` rather than false positives, honoring physical system integrity. Absolute honesty: minimum sample size gating ($n \ge 10$) suppresses misleading percentages and displays explicit 'Insufficient data for evaluation' notifications. Automated performance drift detection flags $\ge 30\%$ error increases over recent 7-day vs 30-day historical baselines. Human-in-the-loop audit records alignment across AI recommendation, human decision, and realized operational outcome. Guarded by 72 ArchUnit rules, 599 backend tests, and 186 frontend tests.
 - **Adaptive Intelligence, Model Governance & Controlled Calibration (Milestone 08.9)**: Complete predictive governance, versioning, anti-leakage backtesting, and controlled rollout lifecycle (`com.aquaai.prediction`). Advances the platform from observing degradation to controlled, explainable adaptation: $\text{Insight} \to \text{Proposal} \to \text{Backtest} \to \text{Human Review} \to \text{Version} \to \text{Controlled Rollout} \to \text{Monitoring} \to \text{Rollback}$. Strict zero autonomous self-modification principle: the system NEVER changes parameters or logic automatically without explicit human administrator approval (`ROLE_ADMIN`). Hard hydraulic safety constraints (`pipeBurstPressureBar`, `emergencyPressureThreshold`, `hydraulicSafetyInterlock`, etc.) are permanently immutable and blocked from calibration at domain, use-case, and API boundaries. Features immutable method versioning (`PredictionMethodVersion`), candidate proposal workflow (`CalibrationProposal`), deterministic anti-leakage historical backtesting (`BacktestingEngine`), multi-factor regression guard (`RegressionGuard`), controlled rollout staging (`SHADOW`, `CANARY`, `ACTIVE`), instant 1-click emergency rollback (`RollbackManager`), and comprehensive auditability (`GovernanceAuditLog`). Guarded by 74 ArchUnit rules, 630 backend tests, and 196 frontend tests.
+- **Regional Water Accounting, Distribution Equity & Conservation Intelligence (Milestone 08.15)**: Authoritative regional water accounting layer (`com.aquaai.wateraccounting`) connecting planned distribution, actual canal delivery, field consumption, conveyance losses, allocation compliance, and inter-cluster fairness:
+  - Universal mass-conservation water balance ($Closing = Opening + Inflow - Consumed - Losses - ReturnFlow$) with automated tolerance discrepancy detection.
+  - Traceable accounting chain preventing double-counting between source abstraction, canal transfer, parcel turnout delivery, and crop root-zone consumption.
+  - Continuous conveyance loss accounting on canal reaches with upstream-downstream differential analysis and physical classification (`ACCEPTABLE_CONVEYANCE`, `VERIFIED_LOSS`, `SUSPECTED_LOSS`, `UNACCOUNTED_WITHDRAWAL`, `MEASUREMENT_DISCREPANCY`).
+  - Parcel-level quota allocation compliance tracking with delivery shortfall and over-delivery alerts.
+  - Statistical distribution equity analysis ($m^3/\text{ha}$, sample variance, coefficient of variation $CV$, and rotational delivery delay hours) across Water User Associations (WUAs) to eliminate tail-end disadvantages.
+  - Multi-stage boundary reconciliation with human operator review workflow and immutable audit log notes.
+  - Evidence-based water conservation intelligence providing verifiable recommendations and engineering recovery calculations (guaranteeing zero fabricated savings).
+  - Modern responsive frontend with mass-balance visualization, searchable transaction ledger, equity comparisons, and field accounting drill-down. Guarded by ArchUnit rules 89–94, 755 backend tests, and 247 frontend tests.
 - **Future Integration (Upcoming Milestones)**:
   - High-throughput message streaming / MQTT broker integration.
   - Advanced hydraulic model calibration and canal head-gate automation.
@@ -238,6 +252,24 @@ Field
 
 ## 10. Domain Documentation References
 
+- **Regional Water Accounting & Conservation Intelligence**: [`docs/regional-water-accounting.md`](file:///home/izzatbek/Desktop/agronexsus/docs/regional-water-accounting.md)
+- **Water Balance Methodology & Calculation Engine**: [`docs/water-balance-methodology.md`](file:///home/izzatbek/Desktop/agronexsus/docs/water-balance-methodology.md)
+- **Conveyance Loss Accounting & Differential Analysis**: [`docs/conveyance-loss-accounting.md`](file:///home/izzatbek/Desktop/agronexsus/docs/conveyance-loss-accounting.md)
+- **Water Distribution Equity & Inter-Cluster Fairness**: [`docs/water-distribution-equity.md`](file:///home/izzatbek/Desktop/agronexsus/docs/water-distribution-equity.md)
+- **Water Accounting Reconciliation & Discrepancy Governance**: [`docs/water-accounting-reconciliation.md`](file:///home/izzatbek/Desktop/agronexsus/docs/water-accounting-reconciliation.md)
+- **Evidence-Based Water Conservation Intelligence**: [`docs/water-conservation-intelligence.md`](file:///home/izzatbek/Desktop/agronexsus/docs/water-conservation-intelligence.md)
+- **Milestone 08.15 Completion Report**: [`docs/milestone-08.15-completion-report.md`](file:///home/izzatbek/Desktop/agronexsus/docs/milestone-08.15-completion-report.md)
+- **Regional Water Network Architecture**: [`docs/water-network-architecture.md`](file:///home/izzatbek/Desktop/agronexsus/docs/water-network-architecture.md)
+- **Network Topology & Capacity Engine**: [`docs/network-topology-and-capacity.md`](file:///home/izzatbek/Desktop/agronexsus/docs/network-topology-and-capacity.md)
+- **Canal Dispatch Optimization & Fairness Policies**: [`docs/canal-dispatch-optimization.md`](file:///home/izzatbek/Desktop/agronexsus/docs/canal-dispatch-optimization.md)
+- **Cooperative Irrigation Scheduling**: [`docs/cooperative-irrigation-scheduling.md`](file:///home/izzatbek/Desktop/agronexsus/docs/cooperative-irrigation-scheduling.md)
+- **Network Resilience & What-If Stress Scenarios**: [`docs/network-resilience-scenarios.md`](file:///home/izzatbek/Desktop/agronexsus/docs/network-resilience-scenarios.md)
+- **Hydraulic Safety Limitations & Zero Actuation**: [`docs/hydraulic-safety-limitations.md`](file:///home/izzatbek/Desktop/agronexsus/docs/hydraulic-safety-limitations.md)
+- **Milestone 08.14 Completion Report**: [`docs/milestone-08.14-completion-report.md`](file:///home/izzatbek/Desktop/agronexsus/docs/milestone-08.14-completion-report.md)
+- **Farm-Level Predictive Risk & Resilience Intelligence**: [`docs/farm-risk-intelligence.md`](file:///home/izzatbek/Desktop/agronexsus/docs/farm-risk-intelligence.md)
+- **Risk Assessment Rules & Prioritization Formulas**: [`docs/risk-assessment-rules.md`](file:///home/izzatbek/Desktop/agronexsus/docs/risk-assessment-rules.md)
+- **Risk Confidence & Evidence Model**: [`docs/risk-confidence-and-evidence.md`](file:///home/izzatbek/Desktop/agronexsus/docs/risk-confidence-and-evidence.md)
+- **Milestone 08.13 Completion Report**: [`docs/milestone-08.13-completion-report.md`](file:///home/izzatbek/Desktop/agronexsus/docs/milestone-08.13-completion-report.md)
 - **Context-Aware Adaptive Intelligence Engine**: [`docs/context-aware-prediction.md`](file:///home/izzatbek/Desktop/agronexsus/docs/context-aware-prediction.md)
 - **Adaptive Method Selection & 9-Level Hierarchy**: [`docs/adaptive-selection.md`](file:///home/izzatbek/Desktop/agronexsus/docs/adaptive-selection.md)
 - **Contextual Performance & Local Drift Detection**: [`docs/context-performance.md`](file:///home/izzatbek/Desktop/agronexsus/docs/context-performance.md)

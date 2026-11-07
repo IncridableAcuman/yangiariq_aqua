@@ -205,6 +205,18 @@ Developed in Milestone 08.7, the Predictions workspace transforms platform telem
   - `GovernanceAuditTrailTable.tsx`: Chronological immutable audit trail of every governance decision and version lifecycle event.
   - `PredictiveModelHealthCard.tsx`: Compact dashboard health card embedded in the main Farm Intelligence Dashboard (`/dashboard`) displaying active versions, health counts, candidate counts, and drift alerts.
   - `PredictionExplanationModal.tsx`: Enhanced with Method Version and Configuration Snapshot audit view.
+- **Farm Risk & Resilience Intelligence Center (Milestone 08.13)**:
+  - `RiskOverviewCards.tsx`: 6 interactive KPI cards displaying total evaluated parcels, critical emergencies, hydraulic interlocks, water shortages, soil deficits, and telemetry gaps with one-click filtering.
+  - `CriticalRiskBanner.tsx`: High-visibility emergency banner displaying active hydraulic safety interlocks and blocking unsafe operational dispatches.
+  - `FieldRiskTable.tsx` & `FieldRiskCard.tsx`: Dual-mode parcel matrix with multi-criteria severity/category filtering, search, composite score bars, and priority ranking.
+  - `RiskSeverityBadge.tsx` & `RiskConfidenceIndicator.tsx`: Visual indicators strictly separating severity (`CRITICAL`, `HIGH`, `MEDIUM`, `LOW`, `UNKNOWN`) from confidence (`HIGH`, `MEDIUM`, `LOW`, `INSUFFICIENT_DATA`).
+  - `RiskFactorBreakdown.tsx`: Explainable factor cards displaying contribution %, root causes, projected agronomic/hydraulic consequences, preventative actions, and missing domain inputs.
+  - `RiskEvidencePanel.tsx`: Grouped evidentiary breakdown categorizing facts into `OBSERVED (GROUND TRUTH)`, `PREDICTED (FORECAST)`, `UNRELIABLE / STALE`, and `MISSING INPUT`.
+  - `RiskRecommendationCard.tsx`: Action cards displaying priority ranks, triggering reasons, supporting evidence, and deep-link CTAs directly into Operations, Planning, and Sensor modules.
+  - `RiskAssessmentDetailModal.tsx`: Comprehensive drill-down modal with tabs for Factors & Evidence, Recommendations, and Historical Timeline.
+  - `RiskActionPanel.tsx`: Human-governed acknowledgment and resolution modal requiring mandatory remedial action audit notes (`resolutionNotes`).
+  - `FarmRiskDashboardCard.tsx`: Embedded overview card in the main Farm Intelligence Dashboard (`/dashboard`) providing immediate 10-second situational awareness.
+  - Page: `src/pages/risks/RisksPage.tsx` accessible via `/risks` or sidebar navigation.
 
 
 

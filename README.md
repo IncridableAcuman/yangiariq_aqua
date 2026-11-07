@@ -17,6 +17,25 @@
 **Yangiariq Aqua AI** is an agricultural technology platform engineered to deliver decision support for water distribution operators and local farmers in Yangiariq district (Khorezm, Uzbekistan).
 
 The platform addresses regional challenges in canal water scheduling, soil salinization risk, and irrigation optimization through:
+- **Regional Water Accounting, Distribution Equity & Conservation Intelligence (Milestone 08.15)**: Authoritative regional water accounting layer connecting planned water distribution, actual canal delivery, field consumption, conveyance losses, allocation compliance, and inter-cluster fairness:
+  - Universal mass-conservation water balance ($Closing = Opening + Inflow - Consumed - Losses - ReturnFlow$) with automated tolerance discrepancy detection.
+  - Traceable accounting chain preventing double-counting between source abstraction, canal transfer, parcel turnout delivery, and crop root-zone consumption.
+  - Continuous conveyance loss accounting on canal reaches with upstream-downstream differential analysis and physical classification (`ACCEPTABLE_CONVEYANCE`, `VERIFIED_LOSS`, `SUSPECTED_LOSS`, `UNACCOUNTED_WITHDRAWAL`, `MEASUREMENT_DISCREPANCY`).
+  - Parcel-level quota allocation compliance tracking with delivery shortfall and over-delivery alerts.
+  - Statistical distribution equity analysis ($m^3/\text{ha}$, sample variance, coefficient of variation $CV$, and rotational delivery delay hours) across Water User Associations (WUAs) to eliminate tail-end disadvantages.
+  - Multi-stage boundary reconciliation with human operator review workflow and immutable audit log notes.
+  - Evidence-based water conservation intelligence providing verifiable recommendations and engineering recovery calculations (guaranteeing zero fabricated savings).
+  - Modern responsive frontend with mass-balance visualization, searchable transaction ledger, equity comparisons, and field accounting drill-down.
+- **Regional Water Distribution Network Resilience & Canal Dispatch Optimization (Milestone 08.14)**: District-scale water conveyance network intelligence, topological reachability validation, and coordinated multi-parcel canal dispatch optimization. Features:
+  - Directed graph network modeling connecting river intakes (Amu Darya branch / Shavat canal), primary/secondary canals, control gates, booster pump stations, Water User Associations (WUAs), and parcel inlets.
+  - Automated graph topology validation detecting disconnected nodes, cycles, and capacity inconsistencies.
+  - Transparent fairness optimization policies (`CROP_CRITICALITY_FIRST`, `MOISTURE_DEFICIT_PRIORITY`, `PROPORTIONAL_DEFICIT`) resolving multi-parcel water competition while staggering delivery slots to prevent peak canal surcharging.
+  - Non-negotiable hydraulic safety dominance: Hard safety interlocks immediately block deliveries upon active pipe bursts or critical pressure drops.
+  - Zero autonomous actuation guarantee: The software provides decision-support and planning only; ArchUnit Test 88 prevents inclusion of hardware actuation libraries. All physical gate and pump adjustments require authorized human review and execution.
+  - Isolated "What-If" resilience stress testing simulating canal breaches, pump station outages, contamination, and drought restrictions strictly in-memory without mutating operational database records.
+  - Actual delivery accounting, variance tracking, and conveyance loss analysis.
+  - Interactive Leaflet GIS water network map using open OpenStreetMap tiles (zero external paid providers / zero API keys).
+- **Farm-Level Predictive Risk & Resilience Intelligence (Milestone 08.13)**: Evidence-based agricultural risk intelligence synthesizing physical telemetry, hydraulic anomalies, water balances, and model health into explainable risk profiles. Answers: *Which fields are at risk? What causes it? How serious is it? How reliable is the evidence? What could happen if no action is taken? What should be done next? Which actions receive priority?* Enforces non-negotiable hydraulic safety dominance, composite risk scoring, independent severity/confidence matrix, deterministic 9-tier precedence hierarchy, Anti-IDOR security, and human-in-the-loop lifecycle (`OPEN` $\to$ `ACKNOWLEDGED` $\to$ `ACTION_REQUIRED` $\to$ `MITIGATED` $\to$ `RESOLVED` $\to$ `EXPIRED`).
 - **Hybrid ML Prediction Engine & Evidence-Based Learning (Milestone 08.11)**: Introduces controlled, pluggable supervised regression candidates that compete with the deterministic agronomic baseline using verified historical ground-truth. Enforces a non-negotiable safety principle: *ML predicts, deterministic agronomic and hydraulic rules constrain, human governance decides production activation*. Features in-process JVM-native Ridge regression, bounded residual adjustments (max $\pm 5.0\%$), reproducible dataset snapshots with SHA-256 fingerprints, strict 60/20/20 chronological train/validation/test temporal splits (zero future leakage), evidence-based sample gating ($N \ge 30$), automated regression guards, and full integration into the 9-level context-aware adaptive selection hierarchy.
 - **Adaptive Intelligence, Model Governance & Controlled Calibration**: Continuous model governance lifecycle moving from degradation detection to controlled calibration: Insight $\to$ Proposal $\to$ Backtest $\to$ Human Review $\to$ Version $\to$ Controlled Rollout $\to$ Monitoring $\to$ Rollback. Enforces zero autonomous self-modification, permanent immutability of hard hydraulic safety parameters, anti-leakage historical backtesting, multi-factor regression guarding, staged rollout (`SHADOW`, `CANARY`, `ACTIVE`), and 1-click emergency rollback with complete auditability.
 - **Predictive Model Evaluation & Continuous Intelligence**: Empirical verification and continuous intelligence feedback loop answering *"How accurate was that prediction?", "Where did it succeed/fail?", "Is the model drifting over time?"*. Features arbitrary-precision regression and classification metrics, safety interlock outcome interruption classification, minimum sample size gating ($n \ge 10$), and temporal performance drift detection.
@@ -35,7 +54,7 @@ The platform addresses regional challenges in canal water scheduling, soil salin
 
 ## Architectural Highlights
 
-- **Modular Monolith**: Clean boundaries between business domains (`auth`, `user`, `field`, `water`, `problem`, `dashboard`, `ai`, `sensor`, `anomaly`, `recommendation`, `irrigation`, `intelligence`, `operations`, `analytics`, `notification`, `shared`).
+- **Modular Monolith**: Clean boundaries between business domains (`auth`, `user`, `field`, `water`, `problem`, `dashboard`, `ai`, `sensor`, `anomaly`, `recommendation`, `irrigation`, `intelligence`, `operations`, `analytics`, `prediction`, `risk`, `network`, `wateraccounting`, `notification`, `shared`).
 - **Clean Package-by-Feature**: Explicit separation between `api`, `application`, `domain`, and `infrastructure` layers.
 - **Architectural Guardrails**: Enforced via **ArchUnit** tests ensuring that controllers never access repositories or bypass DTO mappings.
 - **Pluggable AI Port**: `AiProvider` interface supporting Gemini API and mock fallbacks without leaking vendor SDK dependencies into domain logic.
@@ -97,6 +116,17 @@ docker compose up --build -d
 
 ## Documentation Index
 
+- [Regional Water Network Architecture](docs/water-network-architecture.md)
+- [Network Topology & Capacity Engine](docs/network-topology-and-capacity.md)
+- [Canal Dispatch Optimization & Fairness Policies](docs/canal-dispatch-optimization.md)
+- [Cooperative Irrigation Scheduling](docs/cooperative-irrigation-scheduling.md)
+- [Network Resilience & What-If Scenarios](docs/network-resilience-scenarios.md)
+- [Hydraulic Safety Limitations & Zero Actuation](docs/hydraulic-safety-limitations.md)
+- [Milestone 08.14 Completion Report](docs/milestone-08.14-completion-report.md)
+- [Farm-Level Predictive Risk & Resilience Intelligence](docs/farm-risk-intelligence.md)
+- [Risk Assessment Rules & Prioritization Formulas](docs/risk-assessment-rules.md)
+- [Risk Confidence & Evidence Model](docs/risk-confidence-and-evidence.md)
+- [Milestone 08.13 Completion Report](docs/milestone-08.13-completion-report.md)
 - [Context-Aware Prediction Engine](docs/context-aware-prediction.md)
 - [Adaptive Method Selection & 9-Level Hierarchy](docs/adaptive-selection.md)
 - [Context Performance & Local Drift Detection](docs/context-performance.md)

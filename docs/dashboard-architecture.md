@@ -245,3 +245,13 @@ Authorization: Bearer <jwt_token>
 - **Target Response Time**: $< 250\text{ ms}$ for $P_{95}$ single farm requests (20–100 parcels).
 - **Database Query Count**: $\le 10$ round-trips total per overview execution.
 - **Client Cache Window**: TanStack Query cache (`staleTime: 60s`, `refetchInterval: 120s`). Background refetch retains visible state without screen flickering.
+
+---
+
+## 8. Integration with Farm Risk & Resilience Intelligence (Milestone 08.13)
+
+The dashboard integrates the **Farm-Level Predictive Risk & Resilience Intelligence** layer (`com.aquaai.risk`):
+- **`FarmRiskDashboardCard`**: Rendered prominently above the parcel prioritization section, providing immediate 10-second situational awareness across 6 risk domains (Hydraulic Safety, Water Availability, Soil Moisture, Operational Delays, Telemetry Gaps, Model Health).
+- **Critical Risk Alerts**: High-visibility warnings whenever hydraulic safety interlocks or quota exhaustion are active, preventing operators from dispatching conflicting schedules.
+- **Deep-Linking**: Direct CTA `[Open Risk Intelligence Center →]` seamlessly routes to `/risks` with pre-selected parcel filters.
+- **Unified Action Workflow**: Recommendations synthesized in the risk module link into existing Action Center handlers (`/operations`, `/irrigation`, `/sensors`, `/anomalies`) to prevent duplicate action queues.

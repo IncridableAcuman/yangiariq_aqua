@@ -7,6 +7,7 @@ import {
   Cpu,
   Sparkles,
   AlertTriangle,
+  AlertOctagon,
   ShieldAlert,
   Settings,
   Workflow,
@@ -16,6 +17,8 @@ import {
   UserPlus,
   BarChart3,
   Compass,
+  Network,
+  Scale,
 } from 'lucide-react'
 import { translations, SupportedLanguage } from '@/shared/i18n'
 import { useAuth } from '@/features/auth/context/AuthContext'
@@ -113,6 +116,27 @@ export const MobileSidebar: React.FC<MobileSidebarProps> = ({
       label: t.nav.anomalies,
       icon: ShieldAlert,
       badge: null,
+    },
+    {
+      id: 'risks' as NavSection,
+      label: t.nav.risks,
+      icon: AlertOctagon,
+      badge: 'Risk',
+      badgeVariant: 'warning' as const,
+    },
+    {
+      id: 'network' as NavSection,
+      label: t.nav.network,
+      icon: Network,
+      badge: '08.14',
+      badgeVariant: 'secondary' as const,
+    },
+    {
+      id: 'water-accounting' as NavSection,
+      label: t.nav.waterAccounting,
+      icon: Scale,
+      badge: '08.15',
+      badgeVariant: 'secondary' as const,
     },
     {
       id: 'ai-advisor' as NavSection,

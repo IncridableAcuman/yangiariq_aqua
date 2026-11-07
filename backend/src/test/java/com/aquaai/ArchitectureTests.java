@@ -732,4 +732,172 @@ class ArchitectureTests {
                 .should().resideInAPackage("..prediction.infrastructure.persistence..")
                 .check(importedClasses);
     }
+
+    @Test
+    @DisplayName("77. Risk controllers must reside in risk.api package")
+    void riskControllersMustResideInApiPackage() {
+        classes()
+                .that().resideInAPackage("..risk..")
+                .and().areAnnotatedWith(RestController.class)
+                .should().resideInAPackage("..risk.api..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("78. Risk domain must not depend on JPA or persistence annotations")
+    void riskDomainMustNotDependOnJpa() {
+        noClasses()
+                .that().resideInAPackage("..risk.domain..")
+                .should().dependOnClassesThat().resideInAnyPackage("jakarta.persistence..", "org.springframework.data..", "org.hibernate..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("79. Risk domain must not depend on Spring framework classes")
+    void riskDomainMustNotDependOnSpring() {
+        noClasses()
+                .that().resideInAPackage("..risk.domain..")
+                .should().dependOnClassesThat().resideInAnyPackage("org.springframework..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("80. Risk domain must not depend on Spring MVC or web classes")
+    void riskDomainMustNotDependOnWeb() {
+        noClasses()
+                .that().resideInAPackage("..risk.domain..")
+                .should().dependOnClassesThat().resideInAnyPackage("org.springframework.web..", "jakarta.servlet..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("81. Risk persistence entities must reside in risk.infrastructure.persistence")
+    void riskPersistenceEntitiesMustResideInInfrastructurePersistence() {
+        classes()
+                .that().resideInAPackage("..risk..")
+                .and().areAnnotatedWith(Entity.class)
+                .should().resideInAPackage("..risk.infrastructure.persistence..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("82. Risk module must not depend on hardware or actuator SDKs")
+    void riskMustNotDependOnHardware() {
+        noClasses()
+                .that().resideInAPackage("..risk..")
+                .should().dependOnClassesThat().resideInAnyPackage("org.eclipse.paho..", "com.pi4j..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("83. Water network controllers must reside in network.api")
+    void networkControllersMustResideInApi() {
+        classes()
+                .that().resideInAPackage("..network..")
+                .and().areAnnotatedWith(RestController.class)
+                .should().resideInAPackage("..network.api..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("84. Water network domain must not depend on JPA or persistence annotations")
+    void networkDomainMustNotDependOnJpa() {
+        noClasses()
+                .that().resideInAPackage("..network.domain..")
+                .should().dependOnClassesThat().resideInAnyPackage("jakarta.persistence..", "org.springframework.data..", "org.hibernate..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("85. Water network domain must not depend on Spring framework classes")
+    void networkDomainMustNotDependOnSpring() {
+        noClasses()
+                .that().resideInAPackage("..network.domain..")
+                .should().dependOnClassesThat().resideInAnyPackage("org.springframework..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("86. Water network domain must not depend on Spring MVC or web classes")
+    void networkDomainMustNotDependOnWeb() {
+        noClasses()
+                .that().resideInAPackage("..network.domain..")
+                .should().dependOnClassesThat().resideInAnyPackage("org.springframework.web..", "jakarta.servlet..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("87. Water network persistence entities must reside in network.infrastructure.persistence")
+    void networkPersistenceEntitiesMustResideInInfrastructurePersistence() {
+        classes()
+                .that().resideInAPackage("..network..")
+                .and().areAnnotatedWith(Entity.class)
+                .should().resideInAPackage("..network.infrastructure.persistence..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("88. Water network module must not depend on hardware or actuator SDKs")
+    void networkMustNotDependOnHardware() {
+        noClasses()
+                .that().resideInAPackage("..network..")
+                .should().dependOnClassesThat().resideInAnyPackage("org.eclipse.paho..", "com.pi4j..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("89. Water accounting controllers must reside in wateraccounting.api")
+    void waterAccountingControllersMustResideInApi() {
+        classes()
+                .that().resideInAPackage("..wateraccounting..")
+                .and().areAnnotatedWith(RestController.class)
+                .should().resideInAPackage("..wateraccounting.api..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("90. Water accounting domain must not depend on JPA or persistence annotations")
+    void waterAccountingDomainMustNotDependOnJpa() {
+        noClasses()
+                .that().resideInAPackage("..wateraccounting.domain..")
+                .should().dependOnClassesThat().resideInAnyPackage("jakarta.persistence..", "org.springframework.data..", "org.hibernate..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("91. Water accounting domain must not depend on Spring framework classes")
+    void waterAccountingDomainMustNotDependOnSpring() {
+        noClasses()
+                .that().resideInAPackage("..wateraccounting.domain..")
+                .should().dependOnClassesThat().resideInAnyPackage("org.springframework..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("92. Water accounting domain must not depend on Spring MVC or web classes")
+    void waterAccountingDomainMustNotDependOnWeb() {
+        noClasses()
+                .that().resideInAPackage("..wateraccounting.domain..")
+                .should().dependOnClassesThat().resideInAnyPackage("org.springframework.web..", "jakarta.servlet..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("93. Water accounting persistence entities must reside in wateraccounting.infrastructure.persistence")
+    void waterAccountingPersistenceEntitiesMustResideInInfrastructurePersistence() {
+        classes()
+                .that().resideInAPackage("..wateraccounting..")
+                .and().areAnnotatedWith(Entity.class)
+                .should().resideInAPackage("..wateraccounting.infrastructure.persistence.entity..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("94. Water accounting module must not depend on hardware or actuation SDKs")
+    void waterAccountingMustNotDependOnHardware() {
+        noClasses()
+                .that().resideInAPackage("..wateraccounting..")
+                .should().dependOnClassesThat().resideInAnyPackage("org.eclipse.paho..", "com.pi4j..", "com.fazecast.jSerialComm..")
+                .check(importedClasses);
+    }
 }

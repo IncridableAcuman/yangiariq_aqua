@@ -137,3 +137,15 @@ $$\text{Deterministic Agronomic Baseline} + \text{Bounded ML Residual Adjustment
 - **Sample Gating**: Enforces minimum $N \ge 30$ verified records for ML training; returns explicit `INSUFFICIENT_TRAINING_DATA` rather than fabricating synthetic data.
 - **Zero Actuator Authority**: ML predictions never operate valves, pumps, or safety thresholds. The deterministic safety layer remains authoritative.
 
+---
+
+## 10. Farm-Level Predictive Risk & Resilience Intelligence (Milestone 08.13)
+
+Milestone 08.13 synthesizes the forecasting capabilities (08.7), continuous evaluation (08.8), model governance (08.9), and hybrid ML engines (08.11–08.12) into a unified agricultural risk intelligence layer:
+- **Model Uncertainty Feed**: The risk engine directly inspects model health status (`DEGRADED`), contextual performance drift, and evaluation sample counts ($N < 30$).
+- **Predictive Moisture Gating**: Projects forward moisture depletion without presenting forecasts as observed real-world events.
+- **Evidentiary Traceability**: Every predictive factor links to supporting model evidence, disclosing assumptions, confidence limits, and model health.
+- **Prioritization Hierarchy**: Model reliability warnings are ranked deterministically at Tier #8, ensuring they never take precedence over immediate hydraulic emergencies (Tier #1) or confirmed ground-truth crop wilting (Tier #3).
+- **Documentation**: See [`docs/farm-risk-intelligence.md`](farm-risk-intelligence.md), [`docs/risk-assessment-rules.md`](risk-assessment-rules.md), and [`docs/risk-confidence-and-evidence.md`](risk-confidence-and-evidence.md).
+
+

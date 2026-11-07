@@ -21,6 +21,9 @@ import { SettingsPage } from '@/pages/settings'
 import { OperationsPage } from '@/pages/operations'
 import { AnalyticsPage } from '@/pages/analytics'
 import { PredictionsPage } from '@/pages/predictions'
+import { RisksPage } from '@/pages/risks'
+import { RegionalOperationsPage } from '@/pages/network/RegionalOperationsPage'
+import { RegionalWaterAccountingPage } from '@/pages/water-accounting/RegionalWaterAccountingPage'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -160,6 +163,18 @@ export function AppContent() {
         return <SensorsPage lang={lang} />
       case 'anomalies':
         return <AnomaliesPage lang={lang} />
+      case 'risks':
+        return (
+          <RisksPage
+            lang={lang}
+            initialFieldId={selectedOperationFieldId}
+            onNavigate={handleNavigate}
+          />
+        )
+      case 'network':
+        return <RegionalOperationsPage />
+      case 'water-accounting':
+        return <RegionalWaterAccountingPage onNavigate={handleNavigate} />
       case 'ai-advisor':
         return <AiAdvisorPage lang={lang} />
       case 'problems':

@@ -7,6 +7,9 @@ import {
   AlertCircle,
   ShieldCheck,
   BarChart3,
+  AlertOctagon,
+  Waves,
+  Scale,
 } from 'lucide-react'
 import { Button } from '@/shared/ui/button'
 import { Badge } from '@/shared/ui/badge'
@@ -24,6 +27,7 @@ import {
   DashboardFieldMap,
   FarmPerformanceSummaryCard,
   PredictiveModelHealthCard,
+  FarmRiskDashboardCard,
 } from '@/features/dashboard'
 import { PredictiveSummaryCard } from '@/features/prediction'
 
@@ -184,6 +188,33 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ lang, onNavigate }
               <span>{lang === 'uz' ? 'Tahlil va Statistika' : lang === 'ru' ? 'Аналитика' : 'Analytics'}</span>
             </Button>
             <Button
+              variant="outline"
+              size="sm"
+              onClick={() => onNavigate('risks')}
+              className="gap-1.5 text-xs border-amber-200 dark:border-amber-900 text-amber-700 dark:text-amber-300 bg-amber-50/50 dark:bg-amber-950/30 hover:bg-amber-100"
+            >
+              <AlertOctagon className="h-3.5 w-3.5 text-amber-600 dark:text-amber-400" />
+              <span>{lang === 'uz' ? 'Xavf Intellekti' : lang === 'ru' ? 'Интеллект Рисков' : 'Risk Intelligence'}</span>
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => onNavigate('network')}
+              className="gap-1.5 text-xs border-sky-200 dark:border-sky-900 text-sky-700 dark:text-sky-300 bg-sky-50/50 dark:bg-sky-950/30 hover:bg-sky-100"
+            >
+              <Waves className="h-3.5 w-3.5 text-sky-600 dark:text-sky-400" />
+              <span>{lang === 'uz' ? 'Suv Tarmogʻi' : lang === 'ru' ? 'Водная Сеть' : 'Water Network'}</span>
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => onNavigate('water-accounting')}
+              className="gap-1.5 text-xs border-indigo-200 dark:border-indigo-900 text-indigo-700 dark:text-indigo-300 bg-indigo-50/50 dark:bg-indigo-950/30 hover:bg-indigo-100"
+            >
+              <Scale className="h-3.5 w-3.5 text-indigo-600 dark:text-indigo-400" />
+              <span>{lang === 'uz' ? 'Suv Hisobi' : lang === 'ru' ? 'Водный Учет' : 'Water Accounting'}</span>
+            </Button>
+            <Button
               variant="ghost"
               size="icon"
               className="h-8 w-8 text-muted-foreground hover:text-foreground"
@@ -200,6 +231,14 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ lang, onNavigate }
       <section data-testid="section-action-center">
         <ActionCenter
           urgentActions={overview.urgentActions}
+          lang={lang}
+          onNavigate={onNavigate}
+        />
+      </section>
+
+      {/* 2.1 Farm Risk & Resilience Intelligence (Milestone 08.13) */}
+      <section data-testid="section-risk-intelligence">
+        <FarmRiskDashboardCard
           lang={lang}
           onNavigate={onNavigate}
         />
