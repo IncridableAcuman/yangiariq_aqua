@@ -29,8 +29,8 @@ public interface SpringDataRiskAssessmentRepository extends JpaRepository<RiskAs
     @Query("""
             SELECT r FROM RiskAssessmentJpaEntity r
             WHERE r.fieldId = :fieldId
-              AND (:from IS NULL OR r.evaluatedAt >= :from)
-              AND (:to IS NULL OR r.evaluatedAt <= :to)
+              AND (cast(:from as timestamp) IS NULL OR r.evaluatedAt >= :from)
+              AND (cast(:to as timestamp) IS NULL OR r.evaluatedAt <= :to)
             ORDER BY r.evaluatedAt DESC
             """)
     List<RiskAssessmentJpaEntity> findHistorical(
@@ -43,8 +43,8 @@ public interface SpringDataRiskAssessmentRepository extends JpaRepository<RiskAs
     @Query("""
             SELECT COUNT(r) FROM RiskAssessmentJpaEntity r
             WHERE r.fieldId = :fieldId
-              AND (:from IS NULL OR r.evaluatedAt >= :from)
-              AND (:to IS NULL OR r.evaluatedAt <= :to)
+              AND (cast(:from as timestamp) IS NULL OR r.evaluatedAt >= :from)
+              AND (cast(:to as timestamp) IS NULL OR r.evaluatedAt <= :to)
             """)
     long countHistorical(
             @Param("fieldId") UUID fieldId,

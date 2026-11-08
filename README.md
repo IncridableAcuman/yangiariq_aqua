@@ -17,6 +17,24 @@
 **Yangiariq Aqua AI** is an agricultural technology platform engineered to deliver decision support for water distribution operators and local farmers in Yangiariq district (Khorezm, Uzbekistan).
 
 The platform addresses regional challenges in canal water scheduling, soil salinization risk, and irrigation optimization through:
+- **Regional Water Operations Performance, Outcome Measurement & Evidence-Based Impact Assessment (Milestone 08.17)**: Authoritative outcome measurement and impact assessment layer (`com.aquaai.performance`) connecting intelligence modules to evaluate physical reality:
+  - Tripartite conceptual separation: strictly separates OUTPUT (activities/schedules) from OUTCOME (measured changes in physical state) from IMPACT (conservative, verified causal attribution).
+  - Deterministic performance indicator catalog across delivery reliability, conveyance efficiency, allocation compliance, distribution equity ($CV$), irrigation efficiency, incident recurrence, data quality, and verified conservation savings.
+  - Robust 5-point baseline comparability engine (`BaselineComparabilityEngine`) enforcing duration ratio (0.50–2.00), unit compatibility, geographic scope alignment, seasonal/climatic context matching, and $\ge 80\%$ completeness.
+  - Conservative attribution hierarchy (`DIRECTLY_VERIFIED`, `STRONGLY_ASSOCIATED`, `ASSOCIATED`, `INCONCLUSIVE`, `NOT_ASSESSABLE`) with strict invariant: simulated or estimated baselines can NEVER yield directly verified attribution.
+  - Non-actuation guarantee: purely observational, analytical, and governance layer with zero direct actuator control (ArchUnit Rule 106).
+  - Comprehensive frontend workspace: overview KPI cards, dynamic trend charts with visual missing data breaks and simulated badges, indicator catalog, impact assessment registry with independent auditor review, and baseline/target management.
+  - Multi-tenant anti-IDOR security preventing cross-farm data leakage. Guarded by 106 ArchUnit rules, 836 backend tests (820 passed, 0 failures, 16 skipped), and 275 frontend tests across 29 test files.
+- **Regional Water Accountability, Incident Investigation & Corrective Action Governance (Milestone 08.16)**: Authoritative operational accountability and incident governance layer (`com.aquaai.accountability`) transforming findings into auditable investigations, assigned responsibilities, documented corrective actions, and independently verified resolutions:
+  - 10 deterministic incident categories (`WATER_BALANCE_DISCREPANCY`, `CONVEYANCE_LOSS`, `UNACCOUNTED_WITHDRAWAL`, `ALLOCATION_EXCEEDED`, `UNDER_DELIVERY`, `DISTRIBUTION_DISPARITY`, `HYDRAULIC_SAFETY`, `SENSOR_DATA_QUALITY`, `OPERATIONAL_NON_COMPLIANCE`, `OTHER`).
+  - Deterministic severity model with strict wall-clock SLA review horizons (`CRITICAL`: 4h, `HIGH`: 24h, `MEDIUM`: 72h, `LOW`: 168h, `INFORMATIONAL`: none).
+  - Evidence confidence taxonomy (`VERIFIED`, `PARTIALLY_VERIFIED`, `UNVERIFIED`, `SIMULATED`, `INSUFFICIENT_DATA`) preserving data lineage and prohibiting false elevation of simulated data.
+  - Presumption of innocence: non-accusatory governance treating discrepancies as operational findings rather than automatic misconduct.
+  - 12-state deterministic incident lifecycle machine (`DETECTED` -> `UNDER_REVIEW` -> `OPEN` -> `INVESTIGATING` -> `ACTION_PROPOSED` -> `ACTION_APPROVED` -> `ACTION_IN_PROGRESS` -> `PENDING_VERIFICATION` -> `RESOLVED` -> `CLOSED`, plus `DISMISSED` and `REOPENED`).
+  - Strict separation of duties (Four-Eyes Principle): action owners cannot verify resolutions unless documented administrative override is granted.
+  - No auto-resolution: completing a corrective action strictly moves cases to `PENDING_VERIFICATION`.
+  - Non-actuation constraint: zero direct physical gate manipulation or pump actuation (ArchUnit Rule 100).
+  - Comprehensive responsive frontend with KPI metrics cards, searchable list table, 5-tab detail modal, and complete governance dialogs. Guarded by ArchUnit rules 95–100 (total 100 rules), 814 backend tests (798 passed), and 261 frontend tests (28 test files).
 - **Regional Water Accounting, Distribution Equity & Conservation Intelligence (Milestone 08.15)**: Authoritative regional water accounting layer connecting planned water distribution, actual canal delivery, field consumption, conveyance losses, allocation compliance, and inter-cluster fairness:
   - Universal mass-conservation water balance ($Closing = Opening + Inflow - Consumed - Losses - ReturnFlow$) with automated tolerance discrepancy detection.
   - Traceable accounting chain preventing double-counting between source abstraction, canal transfer, parcel turnout delivery, and crop root-zone consumption.
@@ -54,7 +72,7 @@ The platform addresses regional challenges in canal water scheduling, soil salin
 
 ## Architectural Highlights
 
-- **Modular Monolith**: Clean boundaries between business domains (`auth`, `user`, `field`, `water`, `problem`, `dashboard`, `ai`, `sensor`, `anomaly`, `recommendation`, `irrigation`, `intelligence`, `operations`, `analytics`, `prediction`, `risk`, `network`, `wateraccounting`, `notification`, `shared`).
+- **Modular Monolith**: Clean boundaries between business domains (`auth`, `user`, `field`, `water`, `problem`, `dashboard`, `ai`, `sensor`, `anomaly`, `recommendation`, `irrigation`, `intelligence`, `operations`, `analytics`, `prediction`, `risk`, `network`, `wateraccounting`, `accountability`, `notification`, `shared`).
 - **Clean Package-by-Feature**: Explicit separation between `api`, `application`, `domain`, and `infrastructure` layers.
 - **Architectural Guardrails**: Enforced via **ArchUnit** tests ensuring that controllers never access repositories or bypass DTO mappings.
 - **Pluggable AI Port**: `AiProvider` interface supporting Gemini API and mock fallbacks without leaking vendor SDK dependencies into domain logic.

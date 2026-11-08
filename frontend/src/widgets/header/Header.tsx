@@ -75,6 +75,8 @@ export const Header: React.FC<HeaderProps> = ({
     risks: t.nav.risks,
     network: t.nav.network,
     'water-accounting': t.nav.waterAccounting,
+    accountability: t.nav.accountability,
+    performance: t.nav.performance,
     'ai-advisor': t.nav.aiAdvisor,
     problems: t.nav.problems,
     settings: t.nav.settings,

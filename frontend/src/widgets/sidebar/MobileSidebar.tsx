@@ -19,6 +19,8 @@ import {
   Compass,
   Network,
   Scale,
+  FileSearch,
+  Gauge,
 } from 'lucide-react'
 import { translations, SupportedLanguage } from '@/shared/i18n'
 import { useAuth } from '@/features/auth/context/AuthContext'
@@ -136,6 +138,20 @@ export const MobileSidebar: React.FC<MobileSidebarProps> = ({
       label: t.nav.waterAccounting,
       icon: Scale,
       badge: '08.15',
+      badgeVariant: 'secondary' as const,
+    },
+    {
+      id: 'accountability' as NavSection,
+      label: t.nav.accountability,
+      icon: FileSearch,
+      badge: '08.16',
+      badgeVariant: 'secondary' as const,
+    },
+    {
+      id: 'performance' as NavSection,
+      label: t.nav.performance,
+      icon: Gauge,
+      badge: '08.17',
       badgeVariant: 'secondary' as const,
     },
     {

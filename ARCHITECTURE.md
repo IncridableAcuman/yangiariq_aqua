@@ -244,6 +244,24 @@ Field
   - Multi-stage boundary reconciliation with human operator review workflow and immutable audit log notes.
   - Evidence-based water conservation intelligence providing verifiable recommendations and engineering recovery calculations (guaranteeing zero fabricated savings).
   - Modern responsive frontend with mass-balance visualization, searchable transaction ledger, equity comparisons, and field accounting drill-down. Guarded by ArchUnit rules 89–94, 755 backend tests, and 247 frontend tests.
+- **Regional Water Accountability, Incident Investigation & Corrective Action Governance (Milestone 08.16)**: Authoritative operational accountability and incident governance layer (`com.aquaai.accountability`) transforming findings into auditable investigations, assigned responsibilities, documented corrective actions, and independently verified resolutions:
+  - 10 deterministic incident categories (`WATER_BALANCE_DISCREPANCY`, `CONVEYANCE_LOSS`, `UNACCOUNTED_WITHDRAWAL`, `ALLOCATION_EXCEEDED`, `UNDER_DELIVERY`, `DISTRIBUTION_DISPARITY`, `HYDRAULIC_SAFETY`, `SENSOR_DATA_QUALITY`, `OPERATIONAL_NON_COMPLIANCE`, `OTHER`).
+  - Deterministic severity model with strict wall-clock SLA review horizons (`CRITICAL`: 4h, `HIGH`: 24h, `MEDIUM`: 72h, `LOW`: 168h, `INFORMATIONAL`: none).
+  - Evidence confidence taxonomy (`VERIFIED`, `PARTIALLY_VERIFIED`, `UNVERIFIED`, `SIMULATED`, `INSUFFICIENT_DATA`) preserving data lineage and prohibiting false elevation of simulated data.
+  - Presumption of innocence: non-accusatory governance treating discrepancies as operational findings rather than automatic misconduct.
+  - 12-state deterministic incident lifecycle machine (`DETECTED` -> `UNDER_REVIEW` -> `OPEN` -> `INVESTIGATING` -> `ACTION_PROPOSED` -> `ACTION_APPROVED` -> `ACTION_IN_PROGRESS` -> `PENDING_VERIFICATION` -> `RESOLVED` -> `CLOSED`, plus `DISMISSED` and `REOPENED`).
+  - Strict separation of duties (Four-Eyes Principle): action owners cannot verify resolutions unless documented administrative override is granted.
+  - No auto-resolution: completing a corrective action strictly moves cases to `PENDING_VERIFICATION`.
+  - Non-actuation constraint: zero direct physical gate manipulation or pump actuation (ArchUnit Rule 100).
+  - Comprehensive responsive frontend with KPI metrics cards, searchable list table, 5-tab detail modal, and complete governance dialogs. Guarded by ArchUnit rules 95–100 (total 100 rules), 814 backend tests (798 passed), and 261 frontend tests (28 test files).
+- **Regional Water Operations Performance, Outcome Measurement & Evidence-Based Impact Assessment (Milestone 08.17)**: Authoritative outcome measurement and impact assessment layer (`com.aquaai.performance`) connecting intelligence modules to evaluate physical reality:
+  - Tripartite conceptual separation: strictly separates OUTPUT (activities/schedules) from OUTCOME (measured changes in physical state) from IMPACT (conservative, verified causal attribution).
+  - Deterministic performance indicator catalog across delivery reliability, conveyance efficiency, allocation compliance, distribution equity ($CV$), irrigation efficiency, incident recurrence, data quality, and verified conservation savings.
+  - Robust 5-point baseline comparability engine (`BaselineComparabilityEngine`) enforcing duration ratio (0.50–2.00), unit compatibility, geographic scope alignment, seasonal/climatic context matching, and $\ge 80\%$ completeness.
+  - Conservative attribution hierarchy (`DIRECTLY_VERIFIED`, `STRONGLY_ASSOCIATED`, `ASSOCIATED`, `INCONCLUSIVE`, `NOT_ASSESSABLE`) with strict invariant: simulated or estimated baselines can NEVER yield directly verified attribution.
+  - Non-actuation guarantee: purely observational, analytical, and governance layer with zero direct actuator control (ArchUnit Rule 106).
+  - Comprehensive frontend workspace: overview KPI cards, dynamic trend charts with visual missing data breaks and simulated badges, indicator catalog, impact assessment registry with independent auditor review, and baseline/target management.
+  - Multi-tenant anti-IDOR security preventing cross-farm data leakage. Guarded by 106 ArchUnit rules, 836 backend tests (820 passed, 0 failures, 16 skipped), and 275 frontend tests across 29 test files.
 - **Future Integration (Upcoming Milestones)**:
   - High-throughput message streaming / MQTT broker integration.
   - Advanced hydraulic model calibration and canal head-gate automation.
@@ -252,6 +270,21 @@ Field
 
 ## 10. Domain Documentation References
 
+- **Regional Performance Architecture**: [`docs/regional-performance-architecture.md`](file:///home/izzatbek/Desktop/agronexsus/docs/regional-performance-architecture.md)
+- **Performance Indicator Catalog**: [`docs/performance-indicator-catalog.md`](file:///home/izzatbek/Desktop/agronexsus/docs/performance-indicator-catalog.md)
+- **Baseline and Comparability Methodology**: [`docs/baseline-and-comparability-methodology.md`](file:///home/izzatbek/Desktop/agronexsus/docs/baseline-and-comparability-methodology.md)
+- **Outcome and Evidence-Based Impact Assessment**: [`docs/outcome-and-impact-assessment.md`](file:///home/izzatbek/Desktop/agronexsus/docs/outcome-and-impact-assessment.md)
+- **Water Conservation Impact Verification**: [`docs/conservation-impact-verification.md`](file:///home/izzatbek/Desktop/agronexsus/docs/conservation-impact-verification.md)
+- **Performance Data Quality and Reliability**: [`docs/performance-data-quality.md`](file:///home/izzatbek/Desktop/agronexsus/docs/performance-data-quality.md)
+- **Regional Performance Reporting & Export**: [`docs/regional-performance-reporting.md`](file:///home/izzatbek/Desktop/agronexsus/docs/regional-performance-reporting.md)
+- **Milestone 08.17 Completion Report**: [`docs/milestone-08.17-completion-report.md`](file:///home/izzatbek/Desktop/agronexsus/docs/milestone-08.17-completion-report.md)
+- **Regional Water Accountability Architecture**: [`docs/regional-accountability-architecture.md`](file:///home/izzatbek/Desktop/agronexsus/docs/regional-accountability-architecture.md)
+- **Incident Lifecycle and Governance**: [`docs/incident-lifecycle-and-governance.md`](file:///home/izzatbek/Desktop/agronexsus/docs/incident-lifecycle-and-governance.md)
+- **Investigation and Evidence Management**: [`docs/investigation-and-evidence-management.md`](file:///home/izzatbek/Desktop/agronexsus/docs/investigation-and-evidence-management.md)
+- **Corrective Action Governance**: [`docs/corrective-action-governance.md`](file:///home/izzatbek/Desktop/agronexsus/docs/corrective-action-governance.md)
+- **Independent Verification and Separation of Duties**: [`docs/independent-verification.md`](file:///home/izzatbek/Desktop/agronexsus/docs/independent-verification.md)
+- **Accountability SLA and Escalation Governance**: [`docs/accountability-sla-and-escalation.md`](file:///home/izzatbek/Desktop/agronexsus/docs/accountability-sla-and-escalation.md)
+- **Milestone 08.16 Completion Report**: [`docs/milestone-08.16-completion-report.md`](file:///home/izzatbek/Desktop/agronexsus/docs/milestone-08.16-completion-report.md)
 - **Regional Water Accounting & Conservation Intelligence**: [`docs/regional-water-accounting.md`](file:///home/izzatbek/Desktop/agronexsus/docs/regional-water-accounting.md)
 - **Water Balance Methodology & Calculation Engine**: [`docs/water-balance-methodology.md`](file:///home/izzatbek/Desktop/agronexsus/docs/water-balance-methodology.md)
 - **Conveyance Loss Accounting & Differential Analysis**: [`docs/conveyance-loss-accounting.md`](file:///home/izzatbek/Desktop/agronexsus/docs/conveyance-loss-accounting.md)

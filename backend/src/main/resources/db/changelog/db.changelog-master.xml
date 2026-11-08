@@ -28,5 +28,7 @@
     <include file="db/changelog/changes/021-create-risk-intelligence-tables.sql"/>
     <include file="db/changelog/changes/022-create-water-network-tables.sql"/>
     <include file="db/changelog/changes/023-create-water-accounting-tables.sql"/>
+    <include file="db/changelog/changes/024-create-accountability-domain-tables.sql"/>
+    <include file="db/changelog/changes/025-create-performance-domain-tables.sql"/>
 
 </databaseChangeLog>

@@ -900,4 +900,116 @@ class ArchitectureTests {
                 .should().dependOnClassesThat().resideInAnyPackage("org.eclipse.paho..", "com.pi4j..", "com.fazecast.jSerialComm..")
                 .check(importedClasses);
     }
+
+    @Test
+    @DisplayName("95. Accountability controllers must reside in accountability.api")
+    void accountabilityControllersMustResideInApi() {
+        classes()
+                .that().resideInAPackage("..accountability..")
+                .and().areAnnotatedWith(RestController.class)
+                .should().resideInAPackage("..accountability.api..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("96. Accountability domain must not depend on JPA or persistence annotations")
+    void accountabilityDomainMustNotDependOnJpa() {
+        noClasses()
+                .that().resideInAPackage("..accountability.domain..")
+                .should().dependOnClassesThat().resideInAnyPackage("jakarta.persistence..", "org.springframework.data..", "org.hibernate..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("97. Accountability domain must not depend on Spring framework classes")
+    void accountabilityDomainMustNotDependOnSpring() {
+        noClasses()
+                .that().resideInAPackage("..accountability.domain..")
+                .should().dependOnClassesThat().resideInAnyPackage("org.springframework..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("98. Accountability domain must not depend on Spring MVC or web classes")
+    void accountabilityDomainMustNotDependOnWeb() {
+        noClasses()
+                .that().resideInAPackage("..accountability.domain..")
+                .should().dependOnClassesThat().resideInAnyPackage("org.springframework.web..", "jakarta.servlet..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("99. Accountability persistence entities must reside in accountability.infrastructure.persistence.entity")
+    void accountabilityPersistenceEntitiesMustResideInInfrastructurePersistence() {
+        classes()
+                .that().resideInAPackage("..accountability..")
+                .and().areAnnotatedWith(Entity.class)
+                .should().resideInAPackage("..accountability.infrastructure.persistence.entity..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("100. Accountability module must not depend on hardware or physical actuation SDKs")
+    void accountabilityMustNotDependOnHardware() {
+        noClasses()
+                .that().resideInAPackage("..accountability..")
+                .should().dependOnClassesThat().resideInAnyPackage("org.eclipse.paho..", "com.pi4j..", "com.fazecast.jSerialComm..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("101. Performance controllers must reside in performance.api")
+    void performanceControllersMustResideInApi() {
+        classes()
+                .that().resideInAPackage("..performance..")
+                .and().areAnnotatedWith(RestController.class)
+                .should().resideInAPackage("..performance.api..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("102. Performance domain must not depend on JPA or persistence annotations")
+    void performanceDomainMustNotDependOnJpa() {
+        noClasses()
+                .that().resideInAPackage("..performance.domain..")
+                .should().dependOnClassesThat().resideInAnyPackage("jakarta.persistence..", "org.springframework.data..", "org.hibernate..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("103. Performance domain must not depend on Spring framework classes")
+    void performanceDomainMustNotDependOnSpring() {
+        noClasses()
+                .that().resideInAPackage("..performance.domain..")
+                .should().dependOnClassesThat().resideInAnyPackage("org.springframework..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("104. Performance domain must not depend on Spring MVC or web classes")
+    void performanceDomainMustNotDependOnWeb() {
+        noClasses()
+                .that().resideInAPackage("..performance.domain..")
+                .should().dependOnClassesThat().resideInAnyPackage("org.springframework.web..", "jakarta.servlet..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("105. Performance persistence entities must reside in performance.infrastructure.persistence.entity")
+    void performancePersistenceEntitiesMustResideInInfrastructurePersistence() {
+        classes()
+                .that().resideInAPackage("..performance..")
+                .and().areAnnotatedWith(Entity.class)
+                .should().resideInAPackage("..performance.infrastructure.persistence.entity..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("106. Performance module must not depend on hardware or physical actuation SDKs")
+    void performanceMustNotDependOnHardware() {
+        noClasses()
+                .that().resideInAPackage("..performance..")
+                .should().dependOnClassesThat().resideInAnyPackage("org.eclipse.paho..", "com.pi4j..", "com.fazecast.jSerialComm..")
+                .check(importedClasses);
+    }
 }

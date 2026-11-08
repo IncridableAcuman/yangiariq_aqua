@@ -24,6 +24,8 @@ import { PredictionsPage } from '@/pages/predictions'
 import { RisksPage } from '@/pages/risks'
 import { RegionalOperationsPage } from '@/pages/network/RegionalOperationsPage'
 import { RegionalWaterAccountingPage } from '@/pages/water-accounting/RegionalWaterAccountingPage'
+import { RegionalAccountabilityPage } from '@/pages/accountability/RegionalAccountabilityPage'
+import { RegionalPerformancePage } from '@/pages/performance'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -175,6 +177,10 @@ export function AppContent() {
         return <RegionalOperationsPage />
       case 'water-accounting':
         return <RegionalWaterAccountingPage onNavigate={handleNavigate} />
+      case 'accountability':
+        return <RegionalAccountabilityPage onNavigate={handleNavigate} />
+      case 'performance':
+        return <RegionalPerformancePage onNavigate={handleNavigate} />
       case 'ai-advisor':
         return <AiAdvisorPage lang={lang} />
       case 'problems':
