@@ -26,6 +26,8 @@ import { RegionalOperationsPage } from '@/pages/network/RegionalOperationsPage'
 import { RegionalWaterAccountingPage } from '@/pages/water-accounting/RegionalWaterAccountingPage'
 import { RegionalAccountabilityPage } from '@/pages/accountability/RegionalAccountabilityPage'
 import { RegionalPerformancePage } from '@/pages/performance'
+import { DataIntegrationPage } from '@/pages/data-integration'
+import { PilotPage } from '@/pages/pilot'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -181,6 +183,10 @@ export function AppContent() {
         return <RegionalAccountabilityPage onNavigate={handleNavigate} />
       case 'performance':
         return <RegionalPerformancePage onNavigate={handleNavigate} />
+      case 'data-integration':
+        return <DataIntegrationPage lang={lang} />
+      case 'pilot':
+        return <PilotPage lang={lang} />
       case 'ai-advisor':
         return <AiAdvisorPage lang={lang} />
       case 'problems':

@@ -8,6 +8,7 @@ import com.aquaai.sensor.domain.model.SensorType;
 import com.aquaai.sensor.domain.provider.SensorProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -25,6 +26,7 @@ import java.util.concurrent.ConcurrentMap;
  * guaranteeing coherent, believable time-series data sequences for demo and local development.
  */
 @Slf4j
+@Primary
 @Component
 @ConditionalOnProperty(name = "app.sensor.provider", havingValue = "simulated", matchIfMissing = true)
 public class SimulatedSensorProvider implements SensorProvider {

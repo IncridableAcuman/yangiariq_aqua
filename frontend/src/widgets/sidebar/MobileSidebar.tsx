@@ -21,6 +21,7 @@ import {
   Scale,
   FileSearch,
   Gauge,
+  Database,
 } from 'lucide-react'
 import { translations, SupportedLanguage } from '@/shared/i18n'
 import { useAuth } from '@/features/auth/context/AuthContext'
@@ -152,6 +153,20 @@ export const MobileSidebar: React.FC<MobileSidebarProps> = ({
       label: t.nav.performance,
       icon: Gauge,
       badge: '08.17',
+      badgeVariant: 'secondary' as const,
+    },
+    {
+      id: 'data-integration' as NavSection,
+      label: t.nav.dataIntegration,
+      icon: Database,
+      badge: '08.19',
+      badgeVariant: 'secondary' as const,
+    },
+    {
+      id: 'pilot' as NavSection,
+      label: t.nav.pilot,
+      icon: Compass,
+      badge: '08.20',
       badgeVariant: 'secondary' as const,
     },
     {

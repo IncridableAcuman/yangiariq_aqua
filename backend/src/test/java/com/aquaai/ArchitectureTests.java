@@ -1012,4 +1012,116 @@ class ArchitectureTests {
                 .should().dependOnClassesThat().resideInAnyPackage("org.eclipse.paho..", "com.pi4j..", "com.fazecast.jSerialComm..")
                 .check(importedClasses);
     }
+
+    @Test
+    @DisplayName("107. Integration controllers must reside in integration.api")
+    void integrationControllersMustResideInApi() {
+        classes()
+                .that().resideInAPackage("..integration..")
+                .and().areAnnotatedWith(RestController.class)
+                .should().resideInAPackage("..integration.api..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("108. Integration domain must not depend on JPA or persistence annotations")
+    void integrationDomainMustNotDependOnJpa() {
+        noClasses()
+                .that().resideInAPackage("..integration.domain..")
+                .should().dependOnClassesThat().resideInAnyPackage("jakarta.persistence..", "org.springframework.data..", "org.hibernate..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("109. Integration domain must not depend on Spring framework classes")
+    void integrationDomainMustNotDependOnSpring() {
+        noClasses()
+                .that().resideInAPackage("..integration.domain..")
+                .should().dependOnClassesThat().resideInAnyPackage("org.springframework..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("110. Integration domain must not depend on Spring MVC or web classes")
+    void integrationDomainMustNotDependOnWeb() {
+        noClasses()
+                .that().resideInAPackage("..integration.domain..")
+                .should().dependOnClassesThat().resideInAnyPackage("org.springframework.web..", "jakarta.servlet..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("111. Integration persistence entities must reside in integration.infrastructure.persistence.entity")
+    void integrationPersistenceEntitiesMustResideInInfrastructurePersistence() {
+        classes()
+                .that().resideInAPackage("..integration..")
+                .and().areAnnotatedWith(Entity.class)
+                .should().resideInAPackage("..integration.infrastructure.persistence.entity..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("112. Integration module must not depend on physical actuation SDKs")
+    void integrationMustNotDependOnActuation() {
+        noClasses()
+                .that().resideInAPackage("..integration..")
+                .should().dependOnClassesThat().resideInAnyPackage("com.pi4j..", "com.fazecast.jSerialComm..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("113. Pilot controllers must reside in pilot.api")
+    void pilotControllersMustResideInApi() {
+        classes()
+                .that().resideInAPackage("..pilot..")
+                .and().areAnnotatedWith(RestController.class)
+                .should().resideInAPackage("..pilot.api..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("114. Pilot domain must not depend on JPA or persistence annotations")
+    void pilotDomainMustNotDependOnJpa() {
+        noClasses()
+                .that().resideInAPackage("..pilot.domain..")
+                .should().dependOnClassesThat().resideInAnyPackage("jakarta.persistence..", "org.springframework.data..", "org.hibernate..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("115. Pilot domain must not depend on Spring framework classes")
+    void pilotDomainMustNotDependOnSpring() {
+        noClasses()
+                .that().resideInAPackage("..pilot.domain..")
+                .should().dependOnClassesThat().resideInAnyPackage("org.springframework..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("116. Pilot domain must not depend on Spring MVC or web classes")
+    void pilotDomainMustNotDependOnWeb() {
+        noClasses()
+                .that().resideInAPackage("..pilot.domain..")
+                .should().dependOnClassesThat().resideInAnyPackage("org.springframework.web..", "jakarta.servlet..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("117. Pilot persistence entities must reside in pilot.infrastructure.persistence.entity")
+    void pilotPersistenceEntitiesMustResideInInfrastructurePersistence() {
+        classes()
+                .that().resideInAPackage("..pilot..")
+                .and().areAnnotatedWith(Entity.class)
+                .should().resideInAPackage("..pilot.infrastructure.persistence.entity..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("118. Pilot module must not depend on physical actuation SDKs")
+    void pilotMustNotDependOnActuation() {
+        noClasses()
+                .that().resideInAPackage("..pilot..")
+                .should().dependOnClassesThat().resideInAnyPackage("com.pi4j..", "com.fazecast.jSerialComm..")
+                .check(importedClasses);
+    }
 }
