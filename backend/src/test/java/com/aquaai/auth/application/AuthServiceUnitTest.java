@@ -126,6 +126,64 @@ class AuthServiceUnitTest {
     }
 
     @Test
+    @DisplayName("Registration with designated admin email should automatically assign ADMIN role")
+    void testRegisterDesignatedAdminEmailAssignsAdminRole() {
+        RegisterRequest request = RegisterRequest.builder()
+                .firstName("Izzatbek")
+                .lastName("Abdusharipov")
+                .phoneNumber("+998901234501")
+                .email("abdusharipovizzat03@gmail.com")
+                .password("securePassword123")
+                .district("Yangiariq")
+                .build();
+
+        when(userRepository.existsByPhoneNumber("+998901234501")).thenReturn(false);
+        when(userRepository.existsByEmail("abdusharipovizzat03@gmail.com")).thenReturn(false);
+        when(passwordEncoder.encode("securePassword123")).thenReturn("hashedPass");
+        when(tokenProvider.generateAccessToken(any(), eq("+998901234501"), eq(UserRole.ADMIN))).thenReturn("admin-access-token");
+
+        when(userRepository.save(any(User.class))).thenAnswer(invocation -> {
+            User u = invocation.getArgument(0);
+            u.setId(UUID.randomUUID());
+            return u;
+        });
+
+        AuthResponse response = authService.register(request, "Mozilla/5.0", "127.0.0.1");
+
+        assertThat(response.user().role()).isEqualTo(UserRole.ADMIN);
+        assertThat(response.user().email()).isEqualTo("abdusharipovizzat03@gmail.com");
+    }
+
+    @Test
+    @DisplayName("Login with designated admin email should auto-elevate user to ADMIN role")
+    void testLoginDesignatedAdminElevatesToAdminRole() {
+        User user = User.builder()
+                .phoneNumber("+998901234502")
+                .email("izzatbek.engineer@gmail.com")
+                .passwordHash("hashedSecret")
+                .role(UserRole.FARMER)
+                .status(UserStatus.ACTIVE)
+                .build();
+        user.setId(UUID.randomUUID());
+
+        when(userRepository.findByIdentifier("izzatbek.engineer@gmail.com")).thenReturn(Optional.of(user));
+        when(passwordEncoder.matches("validPassword", "hashedSecret")).thenReturn(true);
+        when(userRepository.save(any(User.class))).thenAnswer(inv -> inv.getArgument(0));
+        when(tokenProvider.generateAccessToken(any(), eq("+998901234502"), eq(UserRole.ADMIN))).thenReturn("elevated-admin-token");
+
+        LoginRequest request = LoginRequest.builder()
+                .identifier("izzatbek.engineer@gmail.com")
+                .password("validPassword")
+                .build();
+
+        AuthResponse response = authService.login(request, "device", "127.0.0.1");
+
+        assertThat(response.user().role()).isEqualTo(UserRole.ADMIN);
+        assertThat(user.getRole()).isEqualTo(UserRole.ADMIN);
+        verify(userRepository).save(user);
+    }
+
+    @Test
     @DisplayName("Registration should reject duplicate phone number")
     void testRegisterDuplicatePhone() {
         RegisterRequest request = RegisterRequest.builder()

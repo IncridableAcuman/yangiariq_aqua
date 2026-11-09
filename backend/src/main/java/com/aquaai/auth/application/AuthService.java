@@ -40,6 +40,18 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class AuthService {
 
+    public static final java.util.Set<String> DESIGNATED_ADMIN_EMAILS = java.util.Set.of(
+            "abdusharipovizzat03@gmail.com",
+            "izzatbek.engineer@gmail.com"
+    );
+
+    public static boolean isDesignatedAdminEmail(String email) {
+        if (email == null || email.isBlank()) {
+            return false;
+        }
+        return DESIGNATED_ADMIN_EMAILS.contains(email.trim().toLowerCase());
+    }
+
     private static final Duration PASSWORD_RESET_VALIDITY = Duration.ofMinutes(15);
 
     private final UserRepository userRepository;
@@ -67,6 +79,9 @@ public class AuthService {
             throw new DuplicateResourceException("User", "email", normalizedEmail);
         }
 
+        boolean isDesignatedAdmin = normalizedEmail != null && isDesignatedAdminEmail(normalizedEmail);
+        UserRole assignedRole = isDesignatedAdmin ? UserRole.ADMIN : UserRole.FARMER;
+
         User user = User.builder()
                 .firstName(request.firstName().trim())
                 .lastName(request.lastName().trim())
@@ -74,7 +89,7 @@ public class AuthService {
                 .phoneNumber(normalizedPhone)
                 .email(normalizedEmail)
                 .passwordHash(passwordEncoder.encode(request.password()))
-                .role(UserRole.FARMER) // Public registration strictly assigns FARMER
+                .role(assignedRole)
                 .status(UserStatus.ACTIVE)
                 .district(request.district() != null ? request.district().trim() : "Yangiariq")
                 .build();
@@ -105,6 +120,15 @@ public class AuthService {
         if (user.getStatus() != UserStatus.ACTIVE) {
             log.warn("Login rejected: user {} is not ACTIVE (status={})", user.getId(), user.getStatus());
             throw new BusinessRuleException("Your account is currently inactive. Please contact support.", "ACCOUNT_INACTIVE");
+        }
+
+        // Auto-promote designated admin emails to ADMIN if currently lower role
+        if (user.getEmail() != null && isDesignatedAdminEmail(user.getEmail())) {
+            if (user.getRole() != UserRole.ADMIN && user.getRole() != UserRole.SUPER_ADMIN) {
+                log.info("Auto-elevating designated admin account {} to ADMIN role upon login", user.getEmail());
+                user.setRole(UserRole.ADMIN);
+                user = userRepository.save(user);
+            }
         }
 
         return createAuthResponseForUser(user, deviceInfo, ipAddress);

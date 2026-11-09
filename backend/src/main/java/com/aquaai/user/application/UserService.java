@@ -1,6 +1,7 @@
 package com.aquaai.user.application;
 
 import com.aquaai.admin.application.service.SecurityAuditService;
+import com.aquaai.auth.application.AuthService;
 import com.aquaai.shared.api.PageResponse;
 import com.aquaai.shared.domain.BusinessRuleException;
 import com.aquaai.shared.domain.DuplicateResourceException;
@@ -71,6 +72,12 @@ public class UserService {
                 request.telegramUsername(),
                 request.preferredLanguage()
         );
+
+        if (user.getEmail() != null && com.aquaai.auth.application.AuthService.isDesignatedAdminEmail(user.getEmail())) {
+            if (user.getRole() != UserRole.ADMIN && user.getRole() != UserRole.SUPER_ADMIN) {
+                user.setRole(UserRole.ADMIN);
+            }
+        }
 
         User updated = userRepository.save(user);
         securityAuditService.logAction("PROFILE_UPDATED", "USER", userId.toString(), "User updated profile", "SUCCESS", null);
@@ -156,6 +163,11 @@ public class UserService {
 
         String encodedPassword = passwordEncoder.encode(request.password());
 
+        UserRole assignedRole = request.role() != null ? request.role() : UserRole.FARMER;
+        if (email != null && AuthService.isDesignatedAdminEmail(email)) {
+            assignedRole = UserRole.ADMIN;
+        }
+
         User user = User.builder()
                 .firstName(request.firstName().trim())
                 .lastName(request.lastName().trim())
@@ -163,7 +175,7 @@ public class UserService {
                 .phoneNumber(phone)
                 .email(email)
                 .passwordHash(encodedPassword)
-                .role(request.role() != null ? request.role() : UserRole.FARMER)
+                .role(assignedRole)
                 .status(request.status() != null ? request.status() : UserStatus.ACTIVE)
                 .district(request.district() != null ? request.district().trim() : "Yangiariq")
                 .organization(request.organization() != null ? request.organization().trim() : null)
@@ -254,6 +266,11 @@ public class UserService {
             throw new BusinessRuleException("Administrators cannot modify their own role", "USER_ROLE_CHANGE_INVALID");
         }
 
+        if (user.getEmail() != null && AuthService.isDesignatedAdminEmail(user.getEmail())
+                && request.role() != UserRole.ADMIN && request.role() != UserRole.SUPER_ADMIN) {
+            throw new BusinessRuleException("Designated administrator accounts cannot be demoted", "DESIGNATED_ADMIN_PROTECTED");
+        }
+
         log.info("Admin updating role of user {} from {} to {}", targetUserId, user.getRole(), request.role());
 
         user.changeRole(request.role());
@@ -315,6 +332,10 @@ public class UserService {
             if (SecurityContextHelper.isCurrentUser(targetUserId)) {
                 throw new BusinessRuleException("Administrators cannot modify their own role", "USER_ROLE_CHANGE_INVALID");
             }
+            if (user.getEmail() != null && AuthService.isDesignatedAdminEmail(user.getEmail())
+                    && request.role() != UserRole.ADMIN && request.role() != UserRole.SUPER_ADMIN) {
+                throw new BusinessRuleException("Designated administrator accounts cannot be demoted", "DESIGNATED_ADMIN_PROTECTED");
+            }
             user.changeRole(request.role());
             eventPublisher.publishEvent(new UserSecurityInvalidationEvent(targetUserId, "Role changed to " + request.role()));
         }
@@ -360,6 +381,10 @@ public class UserService {
 
         if (user.getRole() == UserRole.SUPER_ADMIN && userRepository.countByRoleAndStatus(UserRole.SUPER_ADMIN, UserStatus.ACTIVE) <= 1) {
             throw new BusinessRuleException("The last active Super Administrator cannot be deleted", "LAST_SUPER_ADMIN_PROTECTED");
+        }
+
+        if (user.getEmail() != null && AuthService.isDesignatedAdminEmail(user.getEmail())) {
+            throw new BusinessRuleException("Designated administrator accounts cannot be deleted", "DESIGNATED_ADMIN_PROTECTED");
         }
 
         log.warn("Admin soft-deleting and blocking account for user: {}", targetUserId);
