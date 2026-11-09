@@ -32,12 +32,14 @@ public class SecurityConfig {
             "/v3/api-docs/**",
             "/swagger-ui/**",
             "/swagger-ui.html",
-            "/actuator/health",
-            "/actuator/info"
+            "/actuator/health/**",
+            "/actuator/info",
+            "/actuator/prometheus"
     };
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final CorrelationIdFilter correlationIdFilter;
+    private final RateLimitingFilter rateLimitingFilter;
     private final JwtAuthenticationEntryPoint authenticationEntryPoint;
     private final CustomAccessDeniedHandler accessDeniedHandler;
 
@@ -67,6 +69,7 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(correlationIdFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(rateLimitingFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

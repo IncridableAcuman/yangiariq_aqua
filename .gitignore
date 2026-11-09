@@ -2,10 +2,15 @@
 
 # Environment & Secrets
 .env
+.env.prod
 .env.local
 .env.*.local
 *.pem
 *.key
+
+# Backups & Deployments
+backups/
+.deployments/
 
 # Operating System Files
 .DS_Store

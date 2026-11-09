@@ -1,0 +1,164 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: aqua-prod-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DB_NAME:-aquaai}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - postgres_prod_data:/var/lib/postgresql/data
+      - ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+    # In production, database is strictly internal and never exposed to host/internet
+    expose:
+      - "5432"
+    networks:
+      - aqua_prod_net
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    deploy:
+      resources:
+        limits:
+          cpus: "1.5"
+          memory: 1024M
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: ../docker/backend/Dockerfile
+    image: yangiariq-aqua-backend:${IMAGE_TAG:-0.8.18}
+    container_name: aqua-prod-backend
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      SERVER_PORT: 8080
+      DATABASE_URL: jdbc:postgresql://postgres:5432/${DB_NAME:-aquaai}
+      DATABASE_USERNAME: ${DB_USERNAME}
+      DATABASE_PASSWORD: ${DB_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_ACCESS_TOKEN_EXPIRATION: ${JWT_ACCESS_TOKEN_EXPIRATION:-3600000}
+      JWT_REFRESH_TOKEN_EXPIRATION: ${JWT_REFRESH_TOKEN_EXPIRATION:-604800000}
+      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS}
+      AI_PROVIDER: ${AI_PROVIDER:-mock}
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      SENSOR_PROVIDER: ${SENSOR_PROVIDER:-simulated}
+      RATE_LIMIT_ENABLED: "true"
+      RATE_LIMIT_LOGIN_PER_MINUTE: ${RATE_LIMIT_LOGIN_PER_MINUTE:-10}
+      RATE_LIMIT_REFRESH_PER_MINUTE: ${RATE_LIMIT_REFRESH_PER_MINUTE:-30}
+      DB_POOL_MAX_SIZE: ${DB_POOL_MAX_SIZE:-20}
+      DB_POOL_MIN_IDLE: ${DB_POOL_MIN_IDLE:-5}
+      ENABLE_SWAGGER_PROD: ${ENABLE_SWAGGER_PROD:-false}
+    expose:
+      - "8080"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/actuator/health/liveness || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 45s
+    networks:
+      - aqua_prod_net
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    deploy:
+      resources:
+        limits:
+          cpus: "2.0"
+          memory: 1536M
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: ../docker/frontend/Dockerfile
+    image: yangiariq-aqua-frontend:${IMAGE_TAG:-0.8.18}
+    container_name: aqua-prod-frontend
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_started
+    expose:
+      - "80"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:80/index.html > /dev/null || exit 1"]
+      interval: 15s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+    networks:
+      - aqua_prod_net
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "3"
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 256M
+
+  nginx:
+    image: nginx:alpine
+    container_name: aqua-prod-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d:ro
+      - certbot_www:/var/www/certbot:ro
+      - certbot_conf:/etc/letsencrypt:ro
+    depends_on:
+      - frontend
+      - backend
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:80/healthz > /dev/null || exit 1"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+    networks:
+      - aqua_prod_net
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 256M
+
+volumes:
+  postgres_prod_data:
+    name: yangiariq_aqua_postgres_prod_data
+    driver: local
+  certbot_www:
+    name: yangiariq_aqua_certbot_www
+    driver: local
+  certbot_conf:
+    name: yangiariq_aqua_certbot_conf
+    driver: local
+
+networks:
+  aqua_prod_net:
+    name: yangiariq_aqua_prod_net
+    driver: bridge

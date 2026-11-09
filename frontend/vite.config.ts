@@ -22,6 +22,31 @@ export default defineConfig({
       },
     },
   },
+  build: {
+    sourcemap: false,
+    chunkSizeWarningLimit: 1000,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vendor-react': ['react', 'react-dom'],
+          'vendor-ui': [
+            '@radix-ui/react-avatar',
+            '@radix-ui/react-dialog',
+            '@radix-ui/react-dropdown-menu',
+            '@radix-ui/react-label',
+            '@radix-ui/react-select',
+            '@radix-ui/react-separator',
+            '@radix-ui/react-slot',
+            '@radix-ui/react-tabs',
+            '@radix-ui/react-tooltip',
+          ],
+          'vendor-charts': ['recharts'],
+          'vendor-map': ['leaflet'],
+          'vendor-icons': ['lucide-react'],
+        },
+      },
+    },
+  },
   test: {
     globals: true,
     environment: 'jsdom',

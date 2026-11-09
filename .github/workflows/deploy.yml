@@ -1,0 +1,66 @@
+name: Controlled Deployment
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Target Environment'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+          - staging
+          - production
+      image_tag:
+        description: 'Container Image Tag to Deploy'
+        required: true
+        default: 'latest'
+        type: string
+
+concurrency:
+  group: deploy-${{ github.event.inputs.environment }}
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy to ${{ github.event.inputs.environment }}
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment }}
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Validate Deployment Configuration
+        run: |
+          echo "Initiating deployment to ${{ github.event.inputs.environment }}"
+          echo "Target Container Tag: ${{ github.event.inputs.image_tag }}"
+          docker compose -f docker-compose.prod.yml config
+
+      - name: Execute Remote Deployment via SSH
+        if: env.DEPLOY_HOST != ''
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+          DEPLOY_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          IMAGE_TAG: ${{ github.event.inputs.image_tag }}
+        run: |
+          echo "Executing automated deployment on ${DEPLOY_HOST}..."
+          mkdir -p ~/.ssh
+          echo "${DEPLOY_KEY}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh -o StrictHostKeyChecking=no "${DEPLOY_USER}@${DEPLOY_HOST}" << 'EOF'
+            set -e
+            cd /opt/yangiariq-aqua
+            IMAGE_TAG="${IMAGE_TAG}" ./scripts/production/deploy.sh --tag="${IMAGE_TAG}"
+          EOF
+
+      - name: Deployment Instructions & Readiness Confirmation
+        if: env.DEPLOY_HOST == ''
+        run: |
+          echo "=================================================================="
+          echo "Deployment Pipeline Ready."
+          echo "NOTE: Remote target credentials (DEPLOY_HOST/DEPLOY_SSH_KEY) are not"
+          echo "configured in repository secrets. To deploy to your Ubuntu server,"
+          echo "configure GitHub Environment secrets or run locally via:"
+          echo "  ./scripts/production/deploy.sh --tag=${{ github.event.inputs.image_tag }}"
+          echo "=================================================================="
