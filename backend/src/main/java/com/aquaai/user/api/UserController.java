@@ -4,6 +4,7 @@ import com.aquaai.shared.api.ApiResponse;
 import com.aquaai.shared.api.PageResponse;
 import com.aquaai.shared.security.SecurityContextHelper;
 import com.aquaai.shared.security.UserRole;
+import com.aquaai.user.api.dto.AdminCreateUserRequest;
 import com.aquaai.user.api.dto.AdminUpdateUserRequest;
 import com.aquaai.user.api.dto.ChangeUserRoleRequest;
 import com.aquaai.user.api.dto.ChangeUserStatusRequest;
@@ -19,7 +20,9 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -34,7 +37,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.UUID;
 
 @RestController
-@RequestMapping({"/api/v1/users", "/api/v1/user"})
+@RequestMapping({"/api/v1/users", "/api/v1/user", "/api/v1/admin/users"})
 @RequiredArgsConstructor
 @Tag(name = "User Management", description = "Endpoints for user profile, directory search, and identity management")
 @SecurityRequirement(name = "bearerAuth")
@@ -68,6 +71,7 @@ public class UserController {
     }
 
     @GetMapping("/summary")
+    @PreAuthorize("hasAuthority('USER_VIEW') or hasRole('ADMIN') or hasRole('OPERATOR')")
     @Operation(summary = "Get district-wide user summary metrics (Operator/Admin only)")
     public ResponseEntity<ApiResponse<UserSummaryStatsResponse>> getUserSummaryStats() {
         UserSummaryStatsResponse stats = userService.getUserStats();
@@ -75,6 +79,7 @@ public class UserController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAuthority('USER_VIEW') or hasRole('ADMIN') or hasRole('OPERATOR')")
     @Operation(summary = "List and search users directory with filtering and pagination (Operator/Admin only)")
     public ResponseEntity<ApiResponse<PageResponse<UserProfileResponse>>> getUsers(
             @RequestParam(required = false) String search,
@@ -95,6 +100,15 @@ public class UserController {
         return ResponseEntity.ok(ApiResponse.ok(result));
     }
 
+    @PostMapping
+    @PreAuthorize("hasAuthority('USER_CREATE') or hasRole('ADMIN')")
+    @Operation(summary = "Administrative provisioning of a new user account (Admin only)")
+    public ResponseEntity<ApiResponse<UserProfileResponse>> createUser(
+            @Valid @RequestBody AdminCreateUserRequest request) {
+        UserProfileResponse created = userService.createUser(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.ok(created));
+    }
+
     @GetMapping("/{id}")
     @Operation(summary = "Get user profile by ID (Owner, Operator, or Admin)")
     public ResponseEntity<ApiResponse<UserProfileResponse>> getUserById(@PathVariable UUID id) {
@@ -103,6 +117,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('USER_UPDATE') or hasRole('ADMIN')")
     @Operation(summary = "Full update of user account by administrator (Admin only)")
     public ResponseEntity<ApiResponse<UserProfileResponse>> adminUpdateUser(
             @PathVariable UUID id,
@@ -112,6 +127,7 @@ public class UserController {
     }
 
     @PatchMapping("/{id}/status")
+    @PreAuthorize("hasAuthority('USER_ACTIVATE') or hasAuthority('USER_DEACTIVATE') or hasRole('ADMIN')")
     @Operation(summary = "Change user account status (Admin only)")
     public ResponseEntity<ApiResponse<UserProfileResponse>> changeUserStatus(
             @PathVariable UUID id,
@@ -121,6 +137,7 @@ public class UserController {
     }
 
     @PatchMapping("/{id}/role")
+    @PreAuthorize("hasAuthority('USER_ROLE_ASSIGN') or hasRole('ADMIN')")
     @Operation(summary = "Change user role (Admin only)")
     public ResponseEntity<ApiResponse<UserProfileResponse>> changeUserRole(
             @PathVariable UUID id,
@@ -130,6 +147,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('USER_DELETE') or hasRole('ADMIN')")
     @Operation(summary = "Soft-delete and block user account (Admin only)")
     public ResponseEntity<ApiResponse<Void>> deleteUser(@PathVariable UUID id) {
         userService.deleteUser(id);

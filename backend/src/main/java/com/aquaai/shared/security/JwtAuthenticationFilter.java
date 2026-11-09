@@ -1,10 +1,12 @@
 package com.aquaai.shared.security;
 
+import com.aquaai.user.domain.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -20,6 +22,7 @@ import java.util.UUID;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtTokenProvider tokenProvider;
+    private final ObjectProvider<UserRepository> userRepositoryProvider;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -31,6 +34,20 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             UUID userId = tokenProvider.getUserIdFromToken(token);
             String username = tokenProvider.getUsernameFromToken(token);
             UserRole role = tokenProvider.getRoleFromToken(token);
+
+            UserRepository userRepository = userRepositoryProvider.getIfAvailable();
+            if (userRepository != null) {
+                var userOpt = userRepository.findById(userId);
+                if (userOpt.isPresent()) {
+                    var user = userOpt.get();
+                    if (!user.isAllowedToAuthenticate()) {
+                        // Account is deactivated, inactive, or blocked
+                        filterChain.doFilter(request, response);
+                        return;
+                    }
+                    role = user.getRole();
+                }
+            }
 
             UserPrincipal principal = UserPrincipal.builder()
                     .id(userId)

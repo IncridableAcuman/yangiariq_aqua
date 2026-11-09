@@ -1,4 +1,4 @@
-export type UserRole = 'FARMER' | 'OPERATOR' | 'ADMIN'
+export type UserRole = 'SUPER_ADMIN' | 'ADMIN' | 'OPERATOR' | 'FARMER'
 
 export type UserStatus = 'ACTIVE' | 'INACTIVE' | 'BLOCKED'
 

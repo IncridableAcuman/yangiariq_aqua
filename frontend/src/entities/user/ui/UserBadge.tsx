@@ -21,12 +21,19 @@ export const UserRoleBadge: React.FC<UserRoleBadgeProps> = ({
   const t = translations[lang]
 
   const configs: Record<UserRole, { label: string; bg: string; text: string; border: string; icon: React.ReactNode }> = {
-    FARMER: {
-      label: t.auth.roles.FARMER,
-      bg: 'bg-emerald-50 dark:bg-emerald-950/40',
-      text: 'text-emerald-700 dark:text-emerald-300',
-      border: 'border-emerald-200 dark:border-emerald-800',
-      icon: <Tractor className="h-3.5 w-3.5" />,
+    SUPER_ADMIN: {
+      label: lang === 'uz' ? 'Bosh administrator' : lang === 'ru' ? 'Главный администратор' : 'Super Administrator',
+      bg: 'bg-amber-50 dark:bg-amber-950/40',
+      text: 'text-amber-700 dark:text-amber-300',
+      border: 'border-amber-300 dark:border-amber-700',
+      icon: <Shield className="h-3.5 w-3.5 text-amber-600 dark:text-amber-400" />,
+    },
+    ADMIN: {
+      label: t.auth.roles.ADMIN,
+      bg: 'bg-purple-50 dark:bg-purple-950/40',
+      text: 'text-purple-700 dark:text-purple-300',
+      border: 'border-purple-200 dark:border-purple-800',
+      icon: <Shield className="h-3.5 w-3.5" />,
     },
     OPERATOR: {
       label: t.auth.roles.OPERATOR,
@@ -35,12 +42,12 @@ export const UserRoleBadge: React.FC<UserRoleBadgeProps> = ({
       border: 'border-sky-200 dark:border-sky-800',
       icon: <Compass className="h-3.5 w-3.5" />,
     },
-    ADMIN: {
-      label: t.auth.roles.ADMIN,
-      bg: 'bg-purple-50 dark:bg-purple-950/40',
-      text: 'text-purple-700 dark:text-purple-300',
-      border: 'border-purple-200 dark:border-purple-800',
-      icon: <Shield className="h-3.5 w-3.5" />,
+    FARMER: {
+      label: t.auth.roles.FARMER,
+      bg: 'bg-emerald-50 dark:bg-emerald-950/40',
+      text: 'text-emerald-700 dark:text-emerald-300',
+      border: 'border-emerald-200 dark:border-emerald-800',
+      icon: <Tractor className="h-3.5 w-3.5" />,
     },
   }
 

@@ -45,12 +45,27 @@ public final class SecurityContextHelper {
         return targetUserId.equals(getCurrentUserId());
     }
 
-    public static boolean hasRole(UserRole role) {
+    public static boolean isSuperAdmin() {
+        return getCurrentUserRole() == UserRole.SUPER_ADMIN;
+    }
+
+    public static boolean hasExactRole(UserRole role) {
         return getCurrentUserRole() == role;
+    }
+
+    public static boolean hasRole(UserRole role) {
+        UserRole current = getCurrentUserRole();
+        if (role == UserRole.ADMIN && current == UserRole.SUPER_ADMIN) {
+            return true;
+        }
+        return current == role;
     }
 
     public static boolean hasAnyRole(UserRole... roles) {
         UserRole current = getCurrentUserRole();
+        if (current == UserRole.SUPER_ADMIN) {
+            return true;
+        }
         return Arrays.stream(roles).anyMatch(r -> r == current);
     }
 

@@ -33,6 +33,8 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 
     long countByStatus(UserStatus status);
 
+    long countByRoleAndStatus(UserRole role, UserStatus status);
+
     @Query("""
         SELECT u FROM User u
         WHERE (:search IS NULL OR :search = '' OR

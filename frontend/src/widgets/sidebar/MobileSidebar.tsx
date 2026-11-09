@@ -22,6 +22,7 @@ import {
   FileSearch,
   Gauge,
   Database,
+  Shield,
 } from 'lucide-react'
 import { translations, SupportedLanguage } from '@/shared/i18n'
 import { useAuth } from '@/features/auth/context/AuthContext'
@@ -183,6 +184,17 @@ export const MobileSidebar: React.FC<MobileSidebarProps> = ({
       badge: '2',
       badgeVariant: 'warning' as const,
     },
+    ...(user?.role === 'ADMIN' || user?.role === 'SUPER_ADMIN'
+      ? [
+          {
+            id: 'administration' as NavSection,
+            label: t.nav.administration,
+            icon: Shield,
+            badge: '08.20.1',
+            badgeVariant: 'secondary' as const,
+          },
+        ]
+      : []),
     {
       id: 'settings' as NavSection,
       label: t.nav.settings,

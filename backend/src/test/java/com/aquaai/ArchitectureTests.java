@@ -1124,4 +1124,60 @@ class ArchitectureTests {
                 .should().dependOnClassesThat().resideInAnyPackage("com.pi4j..", "com.fazecast.jSerialComm..")
                 .check(importedClasses);
     }
+
+    @Test
+    @DisplayName("119. Admin controllers must reside in admin.api")
+    void adminControllersMustResideInApi() {
+        classes()
+                .that().resideInAPackage("..admin..")
+                .and().areAnnotatedWith(RestController.class)
+                .should().resideInAPackage("..admin.api..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("120. Admin domain must not depend on JPA or persistence annotations")
+    void adminDomainMustNotDependOnJpa() {
+        noClasses()
+                .that().resideInAPackage("..admin.domain..")
+                .should().dependOnClassesThat().resideInAnyPackage("jakarta.persistence..", "org.springframework.data..", "org.hibernate..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("121. Admin domain must not depend on Spring framework classes")
+    void adminDomainMustNotDependOnSpring() {
+        noClasses()
+                .that().resideInAPackage("..admin.domain..")
+                .should().dependOnClassesThat().resideInAnyPackage("org.springframework..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("122. Admin domain must not depend on Spring MVC or web classes")
+    void adminDomainMustNotDependOnWeb() {
+        noClasses()
+                .that().resideInAPackage("..admin.domain..")
+                .should().dependOnClassesThat().resideInAnyPackage("org.springframework.web..", "jakarta.servlet..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("123. Admin persistence entities must reside in admin.infrastructure.persistence.entity")
+    void adminPersistenceEntitiesMustResideInInfrastructurePersistence() {
+        classes()
+                .that().resideInAPackage("..admin..")
+                .and().areAnnotatedWith(Entity.class)
+                .should().resideInAPackage("..admin.infrastructure.persistence.entity..")
+                .check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("124. Admin module must not depend on physical actuation SDKs")
+    void adminMustNotDependOnActuation() {
+        noClasses()
+                .that().resideInAPackage("..admin..")
+                .should().dependOnClassesThat().resideInAnyPackage("com.pi4j..", "com.fazecast.jSerialComm..")
+                .check(importedClasses);
+    }
 }

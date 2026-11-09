@@ -10,6 +10,7 @@ public record UserSummaryStatsResponse(
         long blockedUsers,
         long farmersCount,
         long operatorsCount,
-        long adminsCount
+        long adminsCount,
+        long superAdminsCount
 ) {
 }

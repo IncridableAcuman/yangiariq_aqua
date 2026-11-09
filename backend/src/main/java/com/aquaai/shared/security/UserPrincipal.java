@@ -7,7 +7,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Getter
@@ -19,10 +20,34 @@ public class UserPrincipal implements UserDetails {
     private final String password;
     private final UserRole role;
     private final boolean enabled;
+    @Builder.Default
+    private final Set<String> permissions = new HashSet<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singletonList(new SimpleGrantedAuthority(role.getAuthority()));
+        Set<GrantedAuthority> authorities = new HashSet<>();
+        authorities.add(new SimpleGrantedAuthority(role.getAuthority()));
+        if (role == UserRole.SUPER_ADMIN) {
+            authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+            authorities.add(new SimpleGrantedAuthority("ROLE_OPERATOR"));
+        }
+        Set<String> perms = (permissions != null && !permissions.isEmpty())
+                ? permissions
+                : role.getDefaultPermissions();
+        for (String perm : perms) {
+            authorities.add(new SimpleGrantedAuthority(perm));
+        }
+        return authorities;
+    }
+
+    public boolean hasPermission(String permission) {
+        if (role == UserRole.SUPER_ADMIN) {
+            return true;
+        }
+        Set<String> perms = (permissions != null && !permissions.isEmpty())
+                ? permissions
+                : role.getDefaultPermissions();
+        return perms.contains(permission);
     }
 
     @Override

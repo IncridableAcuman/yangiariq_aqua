@@ -87,7 +87,11 @@ public class User extends BaseAuditableEntity {
     }
 
     public boolean isAdmin() {
-        return this.role == UserRole.ADMIN;
+        return this.role == UserRole.ADMIN || this.role == UserRole.SUPER_ADMIN;
+    }
+
+    public boolean isSuperAdmin() {
+        return this.role == UserRole.SUPER_ADMIN;
     }
 
     public boolean isActive() {

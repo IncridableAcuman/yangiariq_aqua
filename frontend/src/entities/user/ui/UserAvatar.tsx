@@ -1,5 +1,5 @@
 import React from 'react'
-import { UserProfile } from '../types'
+import { UserProfile, UserRole } from '../types'
 import { Avatar, AvatarFallback } from '@/shared/ui/avatar'
 import { User } from 'lucide-react'
 import { cn } from '@/shared/lib/utils'
@@ -40,10 +40,11 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
       ? user.phoneNumber.slice(-2)
       : 'U'
 
-  const roleColors = {
+  const roleColors: Record<UserRole, string> = {
     FARMER: 'bg-emerald-600 text-white',
     OPERATOR: 'bg-sky-600 text-white',
     ADMIN: 'bg-purple-600 text-white',
+    SUPER_ADMIN: 'bg-rose-700 text-white',
   }
 
   const colorClass = user.role ? roleColors[user.role] : 'bg-primary text-primary-foreground'

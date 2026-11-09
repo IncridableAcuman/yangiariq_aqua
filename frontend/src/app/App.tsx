@@ -28,6 +28,7 @@ import { RegionalAccountabilityPage } from '@/pages/accountability/RegionalAccou
 import { RegionalPerformancePage } from '@/pages/performance'
 import { DataIntegrationPage } from '@/pages/data-integration'
 import { PilotPage } from '@/pages/pilot'
+import { AdminPage } from '@/pages/admin'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -187,6 +188,8 @@ export function AppContent() {
         return <DataIntegrationPage lang={lang} />
       case 'pilot':
         return <PilotPage lang={lang} />
+      case 'administration':
+        return <AdminPage lang={lang} />
       case 'ai-advisor':
         return <AiAdvisorPage lang={lang} />
       case 'problems':

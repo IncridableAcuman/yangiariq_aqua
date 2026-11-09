@@ -81,6 +81,7 @@ export const Header: React.FC<HeaderProps> = ({
     pilot: t.nav.pilot,
     'ai-advisor': t.nav.aiAdvisor,
     problems: t.nav.problems,
+    administration: t.nav.administration,
     settings: t.nav.settings,
   }
 

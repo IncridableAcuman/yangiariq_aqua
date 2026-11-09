@@ -32,5 +32,6 @@
     <include file="db/changelog/changes/025-create-performance-domain-tables.sql"/>
     <include file="db/changelog/changes/026-create-data-integration-tables.sql"/>
     <include file="db/changelog/changes/027-create-field-pilot-tables.sql"/>
+    <include file="db/changelog/changes/028-create-admin-rbac-and-audit-tables.sql"/>
 
 </databaseChangeLog>
