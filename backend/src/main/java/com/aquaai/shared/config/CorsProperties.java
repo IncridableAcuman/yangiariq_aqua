@@ -13,7 +13,7 @@ public class CorsProperties {
 
     private List<String> allowedOrigins = List.of("http://localhost:3000", "http://localhost:5173");
     private List<String> allowedMethods = List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS");
-    private List<String> allowedHeaders = List.of("Authorization", "Content-Type", "X-Correlation-Id", "Accept-Language");
+    private List<String> allowedHeaders = List.of("*");
     private List<String> exposedHeaders = List.of("X-Correlation-Id");
     private boolean allowCredentials = true;
     private long maxAgeSeconds = 3600L;
