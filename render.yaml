@@ -1,13 +1,13 @@
 # ==============================================================================
-# Render Blueprint Specification for Yangiariq Aqua AI
+# Render Blueprint Specification for Yangiariq Aqua AI (Agronexsus)
 # Documentation: https://render.com/docs/blueprint-spec
 # ==============================================================================
 services:
   # ----------------------------------------------------------------------------
-  # 1. Spring Boot Backend Web Service (Java 21 + Docker)
+  # 1. Spring Boot Backend REST API Web Service (Java 21 + Docker)
   # ----------------------------------------------------------------------------
   - type: web
-    name: yangiariq-aqua-backend
+    name: yangiariq-aqua-api
     runtime: docker
     plan: free
     region: ohio
@@ -24,12 +24,17 @@ services:
       - key: JWT_SECRET
         generateValue: true
       - key: JWT_ACCESS_TOKEN_EXPIRATION
-        value: "86400000"
+        value: "3600000"
       - key: JWT_REFRESH_TOKEN_EXPIRATION
         value: "604800000"
-      # Allowed CORS origins (Render frontend URL)
+      # Allowed CORS origins (Render frontend URL) - no localhost in production
       - key: CORS_ALLOWED_ORIGINS
-        value: "https://yangiariq-aqua-frontend.onrender.com,http://localhost:3000,http://localhost:5173"
+        value: "https://yangiariq-aqua.onrender.com,https://yangiariq-aqua-api.onrender.com,https://yangiariq-aqua-frontend.onrender.com"
+      - key: RATE_LIMIT_ENABLED
+        value: "true"
+      # Super Admin controlled bootstrap (optional on initial launch)
+      - key: SUPER_ADMIN_BOOTSTRAP_ENABLED
+        value: "false"
       - key: AI_PROVIDER
         value: mock
       - key: GEMINI_API_KEY
@@ -38,9 +43,11 @@ services:
         value: gemini-1.5-flash
       - key: SENSOR_PROVIDER
         value: simulated
+      - key: ENABLE_SWAGGER_PROD
+        value: "true"
 
   # ----------------------------------------------------------------------------
-  # 2. React Vite Frontend (Static Site served via Global CDN)
+  # 2. React Vite Frontend Single Page Application (Static Site on Global CDN)
   # ----------------------------------------------------------------------------
   - type: web
     name: yangiariq-aqua
@@ -55,7 +62,7 @@ services:
         destination: /index.html
     envVars:
       - key: VITE_API_BASE_URL
-        value: https://yangiariq-aqua-backend.onrender.com/api/v1
+        value: https://yangiariq-aqua-api.onrender.com/api/v1
       - key: VITE_DEFAULT_LANGUAGE
         value: uz
       - key: VITE_APP_NAME

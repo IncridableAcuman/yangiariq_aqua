@@ -1,332 +1,359 @@
-# YANGIARIQ AQUA AI (AGRONEXSUS) — STARTUP VA TANLOV TAQDIMOTI (PITCH DECK)
+# YANGIARIQ AQUA AI (AGRONEXSUS) — STARTUP VA INVESTITSIYA TAQDIMOTI (PITCH DECK)
 
 > **Loyiha nomi:** Yangiariq Aqua AI (Agronexsus)  
-> **Yo'nalish:** ClimateTech / AgriTech / AI for Sustainable Development (SDG 6: Clean Water, SDG 13: Climate Action)  
-> **Foydalanish maqsadi:** Ushbu fayl 10 ta slaydli professional taqdimot (PowerPoint / Canva / Google Slides) tayyorlash uchun asosiy qo'llanma hisoblanadi. Har bir bo'lim slayd matni, vizual dizayn tavsiyasi va spiker nutqini o'z ichiga oladi.
+> **Yo'nalish:** AgriTech / Smart Water / Sun'iy Intellekt va Suv Resurslari Boshqaruvi  
+> **Qamrovi:** Umumiy qishloq xo'jaligi suv taqsimoti va Yangiariq tumani miqyosidagi amaliy pilot tatbiqi  
+> **Foydalanish maqsadi:** Ushbu hujjat 10 ta slaydli professional taqdimot (PowerPoint, Canva, Google Slides) tayyorlash uchun to'liq ssenariy va spiker qo'llanmasidir. Har bir bo'lim slayd matni, vizual dizayn tavsiyasi, spiker nutqi va hakamlar savollariga javoblarni o'z ichiga oladi.
 
 ---
 
-## 📑 MUNDARIJA (10 TA SLAYD STRUKTURASI)
+## 📑 MUNDARIJA (10 TA PROFESSIONAL SLAYD STRUKTURASI)
 
-1. [1-Slayd: Muqova — Hook va Asosiy Shior](#1-slayd-muqova--hook-va-asosiy-shior)
-2. [2-Slayd: Muammo — Orolbo'yi va Yangiariq Suv Inqirozi](#2-slayd-muammo--orolboyi-va-yangiariq-suv-inqirozi)
-3. [3-Slayd: Yechim — Yangiariq Aqua AI Nima?](#3-slayd-yechim--yangiariq-aqua-ai-nima)
-4. [4-Slayd: Texnologik Ustunlik — Gibrid AI va Xavfsizlik Tamoyili](#4-slayd-texnologik-ustunlik--gibrid-ai-va-xavfsizlik-tamoyili)
-5. [5-Slayd: Mahsulot Funksionalligi — Dala Amaliyotigacha Yopiq Zanjir](#5-slayd-mahsulot-funksionalligi--dala-amaliyotigacha-yopiq-zanjir)
-6. [6-Slayd: Bozor Hajmi va Maqsadli Auditoriya (TAM, SAM, SOM)](#6-slayd-bozor-hajmi-va-maqsadli-auditoriya-tam-sam-som)
-7. [7-Slayd: Biznes Model va Daromad Manbalari (Monetizatsiya)](#7-slayd-biznes-model-va-daromad-manbalari-monetizatsiya)
-8. [8-Slayd: Moliyaviy Reja va Talab Etiladigan Resurslar (CapEx, OpEx)](#8-slayd-moliyaviy-reja-va-talab-etiladigan-resurslar-capex-opex)
-9. [9-Slayd: Kutilayotgan Ijtimoiy-Iqtisodiy Samaradorlik va Erishiladigan Yutuqlar (ROI)](#9-slayd-kutilayotgan-ijtimoiy-iqtisodiy-samaradorlik-va-erishiladigan-yutuqlar-roi)
-10. [10-Slayd: Yo'l Xaritasi (Roadmap), Jamoa va Investitsiya Da'vati (Call to Action)](#10-slayd-yol-xaritasi-roadmap-jamoa-va-investitsiya-davati-call-to-action)
+1. [1-Slayd: Muqova — Hook va Asosiy Missiya](#1-slayd-muqova--hook-va-asosiy-missiya)
+2. [2-Slayd: Muammo — Qishloq Xo'jaligida Suv Isrofi va Yangiariq Realligi](#2-slayd-muammo--qishloq-xojaligida-suv-isrofi-va-yangiariq-realligi)
+3. [3-Slayd: Yechim — Yangiariq Aqua AI Yaxlit Raqamli Ekotizimi](#3-slayd-yechim--yangiariq-aqua-ai-yaxlit-raqamli-ekotizimi)
+4. [4-Slayd: Texnologik va Ilmiy Ustunlik — Gibrid AI va Deterministik Xavfsizlik](#4-slayd-texnologik-va-ilmiy-ustunlik--gibrid-ai-va-deterministik-xavfsizlik)
+5. [5-Slayd: Mahsulot Arxitekturasi va Dala Boshqaruvi Zanjiri](#5-slayd-mahsulot-arxitekturasi-va-dala-boshqaruvi-zanjiri)
+6. [6-Slayd: Loyihani Amalga Oshirish Bosqichlari (Yo'l Xaritasi / Roadmap)](#6-slayd-loyihani-amalga-oshirish-bosqichlari-yol-xaritasi--roadmap)
+7. [7-Slayd: Bozor Hajmi va Maqsadli Segmentlar (TAM, SAM, SOM)](#7-slayd-bozor-hajmi-va-maqsadli-segmentlar-tam-sam-som)
+8. [8-Slayd: Biznes Model va Daromad Oqimlari (Monetizatsiya)](#8-slayd-biznes-model-va-daromad-oqimlari-monetizatsiya)
+9. [9-Slayd: Kutilayotgan Iqtisodiy Natijalar va Samaradorlik (ROI)](#9-slayd-kutilayotgan-iqtisodiy-natijalar-va-samaradorlik-roi)
+10. [10-Slayd: Jamoa, Talab Etiladigan Resurslar va Hamkorlikka Chorlov](#10-slayd-jamoa-talab-etiladigan-resurslar-va-hamkorlikka-chorlov)
 
 ---
 
-## 1-SLAYD: MUQOVA — HOOK VA ASOSIY SHIOR
+## 1-SLAYD: MUQOVA — HOOK VA ASOSIY MISSIYA
 
 ### 🎯 Slayd Sarlavhasi:
 **YANGIARIQ AQUA AI (AGRONEXSUS)**  
-*Suv resurslarini boshqarishda sun'iy intellekt va gibrid agrotexnologiya*
+*Suv resurslarini adolatli taqsimlash va sug'orishni optimallashtirish bo'yicha sun'iy intellekt platformasi*
 
 ### 💡 Slayddagi Asosiy Matn (Bullet Points):
-- **Missiyamiz:** Har bir tomchi suvni hisob-kitob qilish, suv yo'qotilishining oldini olish va Orolbo'yi fermerlarining barqaror hosildorligini kafolatlash.
-- **Asosiy yo'nalish:** IoT datchiklar, GIS geofazoviy tahlil va gibrid ML bashorati yordamida suv taqsimotini avtomatlashtirish.
+- **Bosh maqsad:** Suv taqsimotidagi isrofgarchilikni bartaraf etish, tuproq sho'rlanishini kamaytirish va hosildorlikni kafolatli oshirish.
+- **Boshlang'ich hudud:** Yangiariq tumani (Xorazm viloyati) — tuman miqyosida to'liq sinovdan o'tkazilib, respublika bo'ylab kengaytiriladigan raqamli model.
+- **Asosiy texnologiyalar:** Gibrid ML bashorati, GIS geofazoviy modellashtirish, IoT datchiklar telemetriyasi va shaffof suv balansi hisobi.
 - **Taqdimotchi:** *[Ism-familiyangiz]*, Loyiha asoschisi va dasturiy injener
-- **Lokatsiya:** Yangiariq tumani, Xorazm viloyati, O'zbekiston
-- **Teglar:** `#ClimateTech #SmartWater #AgriTech #SustainableAI #WaterSecurity`
+- **Teglar:** `#AgriTech #SmartIrrigation #AIinAgriculture #WaterAccounting #CleanTech`
 
-### 🎨 Vizual Tavsiya:
-- Fon qoramtir-zumrad yoki suv rangidagi nafis gradient.
-- Chap tomonda loyihaning zamonaviy logotipi va O'zbekiston xaritasida Xorazm/Yangiariq hududining 3D vizual poligoni.
-- O'ng tomonda quyosh nurlari ostidagi nam sug'orilgan paxta/bug'doy dalasi va uning ustidagi raqamli sun'iy yo'ldosh/IoT chiziqlari.
+### 🎨 Vizual Dizayn Tavsiyasi:
+- Fon: To'q zumrad va moviy tusdagi zamonaviy texnologik gradient.
+- Chap tomonda: "Yangiariq Aqua AI" logotipi va Yangiariq tumani kanallar tarmog'ining 3D raqamli xaritasi.
+- O'ng tomonda: Zamonaviy planshetda platformaning GIS xaritasi va suv taqsimoti ko'rsatkichlari grafik ko'rinishida.
 
-### 🎙️ Ma'ruzachi Nutqi (Speaker Notes):
-> *"Assalomu alaykum, hurmatli hakamlar hay'ati va tanlov ishtirokchilari!  
-Bugun Orol fojiasi ta'sirida bo'lgan quyi Amudaryo hududida, ayniqsa Xorazm viloyatining Yangiariq tumanida suv muammosi oddiy iqtisodiy masala emas, bu yashab qolish va oziq-ovqat xavfsizligi masalasidir.  
-Biz shunchaki nazariy g'oya emas, balki to'liq ishlaydigan, 32 ta ma'lumotlar jadvali va 670 dan ortiq avtomatlashtirilgan testlardan o'tgan haqiqiy texnologik yechim — **Yangiariq Aqua AI** platformasini yaratdik. Loyihamiz qanday qilib millionlab kub metr suvni tejashi va fermerlar daromadini oshirishini birgalikda ko'rib chiqamiz."*
-
----
-
-## 2-SLAYD: MUAMMO — OROLBO'YI VA YANGIARIQ SUV INQIROZI
-
-### 🎯 Slayd Sarlavhasi:
-**SUV INQIROZI: AMUDARYO QURIShI, TUZ VA ISROFGARCHILIK**  
-*Nega Yangiariq tumanida eski usulda sug'orish falokatga olib kelmoqda?*
-
-### 💡 Slayddagi Asosiy Matn (Faktlar va Raqamlar):
-1. **35% – 45% Suv Yo'qotilishi:**
-   - Suv taqsimoti asosan tuproq o'zanli ochiq kanallar orqali olib boriladi; bug'lanish, sizib ketish (filtratsiya) va noqonuniy tortib olish yuqori darajada.
-2. **Ikkilamchi Sho'rlanish (Salinization Trap):**
-   - Suv taqchilligidan qo'rqqan fermerlar me'yordan 30-50% ko'p suv bostiradi. Bu esa grunt suvlarini ko'tarib, yer sho'rlanishini 2 barobar tezlashtiradi.
-3. **Shaffoflikning Yo'qligi va "Suv Navbati" Nizolari:**
-   - Suv dispetcherlari taqsimotni daftarlarda, subyektiv qarorlar bilan olib boradi. Tuman bo'yicha "kimga qachon suv berilishi" bo'yicha aniq ma'lumot yo'q.
-4. **Iqlim o'zgarishi va Orolbo'yi qurg'oqchiligi:**
-   - Amudaryo quyi oqimida mavsumiy suv oqimi so'nggi 5 yilda 20-30% ga qisqardi.
-
-### 🎨 Vizual Tavsiya:
-- 3 ta infografik blok:
-  - 1-belgi: Oqayotgan jo'mrak va -40% suv yo'qotilishi (Qizil rangda).
-  - 2-belgi: Sho'rlangan oppoq tuproq surati va yaroqsiz holga kelgan ekin maydoni.
-  - 3-belgi: Suv talashayotgan dehqonlar/dispetcher va qo'lda yozilgan eskirgan daftar.
-
-### 🎙️ Ma'ruzachi Nutqi:
-> *"Keling, raqamlarga qaraylik: Yangiariq tumanida dalaga yetib kelguncha kanal suvining deyarli 40 foizi shunchaki yo'qoladi!  
-Eng achinarlisi — fermer navbat kutib-kutib suv olganida, 'keyingi safar navbat tegmaydi' degan xavfda dalaga keragidan ortiq suv bostiradi. Oqibatda yer osti sho'r suvlari ko'tarilib, unumdor tuproqni sho'rxokka aylantiradi. Fermer hosilidan ayriladi, davlat milliardlab so'mlik suv resursini isrof qiladi.  
-Bizga bu jarayonni o'lchaydigan, bashorat qiladigan va shaffof boshqaradigan raqamli tizim kerak."*
+### 🎙️ Spiker Nutqi (Speaker Notes):
+> *"Assalomu alaykum, hurmatli hakamlar hay'ati va investorlar!  
+> Bugun qishloq xo'jaligida suv masalasi shunchaki resurs emas — bu hosildorlik, daromad va oziq-ovqat xavfsizligining poydevoridir. Hozirgi kunda suvning katta qismi dalagacha yetib borgunicha yo'qoladi, mavjud suv esa ilmiy me'yorsiz, taxminiy boshqariladi.  
+> Biz shunchaki nazariy g'oya emas, balki backend va frontend tizimlari to'liq yozilgan, 920 ta dasturiy testdan o'tgan va 67 ta relyatsion jadvaldan iborat tayyor raqamli platforma — **Yangiariq Aqua AI** loyihasini yaratdik. Loyihamiz dastlabki bosqichda Yangiariq tumani misolida qanday qilib millionlab kub metr suvni tejashi va fermerlar daromadini oshirishini ko'rsatib beramiz."*
 
 ---
 
-## 3-SLAYD: YECHIM — YANGIARIQ AQUA AI NIMA?
+## 2-SLAYD: MUAMMO — QISHLOQ XO'JALIGIDA SUV ISROFI VA YANGIARIQ REALLIGI
 
 ### 🎯 Slayd Sarlavhasi:
-**RAQAMLI YECHIM: INTEGRATSIYALASHGAN AGRO-GIDROLOGIK PLATFORMA**  
-*O'lchashdan tortib aniq dala harakatigacha bo'lgan yagona ekotizim*
+**SUG'ORISH TIZIMIDAGI 4 TA ASOSIY TIZIMLI MUAMMO**  
+*Nega an'anaviy sug'orish usullari fermerni ham, davlatni ham zarar keltirmoqda?*
 
-### 💡 Slayddagi Asosiy Matn:
+### 💡 Slayddagi Asosiy Matn (Muammolar va Raqamlar):
+1. **35% – 45% Kanal Yo'qotishlari:**
+   - Suv magistral kanallardan dalagacha tuproq o'zanlar orqali oqib keladi. Sizib ketish, bug'lanish va nazoratsiz oqish oqibatida suvning uchdan bir qismi yo'lda yo'qoladi.
+2. **"Suv Navbati" Noaniqligi va Suv O'g'irligi:**
+   - Suv taqsimoti dispetcherlik daftarlarida qo'lda yuritiladi. Fermer suv qachon kelishini aniq bilmagani sababli doimiy xavotirda bo'ladi.
+3. **Me'yordan Ortiq Bostirib Sug'orish va Ikkilamchi Sho'rlanish:**
+   - Fermer "keyingi safar suv bo'lmaydi" degan xavf bilan dalaga ehtiyojdan 30-40% ko'p suv bostiradi. Bu esa sizot suvlarini ko'tarib, tuproqni sho'rlatadi va unumdorlikni tushiradi.
+4. **Resurslarning Ortiqcha Sarfi:**
+   - Suv nasoslarining asossiz ko'p ishlashi tufayli elektr energiyasi isrof bo'ladi, ortiqcha suv esa o'g'it va mineral moddalarni chuqur qatlamlarga yuvib ketadi.
+
+### 🎨 Vizual Dizayn Tavsiyasi:
+- 4 ta aniq infografik blok:
+  - 1-blok: Sizib yo'qolayotgan suv oqimi (`-40% suv yo'qotilishi`).
+  - 2-blok: Sho'rlangan tuproq va stressga tushgan ekin surati.
+  - 3-blok: Qo'lda yozilgan eskirgan qog'oz daftar va suv navbati talashi.
+  - 4-blok: Ortiqcha elektr sarflayotgan nasos agregati belgisi.
+
+### 🎙️ Spiker Nutqi:
+> *"Keling, muammoga real ko'z bilan qaraylik: Yangiariq tumanidagi kanallar tizimi juda zich, ammo ularning aksariyati ochiq tuproq o'zanlidir. Suv manbadan dalaga yetib kelguncha uning qariyb 40 foizi shunchaki yo'qoladi.  
+> Fermer esa suv yetishmasligidan qo'rqib, navbat kelgan zahoti dalaga me'yoridan 40 foizgacha ortiqcha suv bostiradi. Oqibatda nima bo'ladi? Yer ostidagi sho'r suv yuqoriga ko'tariladi, tuproq sho'rxokka aylanadi, paxta va g'allaning ildizi chiriydi. Fermer har yili hosilining 20 foizini yo'qotadi, tuman suv xo'jaligi esa doimiy suv taqchilligidan aziyat chekadi. Biz bu zanjirni raqamli aniqlik bilan to'xtatamiz."*
+
+---
+
+## 3-SLAYD: YECHIM — YANGIARIQ AQUA AI YAXLIT RAQAMLI EKOTIZIMI
+
+### 🎯 Slayd Sarlavhasi:
+**YAXLIT RAQAMLI YECHIM: AGRO-GIDROLOGIK BOSHQARUV EKOTIZIMI**  
+*Manbadan dalagacha, datchikdan amaliy agrotexnik harakatgacha*
+
+### 💡 Slayddagi Asosiy Matn (3 Ta Asosiy Foydalanuvchi Markazi):
 - **Yangiariq Aqua AI nima?**  
-  Sun'iy intellekt, IoT telemetriya va GIS geofazoviy modellashtirishni birlashtirgan, tuman suv xo'jaligi va fermerlar uchun ishlab chiqilgan yaxlit qaror qabul qilish platformasi.
-- **3 Tomonlama Yagona Ekotizim:**
-  - 👨‍🌾 **Fermer ilovasi:** O'z dalasining tuproq namligi, sho'rlanishi va sug'orish bo'yicha AI tavsiyalarini ko'radi.
-  - 🎛️ **Kanal Dispetcheri (Operator):** Kanallardagi suv oqimi, to'g'onlar, navbatlar va anomal holatlarni markaziy pultdan kuzatadi.
-  - 🏛️ **Tuman Suv Xo'jaligi Rahbariyati:** Tuman bo'yicha umumiy suv balansi, limitlar va taqsimot shaffofligi hisobotlarini oladi.
-- **Yopiq zanjir (Closed-loop):**  
-  Muammo aniqlanadi $\to$ AI tahlil qiladi $\to$ Operator tasdiqlaydi $\to$ Fermer dalada ijro etadi $\to$ IoT datchiklari natijani tekshiradi.
+  Sun'iy intellekt, IoT sensorlari va GIS xaritalash asosida suv taqsimotini hisob-kitob qiladigan, prognozlaydigan va nazorat qiladigan aqlli boshqaruv platformasi.
+- **1. Fermer Shaxsiy Kabineti (Agro-Navigatsiya):**
+  - O'z konturlari bo'yicha tuproq namligi va sho'rlanishini onlayn ko'radi.
+  - Ekin turi (paxta, g'alla, makkajo'xori, poliz) va tuproq tarkibiga moslashtirilgan aniq sug'orish tavsiyasini oladi (qaysi kuni, qancha m³ suv kerak).
+- **2. Kanal Dispetcheri Boshqaruv Pulti (Dispetcherlik Markazi):**
+  - Kanallardagi suv oqimi, to'g'onlar holati, suv navbati jadvallari va gidrologik balansni ko'radi.
+  - Suv sizib ketishi yoki noqonuniy olinishini anomaliya signallari orqali aniqlaydi.
+- **3. Tuman Suv Xo'jaligi Rahbariyati Tahliliy Paneli (Governance Dashboard):**
+  - Tuman bo'yicha limitlar ijrosi, suv balansi va shaffoflik audit jurnallarini (Audit Logs) yagona ekranda nazorat qiladi.
 
-### 🎨 Vizual Tavsiya:
-- Ekotizim sxemasi: Markazda "Yangiariq Aqua AI Core Engine", uning atrofida 3 ta foydalanuvchi doirasi (Fermer, Dispetcher, Rahbariyat) va datchiklar oqimi.
-- Tizimning haqiqiy interfeysidan (Dashboard) zamonaviy screenshot (laptop va planshet maketida).
+### 🎨 Vizual Dizayn Tavsiyasi:
+- Markazda platformaning backend yadrosi, uning atrofida 3 ta doiraviy foydalanuvchi roli (Fermer, Dispetcher, Tuman Rahbariyati).
+- Har bir rolga mos platforma interfeyslarining skrinshotlari (Dashboard, Dala xaritasi, Suv taqsimoti jadvali).
 
-### 🎙️ Ma'ruzachi Nutqi:
-> *"Yangiariq Aqua AI — bu oddiy hisobotlar jadvali emas. Bu O'zbekistonda birinchi marta gidrologik xavfsizlik va sun'iy intellektni bitta platformaga birlashtirgan operatsion markazdir.  
-Tizim fermerga dalasining har kvadrat metri uchun aniq qachon va necha kub metr suv kerakligini aytadi, dispetcherga esa kanal to'g'onlarini adolatli ochish navbatini tuzib beradi. Har bir harakat shaffof, har bir kub metr suv raqamli ro'yxatda."*
+### 🎙️ Spiker Nutqi:
+> *"Biz qanday yechim taklif qilamiz? Biz fermer, kanal dispetcheri va tuman suv bo'limini yagona raqamli makonga birlashtirdik.  
+> Tizim fermerga o'zbek tilida aniq aytadi: 'Falonchi aka, 14-konturingizdagi g'alla maydoniga dushanba kuni 350 kub metr suv bering, ortiqchasi tuproqni sho'rlatadi'. Dispetcher esa o'z ekranida kanalning qaysi nuqtasida suv navbati borligini, qayerda suv to'silganini ko'radi. Barcha ma'lumotlar ochiq va shaffof. Hech kim o'zboshimchalik bilan suv navbatini buza olmaydi."*
 
 ---
 
-## 4-SLAYD: TEXNOLOGIK USTUNLIK — GIBRID AI VA XAVFSIZLIK TAMOYILI
+## 4-SLAYD: TEXNOLOGIK VA ILMIY USTUNLIK — GIBRID AI VA DETERMINISTIK XAVFSIZLIK
 
 ### 🎯 Slayd Sarlavhasi:
-**ILMIY VA TEXNOLOGIK USTUNLIK: GIBRID AI VA QAT'IY XAVFSIZLIK**  
-*Nega bizning AI tizimimizga qishloq xo'jaligida 100% ishonish mumkin?*
+**ILMIY VA TEXNOLOGIK USTUNLIK: GIBRID AI VA XAVFSIZLIK STANDARTLARI**  
+*Nega bizning sun'iy intellekt tavsiyalariga agrar sohada 100% ishonish mumkin?*
+
+### 💡 Slayddagi Asosiy Matn (Innovatsion Yondashuv):
+1. **Gibrid Bashorat Dvigateli (Hybrid ML Engine):**
+   - Faqat "qora quti" AI emas: FAO-56 Penman-Monteith ilmiy agronomik formulalari + In-process Ridge Regression mashinali o'rganish modeli sintezi.
+2. **Qat'iy Agronomik Xavfsizlik Cheklovi (Safety Invariant):**
+   - Sun'iy intellekt agronomik tavsiyadan $\pm 5.0\%$ dan ortiq chetga chiqa olmaydi. Bu ekinning suvsiz qolishi yoki nobud bo'lish xavfini nolga tenglashtiradi.
+3. **Jismoniy Klapanlarni Mustaqil Ochmaslik Qoidasi (Decision Support Only):**
+   - Tizim maslahat beruvchi va tahliliy hisoblanadi. Yakuniy qarorni doimo inson (operator yoki fermer) qabul qiladi.
+4. **"To'rt Ko'z" (Four-Eyes Principle) Ma'lumot Verifikatsiyasi:**
+   - Dala o'lchovlarini kiritgan shaxs uni o'zi tasdiqlay olmaydi; mustaqil agronom yoki operator tasdiqlagachgina tizim hisobiga o'tadi.
+5. **Yuqori Unumdorlik va Avtonomlik:**
+   - Java 21 / Spring Boot 3 va PostgreSQL PostGIS asosida qurilgan. Tashqi qimmat API larsiz, to'liq mahalliylashtirilgan serverda avtonom ishlay oladi.
+
+### 🎨 Vizual Dizayn Tavsiyasi:
+- Gibrid AI arxitekturasi blok-sxemasi:
+  `Sensor Ma'lumotlari` + `Ob-havo` $\to$ `[ Gibrid ML Dvigateli ]` $\to$ `[ ±5% Xavfsizlik Filtri ]` $\to$ `Tasdiqlangan Tavsiya`.
+- Yashil qalqon belgisi va "100% Nazorat ostidagi AI" tamg'asi.
+
+### 🎙️ Spiker Nutqi:
+> *"Agrar sohada sun'iy intellektdan nega qo'rqishadi? Chunki neyrotarmoq adashsa, butun bir daladagi hosil kuyib ketishi mumkin.  
+> Biz platformamiz arxitekturasini ilmiy asosda qurdik: bizda AI mustaqil ravishda qaror chiqarmaydi. U FAO-56 xalqaro agronomik formulasiga asoslanadi va mashinali o'rganish orqali unga aniqlik kiritadi. Xatolik ehtimoli agronomik chegaradan maksimal 5 foizdan ortiq chetlasha olmaydi. Bundan tashqari, barcha muhim amallar 'To'rt ko'z' tamoyili bilan tekshiriladi — bu soxta ma'lumotlar kiritilishining oldini oladi."*
+
+---
+
+## 5-SLAYD: MAHSULOT ARXITEKTURASI VA DALA BOSHQARUVI ZANJIRI
+
+### 🎯 Slayd Sarlavhasi:
+**PLATFORMA MODULLARI VA 7 BOSQICHLI AMALIYOT ZANJIRI**  
+*Muammoni aniqlashdan tortib, natijani tekshirishgacha to'liq sikl*
 
 ### 💡 Slayddagi Asosiy Matn:
-1. **Gibrid ML Bashorat Dvigateli (Hybrid ML Engine - Milestone 08.11):**
-   - Faqat "qora quti" (Black-box AI) emas: Ilmiy asoslangan deterministik agronomik formulalar + In-process Ridge Regression mashinali o'rganish uyg'unligi.
-2. **Qat'iy Xavfsizlik Qoidasi (AI Safety Principle):**
-   - *"ML bashorat qiladi, agronomik qoidalar chegaralaydi, inson (dispetcher/fermer) yakuniy qaror qabul qiladi"*.
-   - ML modeli agronomik me'yordan $\pm 5.0\%$ dan ortiq chetga chiqa olmaydi; klapanlarni mustaqil ochish vakolatiga ega emas.
-3. **Ma'lumotlar Soxtalashuvidan Himoya:**
-   - Tarixiy ma'lumotlar SHA-256 raqamli tamg'asi bilan muhrlanadi, kelajakdan ma'lumot sizib chiqishi (future leakage) qat'iyan 0 ga teng.
-4. **Boshqariladigan Rollout va 1-bosishda Bekor Qilish (1-Click Rollback):**
-   - Har qanday yangi model sinovdan o'tkaziladi (`SHADOW` $\to$ `CANARY` $\to$ `ACTIVE`). Xatolik sezilsa, 1 soniyada oldingi versiyaga qaytariladi.
-5. **Yuqori Unumdorlik va Mustaqillik:**
-   - Java 21 va Spring Boot 3 asosida JVM-native tezlik; qimmat tashqi AI serverlarga bog'liq bo'lmagan holda lokal rejimda ham ishlay oladi.
 
-### 🎨 Vizual Tavsiya:
-- "Gibrid dvigatel" sxemasi:
-  - Kiruvchi ma'lumotlar (Tuproq, Ob-havo, Ekin turi) $\to$ [ Ridge ML ] + [ Fizik Gidravlik Qoidalar ] $\to$ $\pm 5\%$ Cheklov Filtri $\to$ Inson Tasdig'i.
-- Xavfsizlik qalqoni belgisi va "100% Deterministic Safety" tamg'asi.
+#### 5 Ta Asosiy Funktsional Modul:
+1. **GIS Dala va Kanal Geokadastri:** Konturlar, tuproq turlari (qumloq, bo'z, soz tuproq), ekin holati va gidravlik tarmoq xaritasi.
+2. **Suv Balansi va Hisobi (Water Accounting Ledger):** Magistraldan tarmoqlarga va dalagacha bo'lgan yo'qotishlarni aniq hisoblovchi ikki yoqlama buxgalteriya balansi.
+3. **Risk va Anomaliyalar Monitoringi:** Tuproq sho'rining ko'tarilishi, kanal to'g'oni buzilishi yoki suv o'g'irligini avtomatik aniqlash.
+4. **Harakatlar Markazi (Action Center):** 7 bosqichli reglamentlangan ish jarayoni:
+   `Anomaliya aniqlanadi` $\to$ `AI yechim beradi` $\to$ `Ziddiyat tekshiriladi` $\to$ `Dispetcher tasdiqlaydi` $\to$ `Fermer ijro etadi` $\to$ `Sensorlar natijani tasdiqlaydi`.
+5. **Markazlashtirilgan RBAC Xavfsizlik:** 4 ta rol (`SUPER_ADMIN`, `ADMIN`, `OPERATOR`, `FARMER`) va 32 ta qat'iy granular huquqlar.
 
-### 🎙️ Ma'ruzachi Nutqi:
-> *"Agrar sohada sun'iy intellektga nega ko'pchilik ishonmaydi? Chunki AI adashsa, butun hosil nobud bo'lishi mumkin.  
-Biz bu muammoni fundamental arxitektura darajasida hal qildik. Bizning qoidamiz: 'AI tavsiya beradi, agronomik qonunlar chegaralaydi, inson tasdiqlaydi'. Sun'iy intellekt maksimal 5 foizdan ortiq korreksiya qila olmaydi. Shuning uchun ham bizning algoritm xatolikdan xavfsiz va davlat suv taqsimoti standartlariga to'liq mos keladi."*
+### 🎨 Vizual Dizayn Tavsiyasi:
+- 7 bosqichli jarayon chizig'i (Chevron workflow): Har bir qadam chiroyli belgilar bilan ko'rsatilgan.
+- Yon tomonda platformaning real dashboard skrinshotlari (Dark/Light mode).
+
+### 🎙️ Spiker Nutqi:
+> *"Yangiariq Aqua AI — bu faqatgina hisobot ko'rsatadigan monitor emas. Bu to'liq 7 bosqichli ish konveyeridir.  
+> Masalan: sensor tuproq quriyotganini sezsa, tizim zudlik bilan anomaliya qayd etadi, gidravlik ziddiyatlarni tekshiradi, navbatdagi bo'sh vaqtni topadi va dispetcherga tasdiqlash uchun yuboradi. Dispetcher bitta tugma bilan tasdiqlaydi, fermerga esa SMS yoki Telegram orqali topshiriq boradi. Sug'orish tugagach, datchik tuproq namlangani haqida tizimga hisobot qaytaradi. Butun jarayon yopiq zanjirda ishlaydi."*
 
 ---
 
-## 5-SLAYD: MAHSULOT FUNKSIONALLIGI — DALA AMALIYOTIGACHA YOPIQ ZANJIR
+## 6-SLAYD: LOYIHANI AMALGA OSHIRISH BOSQICHLARI (YO'L XARITASI / ROADMAP)
 
 ### 🎯 Slayd Sarlavhasi:
-**PLATFORMA IMKONIYATLARI VA 5 ASOSIY MODUL**  
-*Nazariyadan amaliyotgacha: 7 bosqichli operatsion konveyer*
+**LOYIHANI AMALGA OSHIRISH STRATEGIYASI: 4 TA ANIQ BOSQICH**  
+*Yangiariq tumanidagi boshqariladigan tajribadan umumiy tizimga qadar*
 
-### 💡 Slayddagi Asosiy Matn (Mahsulot Modullari):
-1. **GIS Geofazoviy Dala Xaritasi:**
-   - Har bir konturning chegaralari, tuproq turi (qumloq, soz), ekin turi va sho'rlanish darajasi vizual xaritada.
-2. **Bashorat Paneli (Predictive Intelligence):**
-   - 24 soat, 48 soat va 7 kunlik tuproq namligi dinamikasi va suv talabi prognozi.
-3. **Anomaliyalarni Aniqlash va Signalizatsiya:**
-   - Kanal to'silishi, tuproq sho'rining keskin ko'tarilishi yoki suv sizib ketishi haqida avtomatik tezkor ogohlantirishlar.
-4. **Qarordan-Harakatgacha Operatsion Markaz (Action Center):**
-   - 7 bosqichli qat'iy ish oqimi: Anomaliya $\to$ AI tavsiya $\to$ Ziddiyat tekshiruvi $\to$ Tasdiqlash $\to$ Dala ijrosi $\to$ IoT orqali yakuniy tekshiruv.
-5. **Ko'p Tilli va Moslashuvchan:**
-   - O'zbek (`uz`), Rus (`ru`) va Ingliz (`en`) tillarida; kompyuter, planshet va smartfonlarda to'liq moslashuvchan (Responsive UI).
+### 💡 Slayddagi Asosiy Matn (Bosqichlar va Muddatlar):
 
-### 🎨 Vizual Tavsiya:
-- Haqiqiy platformadan 4 ta kichik ekran rasmi:
-  1. Rangli xaritadagi dalalar (yashil/sariq/qizil statuslar).
-  2. Suv sarfi va namlik grafigi (Recharts vizualizatsiyasi).
-  3. Qizil anomaliya ogohlantirish xabarnomasi (Alert Card).
-  4. 7 bosqichli operatsion jarayon vaqt chizig'i (Timeline).
+```mermaid
+graph LR
+    B1["1-Bosqich\n(Bajarildi)\nArxitektura & Test"] --> B2["2-Bosqich\n(1-4 oylar)\nYangiariq Dala Piloti"]
+    B2 --> B3["3-Bosqich\n(5-8 oylar)\nTuman Integratsiyasi"]
+    B3 --> B4["4-Bosqich\n(9-12 oylar)\nKengaytirish"]
+```
 
-### 🎙️ Ma'ruzachi Nutqi:
-> *"Mana bu slaydda tizimimizning amaliy ko'rinishini ko'rib turibsiz. Bu shunchaki chiroyli rasm emas, bu hozirgi daqiqada ishlayotgan frontend va backend tizimimiz.  
-Dispetcher ertalab ishga kelib, birgina ekranda qaysi dalada namlik tanqisligi borligini, qaysi kanalda oqim sekinlashganini ko'radi. 'Bitta tugma' orqali sug'orish rejasini shakllantiradi va fermerning telefoniga tasdiqlangan topshiriq yuboradi."*
+1. **1-Bosqich (Hozirgi holat — Tizim To'liq Tayyor):**
+   - Dasturiy ta'minot yadrosi ishlab chiqilgan; 920 ta backend va 305 ta frontend testlari 100% muvaffaqiyatli topshirilgan.
+   - PostgreSQL 16 ma'lumotlar bazasi, RBAC boshqaruvi va avtomatlashtirilgan zaxiralash (Disaster Recovery) tizimi sozlangan.
+2. **2-Bosqich (1 – 4-oylar: Yangiariq Tumani Dala Sinovi):**
+   - Yangiariqdagi 50 ta ixtiyoriy fermer xo'jaligi va 4 ta magistral kanalda pilot infratuzilmasini o'rnatish.
+   - Tuproq namligi va ultratovushli suv sathi datchiklarini kalibrlash; "To'rt ko'z" ma'lumot verifikatsiyasini sinash.
+3. **3-Bosqich (5 – 8-oylar: To'liq Operatsion Ishga Tushirish):**
+   - Yangiariq tumani "Suv yetkazib berish xizmati" davlat muassasasi dispetcherlari va tuman agroklasterlari bilan to'liq integratsiya.
+   - Suv hisobi daftari va sun'iy intellekt jadvallari asosida sug'orish mavsumini o'tkazish.
+4. **4-Bosqich (9 – 12-oylar: Natijalarni Baholash va Miqyoslashtirish):**
+   - Tejalgan suv hajmi va hosildorlik ko'rsatkichlarini mustaqil auditdan o'tkazish.
+   - Modelni qo'shni tumanlar va viloyat miqyosida kengaytirish.
+
+### 🎨 Vizual Dizayn Tavsiyasi:
+- Gorizontal vaqt chizig'i (Timeline) 4 ta asosiy bekat bilan.
+- 1-bekatda yashil "BAJARILDI / TAYYOR" belgisi, qolgan 3 ta bekatda amalga oshirish muddatlari va natijalari.
+
+### 🎙️ Spiker Nutqi:
+> *"Loyiha qanday amalga oshiriladi? Biz havoyi reja tuzmadik.  
+> 1-bosqich allaqachon yakunlangan: platformaning barcha dasturiy kodlari yozilgan, arxitekturasi tekshirilgan.  
+> 2-bosqichda biz Yangiariq tumanining eng muammoli qismidagi 50 ta fermer maydonida datchiklarni o'rnatamiz va boshqariladigan dala sinovini o'tkazamiz.  
+> 3-bosqichda tuman suv xo'jaligi bilan to'liq integratsiya qilamiz.  
+> 4-bosqichda esa Yangiariqda isbotlangan ushbu muvaffaqiyatli modelni boshqa tumanlarga replikatsiya qilamiz."*
 
 ---
 
-## 6-SLAYD: BOZOR HAJMI VA MAQSADLI AUDITORIYA (TAM, SAM, SOM)
+## 7-SLAYD: BOZOR HAJMI VA MAQSADLI SEGMENTLAR (TAM, SAM, SOM)
 
 ### 🎯 Slayd Sarlavhasi:
-**BOZOR HAJMI VA MAQSADLI FOYDALANUVCHILAR**  
-*Yangiariqdan boshlab butun Markaziy Osiyo qishloq xo'jaligigacha*
+**BOZOR HAJMI VA MAQSADLI MIJOZLAR SEGMENTI**  
+*Yangiariq tumanidan boshlab respublika agrar sektorining ulkan ehtiyojigacha*
 
 ### 💡 Slayddagi Asosiy Matn:
-- **TAM (Umumiy Bozor — Markaziy Osiyo & O'zbekiston):**  
-  - **$1.2+ Milyard**: O'zbekistondagi 4.3 million gektar sug'oriladigan yerlar va Markaziy Osiyodagi 10+ mln gektar sug'oriladigan maydonlar.
-- **SAM (Xizmat Ko'rsatilishi Mumkin Bo'lgan Bozor — Orolbo'yi Havzasi):**  
-  - **$45 Milyon**: Xorazm viloyati va Qoraqalpog'iston Respublikasi — 500,000+ gektar ekin maydoni, 15,000+ fermer va klasterlar.
-- **SOM (Dastlabki Erishiladigan Bozor — Yangiariq tumani Pilot):**  
-  - **$350,000 – $500,000**: Yangiariq tumanidagi 2,500+ gektar pilot maydoni, 50+ fermer xo'jaligi va 4 ta asosiy magistral kanal.
+- **TAM (Umumiy Bozor — O'zbekiston Qishloq Xo'jaligi Sug'oriladigan Yerlari):**  
+  - **$430 Milyon+**: O'zbekistondagi 4.3 million gektar sug'oriladigan ekin maydonlari va 150+ tuman suv xo'jaligi boshqarmalari.
+- **SAM (Xizmat Ko'rsatilishi Mumkin Bo'lgan Bozor — Quyi Amudaryo Havzasi):**  
+  - **$28 Milyon**: Xorazm viloyati va unga yondosh sug'orma dehqonchilik zonalari — 270,000+ gektar ekin maydoni, agroklasterlar va 7,000+ fermer xo'jaliklari.
+- **SOM (Dastlabki Erishiladigan Bozor — Yangiariq Tumani):**  
+  - **$350,000 – $500,000**: Yangiariq tumanidagi 2,500+ gektar boshlang'ich pilot maydoni, 50+ fermer va tuman suv yetkazib berish tizimi.
 
-### 👥 Asosiy Mijozlarimiz Segmenti:
-1. **Davlat Suv Xo'jaligi Organlari (B2G):** O'zbekiston Suv xo'jaligi vazirligi, Quyi Amudaryo havza boshqarmasi, Tuman "Suv yetkazib berish xizmati" davlat muassasalari.
-2. **Yirik Agroklasterlar (B2B):** Paxta-to'qimachilik va g'allachilik klasterlari (resurslarni tejash va ESG talablari uchun).
-3. **Fermer Xo'jaliklari:** Hosildorlikni yo'qotishdan himoya qiluvchi individual agro-tadbirkorlar.
+### 👥 Bizning 3 Ta Asosiy Mijozlar Segmentimiz:
+1. **Agroklasterlar (B2B):** Paxta, g'alla va meva-sabzavot klasterlari — suv isrofini kamaytirish, hosildorlikni oshirish va energiya sarfini optimallashtirish uchun.
+2. **Davlat Suv Xo'jaligi Tashkilotlari (B2G):** Tuman "Suv yetkazib berish xizmati" (SYX) davlat muassasalari va havza boshqarmalari — taqsimot shaffofligi va hisob-kitob uchun.
+3. **Mustaqil Fermer Xo'jaliklari (B2B/B2C):** Hosilini qurg'oqchilik va sho'rlanishdan himoya qilishni istagan fermerlar.
 
-### 🎨 Vizual Tavsiya:
-- Klassik 3 doirali bozor diagrammasi (TAM $\to$ SAM $\to$ SOM).
-- O'zbekiston xaritasida Orolbo'yi mintaqasining ajratib ko'rsatilishi va maqsadli segmentlar ikonkalari (Vazirlik, Klaster, Fermer).
+### 🎨 Vizual Dizayn Tavsiyasi:
+- 3 ta konsentrik doira: TAM ($430M) $\to$ SAM ($28M) $\to$ SOM ($500K).
+- 3 ta mijoz portreti kartochkasi: Agroklaster rahbari, Tuman suv xo'jaligi muhandisi, Dehqon/fermer.
 
-### 🎙️ Ma'ruzachi Nutqi:
-> *"Bozor talabi qanchalik katta? Bugun O'zbekiston hukumati suvni tejaydigan raqamli texnologiyalarni joriy etishga eng ustuvor vazifa sifatida qaramoqda.  
-Markaziy Osiyo bo'yicha sug'oriladigan yerlar 10 million gektardan oshadi. Biz loyihani Yangiariq tumanining eng muammoli 2,500 gektarida pilot sifatida boshlaymiz va keyingi 2 yilda butun Xorazm va Qoraqalpog'iston bo'ylab miqyoslashtiramiz (scale qilamiz)."*
-
----
-
-## 7-SLAYD: BIZNES MODEL VA DAROMAD MANBALARI (MONETIZATSIYA)
-
-### 🎯 Slayd Sarlavhasi:
-**BIZNES MODEL: QANDAY QILIB BARQAROR DAROMAD OLAMIZ?**  
-*Diversifikatsiyalangan B2B va B2G monetizatsiya strategiyasi*
-
-### 💡 Slayddagi Asosiy Matn (4 Ta Asosiy Daromad Oqimi):
-1. **B2B SaaS (Software as a Service) Obuna To'lovi:**
-   - Agroklasterlar va yirik fermerlar uchun gektariga yillik obuna modeli: **$2.5 – $4.0 / gektar / yil**.
-   - 10,000 gektarli o'rtacha klaster uchun yillik to'lov: ~$30,000 (Klaster tejalgan suv va o'g'itdan $100,000+ iqtisod qiladi).
-2. **B2G Litsenziyalash va Tizimli Integratsiya (Davlat Buyurtmasi):**
-   - Tuman miqyosidagi "Suv yetkazib berish xizmati" (SYX) uchun yillik xizmat ko'rsatish va dispetcherlik dasturi litsenziyasi: **$15,000 – $25,000 / tuman**.
-3. **IoT Uskunalar va O'rnatish Paketi (Hardware + Setup):**
-   - Tuproq namligi va kanal suv sathi datchiklarini o'rnatish, kalibrlash va lokal datchik drayverlari: Paket boshiga 20-25% marja.
-4. **Analitika va Yashil Sertifikatlash (Carbon & Water Credits):**
-   - Suvni tejash bo'yicha xalqaro fondlar (GEF, UNDP, Jahon Banki) grantlari va ESG ko'rsatkichlari bo'yicha sertifikatlangan hisobotlar sotuvi.
-
-### 🎨 Vizual Tavsiya:
-- Monetizatsiya huni (Funnel) yoki 4 ta to'rtburchak kartochka:
-  - Kartochka 1: SaaS obuna (Yillik takroriy daromad - ARR).
-  - Kartochka 2: Davlat shartnomalari (B2G barqarorligi).
-  - Kartochka 3: IoT o'rnatish marjasi.
-  - Kartochka 4: Yashil sertifikatlar.
-
-### 🎙️ Ma'ruzachi Nutqi:
-> *"Bizning biznes modelimiz bir martalik emas, balki takroriy daromadga (SaaS Recurring Revenue) asoslangan.  
-Fermer yoki klaster har bir gektar yer uchun yiliga atigi 3 dollar sarflaydi, ammo suv tejalishi, nasoslarning elektr energiyasi kamayishi va hosil sho'rlanmasligi hisobiga har bir gektardan 50 dan 100 dollargacha sof iqtisodiy foyda ko'radi. Bu mijoz uchun 1 ga 15 darajadagi qaytim (ROI) demakdir."*
+### 🎙️ Spiker Nutqi:
+> *"Bozor ehtiyoji qanchalik katta? Bugungi kunda O'zbekistonda 4 million gektardan ortiq sug'oriladigan yer bor. Suv yetishmovchiligi sababli davlat har bir kub metr suvni tejashni talab qilmoqda.  
+> Biz dastlabki bosqichda butun respublikani emas, aynan Yangiariq tumanining 2,500 gektarlik eng nozik qismini qamrab olamiz (SOM = $500,000). Ushbu tuman modelini muvaffaqiyatli topshirganimizdan so'ng, viloyat va respublika bo'yicha 400 million dollarlik ulkan bozorga chiqamiz."*
 
 ---
 
-## 8-SLAYD: MOLIYAVIY REJA VA TALAB ETILADIGAN RESURSLAR (CAPEX, OPEX)
+## 8-SLAYD: BIZNES MODEL VA DAROMAD OQIMLARI (MONETIZATSIYA)
 
 ### 🎯 Slayd Sarlavhasi:
-**MOLIYAVIY REJA VA RESURSLAR: INVESTITSIYA QAYERGA SARFLANADI?**  
-*12 oylik to'liq pilot va ishga tushirish byudjeti*
+**BIZNES MODEL: BIZ QANDAY VA QAYERDAN DAROMAD OLAMIZ?**  
+*Ko'p bosqichli va barqaror takroriy daromad (SaaS + B2G + Xizmatlar)*
 
-### 💡 Slayddagi Asosiy Matn (So'ralayotgan Mablag': $60,000):
+### 💡 Slayddagi Asosiy Matn (4 Ta Daromad Oqimi):
 
-| Xarajat Yo'nalishi | Ulushi | Miqdori ($) | Asosiy Vazifasi |
-| :--- | :---: | :---: | :--- |
-| **IoT Uskunalar va Sensorlar** | **35%** | $21,000 | 40 ta LoRaWAN tuproq datchigi, 10 ta ultratovushli kanal oqim o'lchagich, 4 ta tayanch stansiya |
-| **R&D va AI Kalibrlash** | **30%** | $18,000 | Agronomik algoritmlarni Yangiariq tuprog'iga moslash, ML modellarni o'qitish va testlash |
-| **Dala Sinovlari va Pilot Joriy Etish** | **15%** | $9,000 | Yangiariqda 50 ta fermer bilan ishlash, dispetcherlarni o'qitish va treninglar |
-| **Server va Bulutli Infratuzilma** | **12%** | $7,200 | PostgreSQL PostGIS, bulutli xizmatlar, axborot xavfsizligi va zaxiralash |
-| **Yuridik, Marketing va Kutilmagan Xarajatlar** | **8%** | $4,800 | Sertifikatlash, patentlash va operatsion xarajatlar |
-| **JAMI** | **100%** | **$60,000** | **12 oylik to'liq dastur** |
+1. **B2B SaaS Obuna Modeli (Fermer va Klasterlar uchun):**
+   - Gektariga yillik dasturiy ta'minot litsenziyasi: **$2.5 – $4.0 / gektar / yil**.
+   - 10,000 gektarlik bitta klaster uchun yillik obuna: **$25,000 – $35,000**.
+   - Klaster tejalgan suv, elektr energiyasi va ortgan hosildan har yili **$120,000+** sof foyda ko'radi.
+2. **B2G Yillik Dispetcherlik Litsenziyasi (Tuman Suv Tashkilotlari):**
+   - Tuman "Suv yetkazib berish xizmati" (SYX) uchun markaziy dispetcherlik, GIS monitoring va balans dasturi: **$15,000 – $20,000 / tuman / yil**.
+3. **IoT Uskunalarni Yetkazish va O'rnatish Paketi (Hardware & Setup):**
+   - Tuproq namlik datchiklari, LoRaWAN tayanch stansiyalari va kanallar uchun ultratovushli sath o'lchagichlarni yetkazib berish, o'rnatish va kalibrlash: **20% – 25% savdo marjasi**.
+4. **Agro-Analitika va Konsalting Xizmatlari:**
+   - Ekin maydonlari degradatsiyasi, sho'rlanish xaritasi va suv balansi auditi bo'yicha maxsus tahliliy hisobotlar tayyorlash.
 
-### 👥 Kerakli Inson Resurslari (Jamoa):
-- **Full-Stack / Software Engineer (1 kishi):** Spring Boot va React arxitekturasi.
-- **AI / Data Engineer (1 kishi):** Mashinali o'rganish, gidrologik vaqt qatorlari tahlili.
-- **Agronom / Gidrolog Ekspert (1 kishi):** Ekin suv balansi me'yorlarini verifikatsiya qilish.
-- **Dala Koordinatori (1 kishi):** Fermerlar bilan aloqa, sensorlarni joyida o'rnatish va nazorat.
+### 🎨 Vizual Dizayn Tavsiyasi:
+- 4 ta zamonaviy daromad kartochkasi:
+  - 1: `SaaS Yillik Obuna` (Asosiy takroriy daromad - ARR).
+  - 2: `B2G Davlat Litsenziyasi` (Barqaror tushum).
+  - 3: `IoT Integratsiya Marjasi` (Boshlang'ich kassa oqimi).
+  - 4: `Chuqur Analitika` (Qo'shimcha qiymat).
 
-### 🎨 Vizual Tavsiya:
-- Dumaloq diagramma (Pie chart): Byudjetning 5 ta sohaga taqsimlanishi.
-- Pastki qismda 4 ta jamoa a'zosi roli va ularning profili.
-
-### 🎙️ Ma'ruzachi Nutqi:
-> *"Ushbu loyihani to'liq quvvat bilan ishga tushirish uchun bizga 60,000 dollar miqdorida boshlang'ich investitsiya yoki grant mablag'i zarur.  
-E'tibor bering: biz mablag'ni shunchaki reklama yoki ofisga sarflamaymiz. Mablag'ning 65 foizi bevosita dalaga — datchiklar xarid qilish va ularni AI tizimimizga kalibrlashga yo'naltiriladi. Bizda dasturiy ta'minot yadrosi allaqachon tayyor, investitsiya esa uni real dalalarda to'liq masshtablashtirish uchun kerak."*
+### 🎙️ Spiker Nutqi:
+> *"Biz qanday qilib daromad ko'ramiz? Bizning biznes modelimiz bir martalik emas, balki yillik takroriy SaaS daromadiga asoslangan.  
+> Fermer yoki klaster har bir gektar yer uchun yiliga atigi 3 dollar to'laydi. Ammo tejalgan suv, tejalgan elektr energiyasi va ortiqcha sho'rlanmagan hosil hisobiga har gektardan 60 dan 100 dollargacha sof foyda oladi. Bu mijoz uchun 1 ga 20 qaytim (ROI) demakdir. Shu sababli mijozlar har yili xizmatimizdan foydalanishda davom etadi."*
 
 ---
 
-## 9-SLAYD: KUTILAYOTGAN IJTIMOIY-IQTISODIY SAMARADORLIK VA ERISHILADIGAN YUTUQLAR (ROI)
+## 9-SLAYD: KUTILAYOTGAN IQTISODIY NATIJALAR VA SAMARADORLIK (ROI)
 
 ### 🎯 Slayd Sarlavhasi:
-**ERISHILADIGAN NATIJALAR: SUV, HOSIL VA IQTISODIYOT**  
-*Yangiariq tumani miqyosidagi yillik kutilayotgan ko'rsatkichlar*
+**KUTILAYOTGAN NATIJALAR VA IQTISODIY SAMARADORLIK**  
+*Yangiariq tumani miqyosidagi yillik aniq o'lchanadigan yutuqlar*
 
-### 💡 Slayddagi Asosiy Matn (Aniq Metrikalar):
+### 💡 Slayddagi Asosiy Matn (Aniq Metrikalar va Raqamlar):
 
-1. **💧 25% – 30% Suv Tejalishi:**
-   - Yangiariq tumanida yiliga **18-25 million m³ suv** isrofdan saqlab qolinadi (Bu butun bir tuman aholisining bir yillik ichimlik suvidan ko'p!).
-2. **📈 15% – 20% Hosildorlik O'sishi:**
-   - Ekinlar suv tanqisligi yoki me'yordan ortiq botqoqlanishdan stressga tushmaydi. Paxta va g'alla hosildorligi gektariga 5-8 sentnerga ortadi.
-3. **🌱 35% Tuproq Sho'rlanishi Xavfining Kamayishi:**
-   - Drenaj va sizot suvlari balansi normallashadi, yerlarning degradatsiyaga uchrashi to'xtatiladi.
-4. **⚡ 20% Elektr Energiyasi va Yoqilg'i Tejamkorligi:**
-   - Suv nasoslarining asossiz ishlashiga chek qo'yiladi.
-5. **🤝 100% Shaffoflik va Nizolarga Barham Berish:**
-   - "Suv navbati" to'liq raqamli qayd qilinadi, inson omili va korrupsion xavflar keskin kamayadi.
+| Ko'rsatkich | An'anaviy Holat | Yangiariq Aqua AI Bilan | Kutilayotgan Foyda |
+| :--- | :---: | :---: | :---: |
+| **Kanal Suv Isrofi** | 35% – 45% yo'qotish | 15% – 20% gacha pasayadi | **25% – 30% suv tejaladi** |
+| **Yillik Tejalgan Suv Hajmi** | 0 m³ | 18 – 22 million m³ | **Tuman bo'yicha 18+ mln m³ tejam** |
+| **Ekin Hosildorligi** | Doimiy suv stressi | Balanslangan namlik | **Hosildorlik +15% – +20% o'sadi** |
+| **Paxta va G'alla Qo'shimcha Hosili** | O'rtacha 22-25 snt/ga | 28-32 snt/ga | **+4 – +7 sentner/ga sof o'sish** |
+| **Nasoslar Elektr Sarfi** | Nazoratsiz ishlash | Jadval asosida aniq rejim | **Elektr sarfi 20% qisqaradi** |
+| **Tuproq Sho'rlanish Xavfi** | Yillik o'sish | Sizot suvlari nazoratda | **Sho'rlanish xavfi 35% kamayadi** |
+| **Suv Taqsimoti Shaffofligi** | Qog'oz daftar (subyektiv) | 100% raqamli audit jurnali | **Nizolar va inson omili yo'qoladi** |
 
-### 🎨 Vizual Tavsiya:
-- 4 ta yirik KPI hisoblagich bloki (Yashil va ko'k ranglar):
-  - `+20% Hosil` | `-25% Suv sarfi` | `18M m³ Tejalgan suv` | `1 Mavsumda ROI`.
-- Tejalgan suvning Orol dengizi yoki Amudaryoga ta'sirini ko'rsatuvchi ijobiy ekologik illyustratsiya.
+### 💰 Moliyaviy Samaradorlik (Yangiariq fermeri misolida):
+- 100 gektarlik o'rtacha fermer xo'jaligi yiliga dastur uchun **$300** to'laydi.
+- Qo'shimcha olingan hosil va tejalgan resurslardan keladigan yillik sof foyda: **$6,000 – $9,000**.
+- Investitsiyaning o'zini oqlash muddati: **Atigi 1 ta sug'orish mavsumi (4 oy)!**
 
-### 🎙️ Ma'ruzachi Nutqi:
-> *"Loyiha qanday natija beradi? Eng muhim natija — Yangiariq tumanining o'zida har yili 20 million kub metrga yaqin toza suv tejaladi!  
-Fermer uchun esa bu yerning sho'rlanmasligi va hosilning 20 foizgacha ko'payishi demakdir. Tizim o'ziga kiritilgan investitsiyani atigi bir sug'orish mavsumida (4-5 oyda) to'liq oqlaydi. Bu loyiha nafaqat biznes, balki Orolbo'yi ekologiyasi uchun ulkan hayotiy qadamdir."*
+### 🎨 Vizual Dizayn Tavsiyasi:
+- 4 ta yirik raqamli KPI bloklari (Yashil va moviy ranglarda):
+  - `18-22 Mln m³` (Tejalgan suv).
+  - `+18%` (O'rtacha hosildorlik).
+  - `-20%` (Elektr energiyasi sarfi).
+  - `1 Mavsum` (O'zini oqlash davri).
+
+### 🎙️ Spiker Nutqi:
+> *"Eng asosiy savol: loyiha nimani o'zgartiradi va qanday foyda keltiradi?  
+> Yangiariq tumanining o'zida bir yilda 20 million kub metrga yaqin suv isrofdan saqlab qolinadi! Bu butun tuman aholisining bir yillik maishiy suv ehtiyojidan ko'proqdir.  
+> Fermer uchun esa bu gektariga 5-6 sentner qo'shimcha paxta va g'alla degani. 100 gektar yeri bor fermer xizmatimiz uchun 300 dollar to'lab, mavsum oxirida 7,000 dollardan ortiq qo'shimcha daromad ko'radi. Tizim o'zini birinchi mavsumdayoq to'liq oqlaydi."*
 
 ---
 
-## 10-SLAYD: YO'L XARITASI (ROADMAP), JAMOA VA INVESTITSIYA DA'VATI (CALL TO ACTION)
+## 10-SLAYD: JAMOA, TALAB ETILADIGAN RESURSLAR VA HAMKORLIKKA CHORLOV
 
 ### 🎯 Slayd Sarlavhasi:
-**KELAJAK YO'L XARITASI VA HAMKORLIKKA CHORLOV**  
-*Orolbo'yi suv kelajagini birgalikda yaratamiz!*
+**JAMOA, TALAB ETILADIGAN MABLAG' VA HAMKORLIK TAKLIFI**  
+*Raqamli suv boshqaruvini Yangiariqda birgalikda joriy etamiz!*
 
 ### 💡 Slayddagi Asosiy Matn:
-- **1-Bosqich (Hozirgi holat — MVP & Test):**  
-  - Tizim arxitekturasi yaratilgan, barcha 677 ta backend va 210 ta frontend testlari muvaffaqiyatli topshirilgan, simulyatsiya va dasturiy modullar 100% tayyor.
-- **2-Bosqich (1 – 4-oylar):**  
-  - Yangiariq tumanidagi 50 ta fermer xo'jaligi va 4 ta asosiy kanalda datchiklarni o'rnatish, pilot sinov.
-- **3-Bosqich (5 – 8-oylar):**  
-  - Tizimni to'liq quvvatda ishga tushirish, agroklasterlar bilan B2B shartnomalar, natijalarni tahlil qilish.
-- **4-Bosqich (9 – 12-oylar):**  
-  - Xorazm viloyatining boshqa tumanlariga va Qoraqalpog'iston hududiga kengayish (Scaling).
 
-### 🚀 Bizning Taklifimiz / Da'vat:
-- Biz hozirda **investitsiya, davlat pilot grantlari va hamkorlar** qidirmoqdamiz.
-- *"Kelajak avlodlarga suvsiz cho'l emas, gullab-yashnagan Orolbo'yini qoldiraylik!"*
+#### Kerakli Resurslar (Dala Piloti uchun $55,000 Talab Etiladi):
+- **40% ($22,000):** IoT uskunalar — 40 ta tuproq namlik datchigi, 10 ta kanallar oqim o'lchagichi, 4 ta LoRaWAN stansiyasi.
+- **25% ($13,750):** Yangiariq tuprog'i va kanallarining gidravlik parametrlarini tizimga kalibrlash va joyida sinov.
+- **20% ($11,000):** Dala infratuzilmasi, fermerlar va dispetcherlar uchun amaliy treninglar va o'quv qo'llanmalar.
+- **15% ($8,250):** Server infratuzilmasi, axborot xavfsizligi va tizim litsenziyalari.
+
+#### Jamoa Tarkibi va Salohiyati:
+- **Loyiha Rahbari & Software Architect:** Full-stack va backend arxitektura (Java 21, Spring Boot, React).
+- **Gidrolog-Muhandis va Agronom:** Ekin suv balans me'yorlari va suv taqsimoti qoidalarini verifikatsiya qiluvchi ekspert.
+- **Data & AI Engineer:** Mashinali o'rganish, anomaliyalarni aniqlash va sensor telemetriyasi mutaxassisi.
+- **Dala Koordinatori:** Yangiariq tumani fermerlari va tuman suv bo'limi bilan bevosita ishlovchi vakil.
+
+### 🚀 Bizning Taklifimiz (Call to Action):
+- Biz hozirda **davlat innovatsion grantlari, agrar pilot maydonlari va strategik investorlar** bilan hamkorlik qilishga tayyormiz.
+- Dasturiy ta'minot 100% tayyor, endigi maqsad — uni Yangiariq dalalarida amaliyotga tatbiq etish!
 
 ### 📞 Aloqa Ma'lumotlari:
-- **Loyiha:** Yangiariq Aqua AI (Agronexsus)
-- **Veb-sayt / Demo:** `http://localhost:5173` (lokal) / `https://yangiariq-aqua-frontend.onrender.com`
+- **Loyiha nomi:** Yangiariq Aqua AI (Agronexsus)
+- **Veb-sayt / Demo:** `http://localhost:5173` (lokal) / `https://aqua.yangiariq.uz`
 - **Email:** *[Sizning elektron pochtangiz]*
-- **Telefon / Telegram:** *[Sizning telefon raqamingiz / Telegram username]*
+- **Telefon / Telegram:** *[Sizning telefon raqamingiz / Telegram havolangiz]*
 
-### 🎨 Vizual Tavsiya:
-- Gorizontal vaqt chizig'i (Roadmap timeline) 4 ta asosiy bosqich bilan.
-- Markazda ilhomlantiruvchi yirik shior, aloqa QR-kodi (Demo havola yoki portfolio uchun) va jamoa logotipi.
+### 🎨 Vizual Dizayn Tavsiyasi:
+- Markazda 4 ta jamoa a'zosi fotosuratlari va asosiy kompetensiyalari.
+- Pastki o'ng burchakda jonli demo tizimiga yo'naltiruvchi QR-kod va yirik ishonchli shior.
 
-### 🎙️ Ma'ruzachi Nutqi:
-> *"Hurmatli hakamlar!  
-Yangiariq Aqua AI — bu qog'ozdagi reja emas. Bu bugun ishga tushishga tayyor bo'lgan, sinovdan o'tgan mustahkam arxitekturaga ega tizim. Bizga quruq va'dalar emas, real raqamli harakatlar kerak.  
-Biz bilan birga Yangiariqdan boshlab Orolbo'yining har bir tomchi suvini asrab qolishga va agrar sohani yangi bosqichga olib chiqishga hissa qo'shing.  
-E'tiboringiz uchun katta rahmat, savollaringizga mamnuniyat bilan javob beraman!"*
+### 🎙️ Spiker Nutqi:
+> *"Hurmatli hakamlar hay'ati!  
+> Yangiariq Aqua AI — bu ertaga boshlanadigan loyiha emas. Bu bugun ishlashga to'liq tayyor bo'lgan, backend va frontend kodlari sinovdan o'tgan real platformadir.  
+> Bizga faqatgina Yangiariq tumanidagi 50 ta fermer maydonida datchiklarni o'rnatish va amaliyotga tushirish uchun 55,000 dollarlik boshlang'ich pilot resursi kerak.  
+> Keling, suvni eski usulda isrof qilishni bas qilaylik. Yangiariqdan boshlab qishloq xo'jaligimizni raqamli va adolatli suv taqsimotiga o'tkazaylik.  
+> E'tiboringiz uchun katta rahmat, barcha savollaringizga mamnuniyat bilan javob beraman!"*
 
 ---
 
-## 💡 TAQDIMOTCHI UCHUN MAXSUS TAVSIYALAR (HAKAMLAR SAVOLLARIGA JAVOBLAR):
+## 💡 TAQDIMOTCHI UCHUN MAXSUS QO'LLANMA (HAKAMLAR SAVOLLARIGA ANIQ JAVOBLAR):
 
-1. **"Datchiklar buzilsa yoki internet uzilsa nima bo'ladi?"**
-   - *Javob:* Tizimimiz telemetriya uzilishi holatida ham ishlashni to'xtatmaydi. Bizda "Telemetry Quality Fallback" va deterministik agronomik hisob-kitob modeli bor. Aloqa tiklangach, datchikdagi kesh ma'lumotlar avtomatik yuklanadi.
-2. **"Fermerlar zamonaviy texnologiyalardan foydalana oladimi?"**
-   - *Javob:* Fermer interfeysi maksimal darajada soddalashtirilgan, o'zbek tilida va xuddi Telegram kabi oson tushuniladi. Rangli signallar (Yashil = Hammasi yaxshi, Sariq = Sug'orish vaqti yaqinlashmoqda, Qizil = Zudlik bilan suv kerak) orqali barcha ma'lumot yetkaziladi.
-3. **"Nega aynan Yangiariq tumani?"**
-   - *Javob:* Yangiariq — Xorazmdagi kanallar tizimi eng murakkab, tuproq sho'rlanishi yuqori va Amudaryodan uzoqroqda joylashgan tumanlardan biri. Agar loyiha Yangiariqda o'zini oqlasa, uni O'zbekistonning istalgan tumanida 100% muvaffaqiyat bilan qo'llash mumkin.
+1. **"Nega loyiha aynan Yangiariq tumanidan boshlanmoqda?"**
+   - *Javob:* Yangiariq tumani Xorazm viloyatida sug'orish kanallari eng tarmoqlangan, tuproq sho'rlanish darajasi yuqori va magistral daryodan eng uzoqda joylashgan tumanlardan biridir. Agar loyiha Yangiariqning og'ir gidrologik sharoitida o'zini to'liq oqlasa, uni O'zbekistonning istalgan tumanida hech qanday qiyinchiliksiz tatbiq etish mumkin.
+
+2. **"Agar dalada internet yoki elektr uzilsa, tizim to'xtab qoladimi?"**
+   - *Javob:* Yo'q, to'xtamaydi. Bizning datchiklarimiz LoRaWAN orqali uzoq masofaga kam energiya sarflab ma'lumot uzatadi va batareyada 3 yilgacha ishlaydi. Aloqa uzilgan taqdirda ham, backend tizimimizda "Telemetry Fallback" mexanizmi mavjud bo'lib, o'rnatilgan agronomik modellar asosida hisob-kitobni davom ettiradi. Aloqa tiklanganda keshdagi ma'lumotlar avtomatik sinxronlanadi.
+
+3. **"Oddiy fermer bu murakkab tizimdan foydalana oladimi?"**
+   - *Javob:* Fermer interfeysi maksimal darajada soddalashtirilgan, o'zbek tilida va xuddi Telegram kabi qulay. Fermerdan grafiklar chizish talab etilmaydi — unga faqat 3 ta rangdagi tushunarli signal ko'rinadi: Yashil — namlik me'yorda; Sariq — sug'orish yaqinlashmoqda; Qizil — zudlik bilan suv berish kerak. Xohlovchilar uchun Telegram-bot integratsiyasi ham mavjud.
+
+4. **"Sun'iy intellekt xato qilib klapanlarni o'zboshimchalik bilan ochib yuborishi mumkinmi?"**
+   - *Javob:* Mutlaqo yo'q. Bizning arxitekturamizda "Decision Support Only" qat'iy xavfsizlik printsipi amal qiladi: platforma faqat tavsiya beradi, jismoniy nasos yoki to'g'onlarni ochish esa faqat inson — dispetcher yoki fermer tomonidan amalga oshiriladi. Shuningdek, AI tavsiyasi ilmiy me'yordan $\pm 5\%$ dan ortiq chetlashishi kod darajasida taqiqlangan.
+
+5. **"Kutilayotgan daromad va biznes model qanchalik hayotiy?"**
+   - *Javob:* Biznes modelimiz 4 ta aniq manbaga asoslangan: agroklasterlar uchun gektariga $3/yil SaaS obunasi, tuman suv tashkiloti uchun $15,000/yil litsenziyasi, datchiklarni o'rnatishdan 20% marja va maxsus agro-analitika xizmatlari. Fermer xizmatimizga 300 dollar sarflab, 6,000 dollardan ortiq qo'shimcha hosil va tejamkorlik oladi, bu esa uning har yili xizmatimizda qolishini kafolatlaydi.
