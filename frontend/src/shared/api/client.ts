@@ -37,7 +37,7 @@ export class ApiError extends Error {
   }
 }
 
-const API_BASE_URL = 'https://yangiariq-aqua-6hfh.onrender.com' || '/api/v1'
+const API_BASE_URL = 'https://yangiariq-aqua-6hfh.onrender.com/api/v1'
 
 let refreshPromise: Promise<string | null> | null = null
 
