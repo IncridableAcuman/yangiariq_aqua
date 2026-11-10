@@ -81,7 +81,19 @@ TABLE_COUNT=$(docker exec "${DB_CONTAINER}" psql -U "${DB_USER}" -d "${TARGET_DB
 CHANGELOG_COUNT=$(docker exec "${DB_CONTAINER}" psql -U "${DB_USER}" -d "${TARGET_DB}" -t -A -c \
     "SELECT count(*) FROM databasechangelog;" 2>/dev/null || echo "0")
 
-CRITICAL_TABLES=("users" "fields" "water_allocations" "performance_indicators" "impact_assessments")
+CRITICAL_TABLES=(
+    "users"
+    "fields"
+    "water_allocations"
+    "performance_indicators"
+    "impact_assessments"
+    "pilot_programs"
+    "pilot_participants"
+    "roles"
+    "permissions"
+    "role_permissions"
+    "security_audit_logs"
+)
 MISSING_TABLES=0
 
 for table in "${CRITICAL_TABLES[@]}"; do
@@ -93,7 +105,7 @@ for table in "${CRITICAL_TABLES[@]}"; do
     fi
 done
 
-if [ "${TABLE_COUNT}" -lt 40 ] || [ "${CHANGELOG_COUNT}" -lt 25 ] || [ "${MISSING_TABLES}" -gt 0 ]; then
+if [ "${TABLE_COUNT}" -lt 55 ] || [ "${CHANGELOG_COUNT}" -lt 45 ] || [ "${MISSING_TABLES}" -gt 0 ]; then
     log_error "Restore verification FAILED! Tables found: ${TABLE_COUNT}, Liquibase changesets: ${CHANGELOG_COUNT}, Missing critical tables: ${MISSING_TABLES}"
     exit 1
 fi

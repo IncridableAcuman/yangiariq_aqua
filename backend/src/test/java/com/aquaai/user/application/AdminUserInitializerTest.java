@@ -11,6 +11,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.mock.env.MockEnvironment;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
@@ -19,7 +20,6 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -34,11 +34,13 @@ class AdminUserInitializerTest {
     @Mock
     private PasswordEncoder passwordEncoder;
 
+    private MockEnvironment environment;
     private AdminUserInitializer initializer;
 
     @BeforeEach
     void setUp() {
-        initializer = new AdminUserInitializer(userRepository, passwordEncoder);
+        environment = new MockEnvironment();
+        initializer = new AdminUserInitializer(userRepository, passwordEncoder, environment);
     }
 
     @Test
@@ -93,7 +95,7 @@ class AdminUserInitializerTest {
     }
 
     @Test
-    @DisplayName("Provisions baseline admin accounts when neither exists")
+    @DisplayName("Provisions baseline admin accounts when neither exists in non-prod environment")
     void testProvisionsBaselineAdminAccountsWhenNeitherExists() {
         when(userRepository.findByEmail(anyString())).thenReturn(Optional.empty());
         when(userRepository.existsByPhoneNumber(anyString())).thenReturn(false);
@@ -116,5 +118,16 @@ class AdminUserInitializerTest {
         assertThat(second.getEmail()).isEqualTo("izzatbek.engineer@gmail.com");
         assertThat(second.getRole()).isEqualTo(UserRole.ADMIN);
         assertThat(second.getStatus()).isEqualTo(UserStatus.ACTIVE);
+    }
+
+    @Test
+    @DisplayName("In production profile, skips creating accounts with default passwords")
+    void testSkipsCreationInProductionProfile() {
+        environment.setActiveProfiles("prod");
+        when(userRepository.findByEmail(anyString())).thenReturn(Optional.empty());
+
+        initializer.run(null);
+
+        verify(userRepository, never()).save(any(User.class));
     }
 }

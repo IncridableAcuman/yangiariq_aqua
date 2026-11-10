@@ -102,6 +102,17 @@ else
     else
         pass "DOMAIN_NAME: ${DOMAIN_NAME}"
     fi
+
+    # Check Super Admin Bootstrap Config
+    if [ "${SUPER_ADMIN_BOOTSTRAP_ENABLED:-false}" = "true" ]; then
+        if [ -z "${SUPER_ADMIN_BOOTSTRAP_EMAIL:-}" ] || [ -z "${SUPER_ADMIN_BOOTSTRAP_PASSWORD:-}" ]; then
+            fail "SUPER_ADMIN_BOOTSTRAP_ENABLED is true, but email or password is missing."
+        elif [ ${#SUPER_ADMIN_BOOTSTRAP_PASSWORD} -lt 12 ] || [ "${SUPER_ADMIN_BOOTSTRAP_PASSWORD}" == "Admin123!" ]; then
+            fail "SUPER_ADMIN_BOOTSTRAP_PASSWORD must be at least 12 characters and not default."
+        else
+            pass "Super Admin bootstrap credentials configured with sufficient complexity"
+        fi
+    fi
 fi
 
 # 3. System Resources

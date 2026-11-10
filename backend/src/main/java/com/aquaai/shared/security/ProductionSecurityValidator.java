@@ -34,8 +34,11 @@ public class ProductionSecurityValidator implements SmartInitializingSingleton {
         if (activeProfiles.contains("prod") || activeProfiles.contains("production")) {
             log.info("Validating production security invariants...");
             validateProductionJwtSecret();
+            validateProductionTokenLifetimes();
             validateProductionDatabasePassword();
             validateProductionCorsConfiguration();
+            validateProductionRateLimiting();
+            validateProductionBootstrapConfig();
             log.info("Production security invariants successfully verified.");
         }
     }
@@ -52,6 +55,15 @@ public class ProductionSecurityValidator implements SmartInitializingSingleton {
 
         if (secret.length() < 32) {
             throw new IllegalStateException("FATAL: Production startup aborted: JWT secret must be at least 256 bits (32 characters).");
+        }
+    }
+
+    private void validateProductionTokenLifetimes() {
+        if (jwtProperties.getAccessTokenExpirationMs() <= 0 || jwtProperties.getAccessTokenExpirationMs() > 86_400_000L) {
+            throw new IllegalStateException("FATAL: Production startup aborted: JWT access token expiration must be between 1ms and 86400000ms (24h). Recommended <= 3600000ms (1h).");
+        }
+        if (jwtProperties.getRefreshTokenExpirationMs() <= 0 || jwtProperties.getRefreshTokenExpirationMs() > 2_592_000_000L) {
+            throw new IllegalStateException("FATAL: Production startup aborted: JWT refresh token expiration must be between 1ms and 2592000000ms (30 days).");
         }
     }
 
@@ -80,6 +92,26 @@ public class ProductionSecurityValidator implements SmartInitializingSingleton {
                 if ("*".equals(origin.trim()) && corsProperties.isAllowCredentials()) {
                     throw new IllegalStateException("FATAL: Production startup aborted: Insecure CORS wildcard '*' with credentials is not permitted in production.");
                 }
+            }
+        }
+    }
+
+    private void validateProductionRateLimiting() {
+        String rateLimitEnabled = environment.getProperty("app.security.rate-limit.enabled");
+        if ("false".equalsIgnoreCase(rateLimitEnabled)) {
+            throw new IllegalStateException("FATAL: Production startup aborted: Rate limiting (app.security.rate-limit.enabled) cannot be explicitly disabled in production.");
+        }
+    }
+
+    private void validateProductionBootstrapConfig() {
+        String bootstrapEnabled = environment.getProperty("app.security.bootstrap.super-admin.enabled");
+        if ("true".equalsIgnoreCase(bootstrapEnabled)) {
+            String bootstrapPass = environment.getProperty("app.security.bootstrap.super-admin.password");
+            if (!StringUtils.hasText(bootstrapPass)) {
+                throw new IllegalStateException("FATAL: Production startup aborted: Super Admin bootstrap is enabled, but app.security.bootstrap.super-admin.password is missing or empty.");
+            }
+            if ("Admin123!".equalsIgnoreCase(bootstrapPass) || bootstrapPass.length() < 12) {
+                throw new IllegalStateException("FATAL: Production startup aborted: Super Admin bootstrap password does not meet security standards (minimum 12 characters and not default).");
             }
         }
     }

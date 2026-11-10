@@ -48,6 +48,14 @@ app:
       login-limit-per-minute: ${RATE_LIMIT_LOGIN_PER_MINUTE:10}
       refresh-limit-per-minute: ${RATE_LIMIT_REFRESH_PER_MINUTE:30}
       default-auth-limit-per-minute: ${RATE_LIMIT_AUTH_PER_MINUTE:15}
+    bootstrap:
+      super-admin:
+        enabled: ${SUPER_ADMIN_BOOTSTRAP_ENABLED:false}
+        email: ${SUPER_ADMIN_BOOTSTRAP_EMAIL:}
+        password: ${SUPER_ADMIN_BOOTSTRAP_PASSWORD:}
+        phone-number: ${SUPER_ADMIN_BOOTSTRAP_PHONE:+998900000001}
+        first-name: ${SUPER_ADMIN_BOOTSTRAP_FIRST_NAME:Super}
+        last-name: ${SUPER_ADMIN_BOOTSTRAP_LAST_NAME:Admin}
   cors:
     allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:3000,http://localhost:5173}
   ai:

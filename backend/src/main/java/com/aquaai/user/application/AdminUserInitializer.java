@@ -1,6 +1,5 @@
 package com.aquaai.user.application;
 
-import com.aquaai.auth.application.AuthService;
 import com.aquaai.shared.security.UserRole;
 import com.aquaai.user.domain.User;
 import com.aquaai.user.domain.UserRepository;
@@ -10,12 +9,17 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.annotation.Order;
+import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Ensures designated administrator accounts are provisioned and granted ADMIN platform role.
+ * In production profiles, default password account creation is strictly suppressed to preserve security.
  */
 @Slf4j
 @Component
@@ -25,6 +29,7 @@ public class AdminUserInitializer implements ApplicationRunner {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final Environment environment;
 
     @Override
     @Transactional
@@ -48,6 +53,10 @@ public class AdminUserInitializer implements ApplicationRunner {
 
     private void ensureAdminAccount(String email, String defaultPhone, String firstName, String lastName) {
         String normalizedEmail = email.trim().toLowerCase();
+        List<String> activeProfiles = environment != null && environment.getActiveProfiles() != null
+                ? Arrays.asList(environment.getActiveProfiles())
+                : List.of();
+        boolean isProd = activeProfiles.contains("prod") || activeProfiles.contains("production");
 
         userRepository.findByEmail(normalizedEmail).ifPresentOrElse(
                 existingUser -> {
@@ -60,13 +69,18 @@ public class AdminUserInitializer implements ApplicationRunner {
                     }
                 },
                 () -> {
-                    // Check if default phone is already taken by another account, generate unique if so
+                    if (isProd) {
+                        log.info("Production profile active: skipping automated creation of designated admin account ({}) with default password. Account must be provisioned via controlled bootstrap or admin management.", normalizedEmail);
+                        return;
+                    }
+
+                    // In non-production environments (dev/test), provision baseline account for local testing
                     String phone = defaultPhone;
                     if (userRepository.existsByPhoneNumber(phone)) {
                         phone = "+99890" + (Math.abs(normalizedEmail.hashCode()) % 9000000 + 1000000);
                     }
 
-                    log.info("Provisioning baseline designated admin account for: {}", normalizedEmail);
+                    log.info("Provisioning baseline designated admin account for non-production: {}", normalizedEmail);
                     User adminUser = User.builder()
                             .email(normalizedEmail)
                             .phoneNumber(phone)

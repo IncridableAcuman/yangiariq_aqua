@@ -111,6 +111,49 @@ class ProductionSecurityValidatorTest {
     }
 
     @Test
+    @DisplayName("Should fail fast in prod when rate limiting is explicitly disabled")
+    void shouldFailWhenProdRateLimitingDisabled() {
+        MockEnvironment env = new MockEnvironment();
+        env.setActiveProfiles("prod");
+        env.setProperty("spring.datasource.password", "prod_db_vault_password_xyz987");
+        env.setProperty("app.security.rate-limit.enabled", "false");
+
+        JwtProperties jwtProps = new JwtProperties();
+        jwtProps.setSecret(STRONG_PROD_SECRET);
+
+        CorsProperties corsProps = new CorsProperties();
+        corsProps.setAllowedOrigins(List.of("https://aqua.yangiariq.uz"));
+
+        ProductionSecurityValidator validator = new ProductionSecurityValidator(env, jwtProps, corsProps);
+
+        assertThatThrownBy(validator::afterSingletonsInstantiated)
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessageContaining("Rate limiting (app.security.rate-limit.enabled) cannot be explicitly disabled in production");
+    }
+
+    @Test
+    @DisplayName("Should fail fast in prod when Super Admin bootstrap has default/weak password")
+    void shouldFailWhenProdBootstrapHasWeakPassword() {
+        MockEnvironment env = new MockEnvironment();
+        env.setActiveProfiles("prod");
+        env.setProperty("spring.datasource.password", "prod_db_vault_password_xyz987");
+        env.setProperty("app.security.bootstrap.super-admin.enabled", "true");
+        env.setProperty("app.security.bootstrap.super-admin.password", "Admin123!");
+
+        JwtProperties jwtProps = new JwtProperties();
+        jwtProps.setSecret(STRONG_PROD_SECRET);
+
+        CorsProperties corsProps = new CorsProperties();
+        corsProps.setAllowedOrigins(List.of("https://aqua.yangiariq.uz"));
+
+        ProductionSecurityValidator validator = new ProductionSecurityValidator(env, jwtProps, corsProps);
+
+        assertThatThrownBy(validator::afterSingletonsInstantiated)
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessageContaining("Super Admin bootstrap password does not meet security standards");
+    }
+
+    @Test
     @DisplayName("Should succeed in prod when all production security requirements are met")
     void shouldSucceedWhenAllProdRequirementsMet() {
         MockEnvironment env = new MockEnvironment();
