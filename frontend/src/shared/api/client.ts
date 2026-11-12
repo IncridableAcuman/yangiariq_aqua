@@ -37,7 +37,7 @@ export class ApiError extends Error {
   }
 }
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api/v1'
+const API_BASE_URL = 'https://yangiariq-aqua-api.onrender.com/api/v1'
 
 let refreshPromise: Promise<string | null> | null = null
 
