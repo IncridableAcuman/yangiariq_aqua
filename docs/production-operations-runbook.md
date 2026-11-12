@@ -1,9 +1,11 @@
 # YANGIARIQ AQUA AI — Production Operations Runbook & Maintenance Guide
 
-**Milestone**: 08.21 — Production Deployment, Security Hardening & Operational Readiness  
-**Target Environment**: Production (Ubuntu 24.04 LTS / Docker Compose / Nginx / PostgreSQL 16)  
-**Version**: 0.8.21  
-**Last Updated**: November 10, 2026  
+**Milestone**: 08.22 — Production Cloud Deployment, Initial Administration & Go-Live Verification  
+**Target Environments**: 
+- Primary Cloud: Render Cloud (Static CDN + Docker Web Service) + Neon Serverless PostgreSQL (AWS Ohio)
+- On-Premise / Self-Hosted: Ubuntu 24.04 LTS / Docker Compose / Nginx / PostgreSQL 16
+**Version**: 0.8.22  
+**Last Updated**: November 12, 2026  
 **Security Classification**: CONFIDENTIAL — OPERATIONAL RUNBOOK  
 
 ---

@@ -29,9 +29,12 @@ services:
         value: "604800000"
       # Allowed CORS origins (Render frontend URL) - no localhost in production
       - key: CORS_ALLOWED_ORIGINS
-        value: "https://yangiariq-aqua.onrender.com,https://yangiariq-aqua-api.onrender.com"
+        value: "https://yangiariq-aqua.onrender.com,https://yangiariq-aqua-6hfh.onrender.com,https://yangiariq-aqua-api.onrender.com"
       - key: RATE_LIMIT_ENABLED
         value: "true"
+      # Memory tuning for Render Free Tier (512MB memory limit)
+      - key: JAVA_OPTS
+        value: "-XX:+UseG1GC -XX:MaxRAMPercentage=60.0 -Xss256k -XX:MaxMetaspaceSize=128m -XX:+ExitOnOutOfMemoryError"
       # Super Admin controlled bootstrap (optional on initial launch)
       - key: SUPER_ADMIN_BOOTSTRAP_ENABLED
         value: "false"
